@@ -1,48 +1,64 @@
-# Laravel Vue CMS Boilerplate
+# Xseller.id - Trade Promotion Program System
 
-CMS Boilerplate modular berkinerja tinggi yang dibangun menggunakan **Laravel 11**, **Vue 3 (Inertia.js)**, **Tailwind CSS**, dan **Spatie Permission**. Didesain khusus sebagai dasar proyek siap pakai (ready-to-deploy) untuk mempercepat pembuatan website perusahaan, portofolio, landing page, atau portal berita.
+Aplikasi Trade Promotion Program berbasis E-Commerce, Affiliasi, dan Komunitas dengan sistem **Binary 2 Kaki** dan **Multi-Tier Bonus (Generasi 1-15)** yang dibangun menggunakan **Laravel 11**, **Vue 3 (Inertia.js)**, **Tailwind CSS**, dan **Spatie Permission**.
 
----
-
-## 👨‍💻 Owner & Creator
-Template CMS Boilerplate ini dimiliki dan dikembangkan oleh:
-- **Username**: [@hasanarofid.site](https://hasanarofid.site)
-- **Website Resmi**: [https://hasanarofid.site](https://hasanarofid.site)
+Official Website: [https://xseller.id](https://xseller.id)
 
 ---
 
-## ⚡ Fitur Utama
-- **Role & Permission Management**: Integrasi Spatie Permission (Default Role: admin, editor, client).
-- **Dynamic Content & Sections**: Konten visual halaman (Hero, Features, Testimonials) dikontrol melalui skema JSON fleksibel secara langsung di UI.
-- **Global Settings**: Konfigurasi nama situs, no WA, link Play Store, dan upload Logo dinamis yang dilengkapi auto-cache.
-- **Post & Category Management**: Tulis artikel lengkap dengan generator slug otomatis, cover image upload, dan status publikasi (draft/published).
-- **Premium UI Theme**: Panel admin bergaya gelap modern (dark mode native) menggunakan Tailwind CSS dan `@lucide/vue` icons.
-- **Vite & Vue 3 Component**: Komponen reusable premium seperti `DataTable`, visual editor, dan `AdminLayout`.
+## ⚡ Ringkasan Model Bisnis & PRD 2026
+
+### 1. Konsep & Terminologi
+- **Beli Voucher (= Beli Produk):** Transaksi kemitraan dan produk menggunakan istilah **Voucher** alih-alih PIN.
+- **Struktur Kemitraan:** Binary System Standard 2 Kaki (Leg Kiri & Leg Kanan).
+- **Tier (Generasi):** Level kedalaman bonus generasi dari Tier 1 s/d Tier 15.
+- **Upgrade Paket:** Berlaku sistem **Overwrite** (kecuali fitur **Steping** untuk Paket Rp 125.000).
+
+### 2. Paket Join (Membership)
+| Nama Paket | Nominal | Direct Referral (20%) | Max Tier | Team Poin | Fitur Tambahan |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Starter** | Rp 125.000 | Rp 20.000 | Tier 3 (Up to 15 via Steping) | 0 Poin | - |
+| **Basic** | Rp 550.000 | Rp 100.000 | Tier 5 | 1 Poin | Alokasi Gen 1: 100k, Gen 2-15: 5k |
+| **Medium** | Rp 2.100.000 | Rp 400.000 | Tier 8 | 4 Poin | Alokasi Gen 1: 400k, Gen 2-15: 15k |
+| **Pro** | Rp 4.300.000 | Rp 800.000 | Tier 12 | 8 Poin | Alokasi Gen 1: 800k, Gen 2-15: 30k + Fitur TPR (7%/bln) |
+| **Ultimate** | Rp 10.500.000 | Rp 2.000.000 | Tier 15 | 12 Poin | Alokasi Gen 1: 2jt, Gen 2-15: 100k + Fitur TPR (9%/bln) |
+
+### 3. Fitur Utama Sistem
+- **Mekanisme Steping (Paket Rp 125k):** Membuka Tier 4 s/d 15 berdasarkan akumulasi Sponsor Direct Paket Rp 4.300.000.
+- **Team Poin Redemption:** Akumulasi poin redemption dari pembelanjaan downline (35 Poin s/d 5.000 Poin).
+- **Repeat Order (RO) Paket Rp 125k:** Memberikan 1 Poin RO + Bonus Sponsor Rp 20.000 + Matching Bonus 20%.
+- **Purchase Order (PO) & Personal Poin:** Pembelian produk tambahan dengan alokasi 15 Generasi dan akumulasi Personal Poin Reward.
+- **TPR Fitur (Titip Produk / Trade Promotion Rate):** Sharing profit 7% & 9% selama 3 bulan dengan Rebate Sponsor 20% & 40%.
 
 ---
 
-## 🚀 Panduan Memulai Lokal
+## 🚀 Panduan Pengoperasian Lokal
 
-### 1. Migrasi & Seed Database
+### 1. Install Dependensi Backend & Frontend
 ```bash
-php artisan migrate:fresh --seed
+composer install
+npm install
 ```
 
-### 2. Hubungkan Storage Link
+### 2. Environment Setup & Migration
 ```bash
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
 php artisan storage:link
 ```
 
-### 3. Kompilasi & Jalankan Dev Server
+### 3. Jalankan Application Dev Server
 ```bash
-# Terminal 1: Compile Asset Frontend
+# Terminal 1: Frontend Asset Builder
 npm run dev
 
-# Terminal 2: Serve Backend Laravel
+# Terminal 2: Backend Development Server
 php artisan serve
 ```
 
-### 🔑 Kredensial Pengguna Seeded
-- **Admin**: `admin@cms.com` / `password`
-- **Editor**: `editor@cms.com` / `password`
-- **Client**: `client@cms.com` / `password`
+---
+
+## 👨‍💻 Owner & Development Team
+- **Owner**: [@hasanarofid.site](https://hasanarofid.site)
+- **Website**: [https://xseller.id](https://xseller.id)
