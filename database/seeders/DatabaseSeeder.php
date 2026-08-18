@@ -20,31 +20,125 @@ class DatabaseSeeder extends Seeder
 
         // 2. Seed Default Users and Assign Roles
         $admin = User::updateOrCreate(
-            ['email' => 'admin@cms.com'],
+            ['email' => 'admin@xseller.id'],
             [
-                'name' => 'Admin CMS',
+                'name' => 'President Director (Admin)',
+                'username' => 'admin',
                 'password' => bcrypt('password'),
+                'left_count' => 3,
+                'right_count' => 2,
+                'left_points' => 1,
+                'right_points' => 0,
+                'package_name' => 'Ultimate',
             ]
         );
         $admin->assignRole('admin');
 
-        $editor = User::updateOrCreate(
-            ['email' => 'editor@cms.com'],
+        // Level 2 (Children of Admin)
+        $budi = User::updateOrCreate(
+            ['email' => 'budi@xseller.id'],
             [
-                'name' => 'Editor CMS',
+                'name' => 'Budi Santoso',
+                'username' => 'budi',
                 'password' => bcrypt('password'),
+                'parent_id' => $admin->id,
+                'position' => 'left',
+                'left_count' => 1,
+                'right_count' => 1,
+                'left_points' => 0,
+                'right_points' => 0,
+                'package_name' => 'Pro',
             ]
         );
-        $editor->assignRole('editor');
+        $budi->assignRole('client');
 
-        $client = User::updateOrCreate(
-            ['email' => 'client@cms.com'],
+        $siti = User::updateOrCreate(
+            ['email' => 'siti@xseller.id'],
             [
-                'name' => 'Client CMS',
+                'name' => 'Siti Rahma',
+                'username' => 'siti',
                 'password' => bcrypt('password'),
+                'parent_id' => $admin->id,
+                'position' => 'right',
+                'left_count' => 1,
+                'right_count' => 0,
+                'left_points' => 0,
+                'right_points' => 0,
+                'package_name' => 'Medium',
             ]
         );
-        $client->assignRole('client');
+        $siti->assignRole('client');
+
+        // Level 3 (Grandchildren)
+        $dewi = User::updateOrCreate(
+            ['email' => 'dewi@xseller.id'],
+            [
+                'name' => 'Dewi Lestari',
+                'username' => 'dewi',
+                'password' => bcrypt('password'),
+                'parent_id' => $budi->id,
+                'position' => 'left',
+                'left_count' => 0,
+                'right_count' => 0,
+                'left_points' => 0,
+                'right_points' => 0,
+                'package_name' => 'Basic',
+            ]
+        );
+        $dewi->assignRole('client');
+
+        $eko = User::updateOrCreate(
+            ['email' => 'eko@xseller.id'],
+            [
+                'name' => 'Eko Prasetyo',
+                'username' => 'eko',
+                'password' => bcrypt('password'),
+                'parent_id' => $budi->id,
+                'position' => 'right',
+                'left_count' => 0,
+                'right_count' => 0,
+                'left_points' => 0,
+                'right_points' => 0,
+                'package_name' => 'Basic',
+            ]
+        );
+        $eko->assignRole('client');
+
+        $fajar = User::updateOrCreate(
+            ['email' => 'fajar@xseller.id'],
+            [
+                'name' => 'Fajar Hidayat',
+                'username' => 'fajar',
+                'password' => bcrypt('password'),
+                'parent_id' => $siti->id,
+                'position' => 'left',
+                'left_count' => 0,
+                'right_count' => 0,
+                'left_points' => 0,
+                'right_points' => 0,
+                'package_name' => 'Starter',
+            ]
+        );
+        $fajar->assignRole('client');
+
+        // 2b. Seed Active Vouchers for Admin
+        \App\Models\Voucher::updateOrCreate(
+            ['code' => 'VCH-2026-XSEL-8921'],
+            [
+                'user_id' => $admin->id,
+                'package_name' => 'Basic',
+                'status' => 'active',
+            ]
+        );
+
+        \App\Models\Voucher::updateOrCreate(
+            ['code' => 'VCH-2026-XSEL-4412'],
+            [
+                'user_id' => $admin->id,
+                'package_name' => 'Ultimate',
+                'status' => 'active',
+            ]
+        );
 
         // 3. Seed Settings
         $this->call(SettingSeeder::class);

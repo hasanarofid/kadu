@@ -4,21 +4,24 @@ import { Layers } from '@lucide/vue';
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-950 text-slate-100 font-sans antialiased relative overflow-hidden flex flex-col items-center justify-center p-6 selection:bg-indigo-500 selection:text-white">
-    <!-- Background Glow Blobs -->
-    <div class="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-900/10 blur-[100px] pointer-events-none"></div>
-    <div class="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-900/10 blur-[100px] pointer-events-none"></div>
+  <div class="min-h-screen bg-[#0d131d] text-slate-100 font-sans antialiased relative overflow-hidden flex flex-col items-center justify-center p-6 selection:bg-indigo-500 selection:text-white">
+    <!-- Background Ambient Radial Glows -->
+    <div class="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-indigo-600/15 via-cyan-500/10 to-transparent blur-[120px] pointer-events-none"></div>
+    <div class="absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full bg-gradient-to-tl from-emerald-600/15 via-blue-600/10 to-transparent blur-[120px] pointer-events-none"></div>
 
     <!-- Card Container -->
-    <div class="w-full sm:max-w-md bg-slate-950/80 border border-slate-800/80 backdrop-blur-md shadow-2xl rounded-3xl p-8 relative z-10 space-y-6">
+    <div class="w-full sm:max-w-md bg-[#111927] border border-slate-800 backdrop-blur-xl shadow-2xl rounded-3xl p-8 relative z-10 space-y-6">
       <!-- Branding -->
       <div class="flex flex-col items-center gap-3">
-        <Link href="/" class="p-3 bg-indigo-600 rounded-2xl shadow-lg shadow-indigo-650/30 hover:scale-105 transition-all">
-          <Layers class="w-7 h-7 text-white" />
+        <Link href="/" class="group relative p-3.5 bg-gradient-to-tr from-indigo-600 to-cyan-500 rounded-2xl shadow-xl shadow-indigo-500/20 hover:scale-105 transition-all">
+          <Layers class="w-7 h-7 text-white transition-transform group-hover:rotate-12" />
         </Link>
-        <div class="text-center">
-          <h2 class="text-lg font-bold text-white tracking-tight uppercase">CMS Boilerplate</h2>
-          <p class="text-xxs text-indigo-400 font-bold uppercase tracking-widest mt-1">Premium Access Panel</p>
+        <div class="text-center space-y-1">
+          <div class="flex items-center justify-center gap-2">
+            <h1 class="text-2xl font-extrabold text-white tracking-tight uppercase">XSELLER</h1>
+            <span class="px-2 py-0.5 text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 rounded-md">v2.4</span>
+          </div>
+          <p class="text-xs text-slate-400 font-medium tracking-wide">Sistem MLM Binary 2 Kaki & E-Commerce Trade Promotion</p>
         </div>
       </div>
 

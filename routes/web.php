@@ -28,6 +28,13 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
+    // Pohon Jaringan (Genealogy Binary Tree)
+    Route::get('/pohon-jaringan', [\App\Http\Controllers\Admin\GenealogyController::class, 'index'])->name('pohon-jaringan');
+
+    // Aktivasi Member Baru
+    Route::get('/aktivasi-member', [\App\Http\Controllers\Admin\MemberActivationController::class, 'index'])->name('activation.index');
+    Route::post('/aktivasi-member', [\App\Http\Controllers\Admin\MemberActivationController::class, 'store'])->name('activation.store');
+
     // Settings
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
