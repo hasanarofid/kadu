@@ -61,6 +61,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Aktivitas (Activity & Bonus Breakdown)
     Route::get('/aktivitas', [\App\Http\Controllers\Admin\ActivityController::class, 'index'])->name('activities.index');
 
+    // Laporan (Reports & Excel/PDF Exports)
+    Route::get('/laporan', [\App\Http\Controllers\Admin\ReportController::class, 'index'])->name('reports.index');
+    Route::get('/laporan/export-excel', [\App\Http\Controllers\Admin\ReportController::class, 'exportExcel'])->name('reports.export-excel');
+    Route::get('/laporan/export-pdf', [\App\Http\Controllers\Admin\ReportController::class, 'exportPdf'])->name('reports.export-pdf');
+
     // Settings
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
