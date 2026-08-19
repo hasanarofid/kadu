@@ -35,14 +35,8 @@ const isSidebarCollapsed = ref(false);
 const isUserMenuOpen = ref(false);
 const isNotificationsOpen = ref(false);
 
-// Toast Notification Stack state matching Gambar 2 mockup
-const toastStack = ref([
-  { id: 1, text: 'Bonus masuk: Rp 100.000', type: 'success' },
-  { id: 2, text: 'Bonus masuk: Rp 100.000', type: 'success' },
-  { id: 3, text: 'Bonus masuk: Rp 50.000', type: 'success' },
-  { id: 4, text: 'Bonus masuk: Rp 100.000', type: 'success' },
-  { id: 5, text: 'Bonus masuk: Rp 50.000', type: 'success' },
-]);
+// Toast Notification Stack state (Hidden / empty by default)
+const toastStack = ref([]);
 
 const closeToast = (id) => {
   toastStack.value = toastStack.value.filter(t => t.id !== id);
