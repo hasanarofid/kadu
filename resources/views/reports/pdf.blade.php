@@ -147,7 +147,7 @@
                 @if($type === 'member')
                     <tr>
                         <td class="bold">USR{{ str_pad($row['id'], 3, '0', STR_PAD_LEFT) }} ({{ '@' . $row['username'] }})</td>
-                        <td>{{ $row['name'] }}<br><small style="color:#64748b;">{{ $row['email'] }}</small></td>
+                        <td>{{ $row['name'] }}<br><small style="color:#64748b;">{{ $row['email'] ?? '-' }}</small></td>
                         <td>{{ $row['sponsor'] }}</td>
                         <td>L: {{ $row['left_count'] }} | R: {{ $row['right_count'] }}</td>
                         <td class="bold green">Rp {{ number_format($row['saldo'], 0, ',', '.') }}</td>
