@@ -58,6 +58,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/data-jaringan/impersonate/{user}', [\App\Http\Controllers\Admin\NetworkDataController::class, 'impersonate'])->name('network-data.impersonate');
     Route::post('/data-jaringan/stop-impersonating', [\App\Http\Controllers\Admin\NetworkDataController::class, 'stopImpersonating'])->name('network-data.stop-impersonating');
 
+    // Aktivitas (Activity & Bonus Breakdown)
+    Route::get('/aktivitas', [\App\Http\Controllers\Admin\ActivityController::class, 'index'])->name('activities.index');
+
     // Settings
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');

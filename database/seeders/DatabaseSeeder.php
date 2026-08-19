@@ -241,6 +241,55 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        // Seed Activity Bonus Logs matching mockup
+        \App\Models\BonusLog::updateOrCreate(
+            ['transaction_code' => 'B001'],
+            [
+                'user_id' => $admin->id,
+                'category' => 'sponsor',
+                'source_user_id' => $budi->id,
+                'description' => 'Bonus Sponsor: Pendaftaran budi (USR002)',
+                'amount' => 100000,
+                'created_at' => now()->subDays(4)->setHour(18)->setMinute(30)->setSecond(0),
+            ]
+        );
+
+        \App\Models\BonusLog::updateOrCreate(
+            ['transaction_code' => 'B002'],
+            [
+                'user_id' => $admin->id,
+                'category' => 'sponsor',
+                'source_user_id' => $siti->id,
+                'description' => 'Bonus Sponsor: Pendaftaran siti (USR003)',
+                'amount' => 100000,
+                'created_at' => now()->subDays(3)->setHour(16)->setMinute(15)->setSecond(0),
+            ]
+        );
+
+        \App\Models\BonusLog::updateOrCreate(
+            ['transaction_code' => 'B005'],
+            [
+                'user_id' => $admin->id,
+                'category' => 'sponsor',
+                'source_user_id' => $eko->id,
+                'description' => 'Bonus Sponsor: Pendaftaran eko (USR005)',
+                'amount' => 100000,
+                'created_at' => now()->subDays(1)->setHour(23)->setMinute(0)->setSecond(0),
+            ]
+        );
+
+        \App\Models\BonusLog::updateOrCreate(
+            ['transaction_code' => 'P001'],
+            [
+                'user_id' => $admin->id,
+                'category' => 'pasangan',
+                'source_user_id' => $budi->id,
+                'description' => 'Bonus Pasangan: Keseimbangan Kiri & Kanan',
+                'amount' => 100000,
+                'created_at' => now()->subDays(2)->setHour(12)->setMinute(0)->setSecond(0),
+            ]
+        );
+
         // 3. Seed Settings
         $this->call(SettingSeeder::class);
 
