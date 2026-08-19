@@ -219,6 +219,28 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        // Seed Financial Wallet Transactions matching mockup
+        \App\Models\WalletTransaction::updateOrCreate(
+            ['description' => 'Transfer saldo modal awal', 'user_id' => $admin->id],
+            [
+                'type' => 'out',
+                'category' => 'transfer',
+                'amount' => 150000,
+                'related_user_id' => $budi->id,
+                'created_at' => now()->subDays(3)->setHour(10)->setMinute(15)->setSecond(0),
+            ]
+        );
+
+        \App\Models\WalletTransaction::updateOrCreate(
+            ['description' => 'Cairkan bonus sponsor ke E-Wallet', 'user_id' => $admin->id],
+            [
+                'type' => 'in',
+                'category' => 'payout',
+                'amount' => 300000,
+                'created_at' => now()->subDays(2)->setHour(14)->setMinute(30)->setSecond(0),
+            ]
+        );
+
         // 3. Seed Settings
         $this->call(SettingSeeder::class);
 
