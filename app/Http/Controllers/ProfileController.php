@@ -2,42 +2,102 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ProfileController extends Controller
 {
     /**
-     * Display the user's profile form.
+     * Display the Corporate & Administrator Profile settings page.
      */
     public function edit(Request $request): Response
     {
+        $user = $request->user();
+        $settings = Setting::all()->pluck('value', 'key');
+
+        $companyBanks = json_decode($settings['company_banks'] ?? '[]', true);
+
         return Inertia::render('Profile/Edit', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'admin_user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'username' => $user->username ?? 'admin',
+                'email' => $user->email,
+                'phone' => $user->phone ?? '081234567890',
+            ],
+            'company_profile' => [
+                'name' => $settings['company_name'] ?? 'Duta Synergy',
+                'owner' => $settings['company_owner'] ?? 'President Director',
+                'copyright' => $settings['company_copyright'] ?? 'Duta Synergy Corp. Hak Cipta Dilindungi Undang-Undang. Application System v2.4 Binary',
+                'logo_url' => !empty($settings['site_logo']) ? Storage::url($settings['site_logo']) : null,
+                'banks' => is_array($companyBanks) ? $companyBanks : [],
+            ],
             'status' => session('status'),
         ]);
     }
 
     /**
-     * Update the user's profile information.
+     * Update Corporate Profile & Admin Credentials.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $validated = $request->validate([
+            'company_name' => 'required|string|max:100',
+            'company_owner' => 'required|string|max:100',
+            'company_copyright' => 'required|string|max:255',
+            'name' => 'required|string|max:100',
+            'username' => 'required|string|max:50|unique:users,username,' . $user->id,
+            'email' => 'required|email|max:100|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:20',
+            'password' => 'nullable|string|min:6',
+            'site_logo' => 'nullable|image|mimes:png,jpg,jpeg,svg,webp|max:2048',
+        ]);
+
+        // Save company settings
+        Setting::setValue('company_name', $validated['company_name'], 'text');
+        Setting::setValue('company_owner', $validated['company_owner'], 'text');
+        Setting::setValue('company_copyright', $validated['company_copyright'], 'text');
+
+        // Logo Upload
+        if ($request->hasFile('site_logo')) {
+            $path = $request->file('site_logo')->store('settings', 'public');
+            Setting::setValue('site_logo', $path, 'image');
         }
 
-        $request->user()->save();
+        // Save admin user credentials
+        $user->name = $validated['name'];
+        $user->username = $validated['username'];
+        $user->email = $validated['email'];
+        if ($request->filled('phone')) {
+            $user->phone = $validated['phone'];
+        }
+        if ($request->filled('password')) {
+            $user->password = Hash::make($validated['password']);
+        }
+        $user->save();
 
-        return Redirect::route('profile.edit');
+        return Redirect::route('profile.edit')->with('success', 'Profil Instansi & Identitas Perusahaan berhasil diperbarui.');
+    }
+
+    /**
+     * Add or delete company bank account.
+     */
+    public function updateBanks(Request $request): RedirectResponse
+    {
+        $banks = $request->input('banks', []);
+        Setting::setValue('company_banks', json_encode($banks), 'json');
+
+        return Redirect::route('profile.edit')->with('success', 'Daftar rekening bank perusahaan berhasil diperbarui.');
     }
 
     /**
@@ -50,9 +110,7 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
-
         Auth::logout();
-
         $user->delete();
 
         $request->session()->invalidate();

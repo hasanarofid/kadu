@@ -24,7 +24,8 @@ import {
   UserCheck,
   CheckCircle2,
   Activity,
-  Crown
+  Crown,
+  Download
 } from '@lucide/vue';
 
 const page = usePage();
@@ -58,7 +59,8 @@ const navigation = [
   { name: 'Aktivitas', href: route('admin.activities.index'), icon: Activity, current: route().current('admin.activities.index') },
   { name: 'Laporan', href: route('admin.reports.index'), icon: FileText, current: route().current('admin.reports.index') },
   { name: 'Pengaturan Profil', href: route('profile.edit'), icon: UserCheck, current: route().current('profile.edit') },
-  { name: 'Pengaturan Sistem', href: route('admin.settings.index'), icon: SettingsIcon, current: route().current('admin.settings.index') },
+  { name: 'Pengaturan Sistem', href: route('admin.settings.index'), icon: SettingsIcon, current: route().current('admin.settings.index'), special: 'amber' },
+  { name: 'Backup Data (JSON)', href: route('admin.backup-json'), icon: Download, current: false, special: 'blue', external: true },
 ];
 
 const logout = () => {
@@ -158,30 +160,52 @@ const logout = () => {
           </div>
 
           <!-- Navigation Menu (Active Item Dark Pill #0d131d) -->
-          <nav class="px-3 py-2 space-y-1 overflow-y-auto max-h-[calc(100vh-280px)]">
-            <Link 
-              v-for="item in navigation" 
-              :key="item.name" 
-              :href="item.href"
-              :class="[
-                item.current 
-                  ? 'bg-[#0d131d] text-white font-bold shadow-md shadow-slate-900/20' 
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium',
-                isSidebarCollapsed ? 'lg:justify-center lg:px-0' : 'px-3.5',
-                'group flex items-center py-2.5 text-xs rounded-xl transition-all duration-200'
-              ]"
-              :title="isSidebarCollapsed ? item.name : ''"
-            >
-              <component 
-                :is="item.icon" 
+          <nav class="px-3 py-2 space-y-1.5 overflow-y-auto max-h-[calc(100vh-280px)]">
+            <template v-for="item in navigation" :key="item.name">
+              <a 
+                v-if="item.external"
+                :href="item.href"
                 :class="[
-                  item.current ? 'text-white' : 'text-slate-400 group-hover:text-slate-700',
-                  isSidebarCollapsed ? 'lg:mr-0' : 'mr-3',
-                  'h-4 h-4 flex-shrink-0 transition-transform duration-200 group-hover:scale-110'
-                ]" 
-              />
-              <span :class="[isSidebarCollapsed ? 'lg:hidden' : 'block', 'whitespace-nowrap']">{{ item.name }}</span>
-            </Link>
+                  item.special === 'blue' ? 'bg-blue-50/80 border border-blue-300 text-blue-700 font-bold hover:bg-blue-100' : 'text-slate-600 hover:bg-slate-100 font-medium',
+                  isSidebarCollapsed ? 'lg:justify-center lg:px-0' : 'px-3.5',
+                  'group flex items-center py-2.5 text-xs rounded-2xl transition-all duration-200 shadow-xs'
+                ]"
+                :title="isSidebarCollapsed ? item.name : ''"
+              >
+                <component 
+                  :is="item.icon" 
+                  :class="[
+                    item.special === 'blue' ? 'text-blue-600' : 'text-slate-400',
+                    isSidebarCollapsed ? 'lg:mr-0' : 'mr-3',
+                    'w-4 h-4 flex-shrink-0 transition-transform duration-200 group-hover:scale-110'
+                  ]" 
+                />
+                <span :class="[isSidebarCollapsed ? 'lg:hidden' : 'block', 'whitespace-nowrap']">{{ item.name }}</span>
+              </a>
+
+              <Link 
+                v-else
+                :href="item.href"
+                :class="[
+                  item.current 
+                    ? (item.special === 'amber' ? 'bg-amber-500 text-white font-black shadow-sm' : 'bg-[#0d131d] text-white font-bold shadow-md shadow-slate-900/20')
+                    : (item.special === 'amber' ? 'bg-amber-50/60 border border-amber-300/80 text-amber-900 font-bold hover:bg-amber-100' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'),
+                  isSidebarCollapsed ? 'lg:justify-center lg:px-0' : 'px-3.5',
+                  'group flex items-center py-2.5 text-xs rounded-2xl transition-all duration-200'
+                ]"
+                :title="isSidebarCollapsed ? item.name : ''"
+              >
+                <component 
+                  :is="item.icon" 
+                  :class="[
+                    item.current ? 'text-white' : (item.special === 'amber' ? 'text-amber-600' : 'text-slate-400 group-hover:text-slate-700'),
+                    isSidebarCollapsed ? 'lg:mr-0' : 'mr-3',
+                    'w-4 h-4 flex-shrink-0 transition-transform duration-200 group-hover:scale-110'
+                  ]" 
+                />
+                <span :class="[isSidebarCollapsed ? 'lg:hidden' : 'block', 'whitespace-nowrap']">{{ item.name }}</span>
+              </Link>
+            </template>
           </nav>
         </div>
 

@@ -21,6 +21,7 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/banks', [ProfileController::class, 'updateBanks'])->name('profile.update-banks');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
@@ -69,6 +70,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Settings
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
+    Route::post('/settings/rewards', [SettingController::class, 'updateRewards'])->name('settings.rewards');
+
+    // Backup Data (JSON)
+    Route::get('/backup-data-json', [\App\Http\Controllers\Admin\BackupController::class, 'downloadJson'])->name('backup-json');
 
     // Pages
     Route::resource('pages', PageController::class);
