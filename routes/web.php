@@ -35,6 +35,12 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/aktivasi-member', [\App\Http\Controllers\Admin\MemberActivationController::class, 'index'])->name('activation.index');
     Route::post('/aktivasi-member', [\App\Http\Controllers\Admin\MemberActivationController::class, 'store'])->name('activation.store');
 
+    // Voucher / PIN Wallet
+    Route::get('/voucher-wallet', [\App\Http\Controllers\Admin\VoucherWalletController::class, 'index'])->name('voucher-wallet.index');
+    Route::post('/voucher-wallet/buy', [\App\Http\Controllers\Admin\VoucherWalletController::class, 'buy'])->name('voucher-wallet.buy');
+    Route::post('/voucher-wallet/produce', [\App\Http\Controllers\Admin\VoucherWalletController::class, 'produce'])->name('voucher-wallet.produce');
+    Route::post('/voucher-wallet/transfer', [\App\Http\Controllers\Admin\VoucherWalletController::class, 'transfer'])->name('voucher-wallet.transfer');
+
     // Settings
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');

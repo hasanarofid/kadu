@@ -51,7 +51,7 @@ const navigation = [
   { name: 'Dashboard', href: route('admin.dashboard'), icon: LayoutDashboard, current: route().current('admin.dashboard') },
   { name: 'Pohon Jaringan', href: route('admin.pohon-jaringan'), icon: GitFork, current: route().current('admin.pohon-jaringan') },
   { name: 'Aktivasi Member', href: route('admin.activation.index'), icon: UserPlus, current: route().current('admin.activation.index') },
-  { name: 'Voucher Wallet', href: route('admin.dashboard'), icon: KeyRound, current: false },
+  { name: 'PIN Wallet', href: route('admin.voucher-wallet.index'), icon: KeyRound, current: route().current('admin.voucher-wallet.index') },
   { name: 'Keuangan', href: route('admin.dashboard'), icon: Wallet, current: false },
   { name: 'Penarikan Saldo', href: route('admin.dashboard'), icon: ArrowUpRight, current: false },
   { name: 'Data Jaringan', href: route('admin.dashboard'), icon: Users, current: false },
@@ -126,25 +126,34 @@ const logout = () => {
             </button>
           </div>
 
-          <!-- Sidebar User Profile Summary Card (Matching Gambar 2 Profile) -->
-          <div v-if="!isSidebarCollapsed" class="p-6 flex flex-col items-center text-center space-y-2">
-            <div class="w-16 h-16 rounded-full bg-[#1e293b] text-white font-extrabold flex items-center justify-center text-2xl shadow-lg border-2 border-slate-100">
+          <!-- Sidebar User Profile Summary Card (Matching Gambar Mockup) -->
+          <div v-if="!isSidebarCollapsed" class="p-4 flex flex-col items-center text-center space-y-2 border-b border-slate-100">
+            <div class="w-14 h-14 rounded-full bg-[#1e293b] text-white font-extrabold flex items-center justify-center text-xl shadow-lg border-2 border-slate-100">
               {{ user.name ? user.name.charAt(0).toUpperCase() : 'P' }}
             </div>
             <div>
               <h3 class="text-xs font-black text-slate-800 tracking-tight leading-tight">{{ user.name }}</h3>
-              <p class="text-[11px] text-slate-400 font-medium">@admin</p>
+              <p class="text-[10px] text-slate-400 font-medium">@{{ user.username || 'admin' }}</p>
             </div>
-            <div class="inline-flex items-center gap-1 px-3 py-0.5 rounded-full border border-amber-500/40 text-amber-600 bg-amber-50/60 text-[10px] font-extrabold uppercase tracking-wider">
+            <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border border-amber-500/40 text-amber-600 bg-amber-50/60 text-[9px] font-extrabold uppercase tracking-wider">
               <Crown class="w-3 h-3 text-amber-500" />
               <span>MEMBER</span>
             </div>
-          </div>
 
-          <!-- Dompet Saya Pill Divider -->
-          <div v-if="!isSidebarCollapsed" class="px-4 mb-2">
-            <div class="px-3 py-1 bg-slate-100/80 rounded-lg text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-              DOMPET SAYA
+            <!-- Dompet Saya Card Widget matching Mockup -->
+            <div class="w-full mt-2 p-3 bg-slate-50 border border-slate-200/80 rounded-2xl text-left space-y-1.5 shadow-sm">
+              <span class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider block">DOMPET SAYA</span>
+              <p class="text-sm font-black text-slate-900 leading-tight">Rp 2.500.000</p>
+              <div class="grid grid-cols-2 gap-1 pt-1.5 border-t border-slate-200/60 text-[9px]">
+                <div>
+                  <span class="text-slate-400 font-medium block">PIN WALLET:</span>
+                  <span class="font-bold text-slate-800">2 Pcs</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 font-medium block">TOTAL BONUS:</span>
+                  <span class="font-bold text-emerald-600">Rp 400.000</span>
+                </div>
+              </div>
             </div>
           </div>
 

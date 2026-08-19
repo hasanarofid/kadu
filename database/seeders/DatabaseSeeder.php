@@ -121,22 +121,101 @@ class DatabaseSeeder extends Seeder
         );
         $fajar->assignRole('client');
 
-        // 2b. Seed Active Vouchers for Admin
-        \App\Models\Voucher::updateOrCreate(
-            ['code' => 'VCH-2026-XSEL-8921'],
+        // 2b. Seed Active & Used Vouchers for Admin matching mockup
+        $v1 = \App\Models\Voucher::updateOrCreate(
+            ['code' => 'PIN-9812-XYZ'],
             [
                 'user_id' => $admin->id,
                 'package_name' => 'Basic',
                 'status' => 'active',
+                'created_at' => now()->subDays(5),
+            ]
+        );
+
+        $v2 = \App\Models\Voucher::updateOrCreate(
+            ['code' => 'PIN-4432-ABC'],
+            [
+                'user_id' => $admin->id,
+                'package_name' => 'Basic',
+                'status' => 'active',
+                'created_at' => now()->subDays(5),
             ]
         );
 
         \App\Models\Voucher::updateOrCreate(
-            ['code' => 'VCH-2026-XSEL-4412'],
+            ['code' => 'PIN-1234-MNO'],
             [
                 'user_id' => $admin->id,
-                'package_name' => 'Ultimate',
+                'package_name' => 'Basic',
+                'status' => 'used',
+                'used_by_id' => $budi->id,
+                'used_at' => now()->subDays(4),
+                'created_at' => now()->subDays(5),
+            ]
+        );
+
+        \App\Models\Voucher::updateOrCreate(
+            ['code' => 'PIN-5678-PQR'],
+            [
+                'user_id' => $admin->id,
+                'package_name' => 'Basic',
+                'status' => 'used',
+                'used_by_id' => $siti->id,
+                'used_at' => now()->subDays(3),
+                'created_at' => now()->subDays(5),
+            ]
+        );
+
+        \App\Models\Voucher::updateOrCreate(
+            ['code' => 'PIN-2222-BBB'],
+            [
+                'user_id' => $admin->id,
+                'package_name' => 'Basic',
+                'status' => 'used',
+                'used_by_id' => $dewi->id,
+                'used_at' => now()->subDays(1),
+                'created_at' => now()->subDays(3),
+            ]
+        );
+
+        // Seed Transfer History matching mockup
+        $vt1 = \App\Models\Voucher::updateOrCreate(
+            ['code' => 'PIN-5555-DDD'],
+            [
+                'user_id' => $budi->id,
+                'package_name' => 'Basic',
                 'status' => 'active',
+                'created_at' => now()->subDays(2),
+            ]
+        );
+
+        \App\Models\VoucherTransfer::updateOrCreate(
+            ['voucher_code' => 'PIN-5555-DDD'],
+            [
+                'voucher_id' => $vt1->id,
+                'sender_id' => $admin->id,
+                'recipient_id' => $budi->id,
+                'created_at' => now()->subDays(2)->setHour(21)->setMinute(20),
+            ]
+        );
+
+        $vt2 = \App\Models\Voucher::updateOrCreate(
+            ['code' => 'PIN-8888-EEE'],
+            [
+                'user_id' => $siti->id,
+                'package_name' => 'Basic',
+                'status' => 'active',
+                'created_at' => now()->subDays(1),
+            ]
+        );
+
+        \App\Models\VoucherTransfer::updateOrCreate(
+            ['voucher_code' => 'PIN-8888-EEE'],
+            [
+                'voucher_id' => $vt2->id,
+                'sender_id' => $admin->id,
+                'recipient_id' => $siti->id,
+                'created_at' => now()->subDays(1)->setHour(23)->setMinute(0),
             ]
         );
 
