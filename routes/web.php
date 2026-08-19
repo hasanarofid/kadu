@@ -53,6 +53,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/penarikan-saldo/{withdrawal}/approve', [\App\Http\Controllers\Admin\WithdrawalController::class, 'approve'])->name('withdrawals.approve');
     Route::post('/penarikan-saldo/{withdrawal}/reject', [\App\Http\Controllers\Admin\WithdrawalController::class, 'reject'])->name('withdrawals.reject');
 
+    // Data Jaringan (Member Directory & Impersonation)
+    Route::get('/data-jaringan', [\App\Http\Controllers\Admin\NetworkDataController::class, 'index'])->name('network-data.index');
+    Route::post('/data-jaringan/impersonate/{user}', [\App\Http\Controllers\Admin\NetworkDataController::class, 'impersonate'])->name('network-data.impersonate');
+    Route::post('/data-jaringan/stop-impersonating', [\App\Http\Controllers\Admin\NetworkDataController::class, 'stopImpersonating'])->name('network-data.stop-impersonating');
+
     // Settings
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
