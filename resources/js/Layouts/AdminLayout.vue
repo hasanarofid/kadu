@@ -53,7 +53,7 @@ const navigation = [
   { name: 'Aktivasi Member', href: route('admin.activation.index'), icon: UserPlus, current: route().current('admin.activation.index') },
   { name: 'PIN Wallet', href: route('admin.voucher-wallet.index'), icon: KeyRound, current: route().current('admin.voucher-wallet.index') },
   { name: 'Keuangan', href: route('admin.finance.index'), icon: Wallet, current: route().current('admin.finance.index') },
-  { name: 'Penarikan Saldo', href: route('admin.dashboard'), icon: ArrowUpRight, current: false },
+  { name: 'Penarikan Saldo', href: route('admin.withdrawals.index'), icon: ArrowUpRight, current: route().current('admin.withdrawals.index') },
   { name: 'Data Jaringan', href: route('admin.dashboard'), icon: Users, current: false },
   { name: 'Aktivitas', href: route('admin.dashboard'), icon: Activity, current: false },
   { name: 'Laporan', href: route('admin.dashboard'), icon: FileText, current: false },

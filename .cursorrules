@@ -18,7 +18,8 @@
   - **DILARANG** menggunakan istilah "PIN" atau "Beli PIN". **Gunakan istilah "VOUCHER" atau "BELI VOUCHER"** untuk transaksi produk/kemitraan agar bisnis model tampak sebagai E-Commerce Trade Promotion Program & Affiliasi.
   - **Tier:** Menyebutkan level/generasi keanggotaan (Generasi 1 s/d Generasi 15).
   - **Jaringan Binary:** Struktur jaringan 2 kaki (Left Leg & Right Leg).
-  - **Overwrite:** Mekanisme upgrade paket (tidak ada upgrade selisih harga, melainkan overwrite paket baru, kecuali fitur Steping).
+  - **Prosedur Migration Database Production:**
+    - Karena terminal SSH di server live terkadang mengalami kendala/error, cara merunning database migration di server production adalah dengan membuka URL: **`https://xseller.id/run_migrate.php`** di browser setelah melakukan `git push origin master`.
 
 ---
 

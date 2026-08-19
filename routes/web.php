@@ -47,6 +47,12 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/keuangan/topup-admin', [\App\Http\Controllers\Admin\FinanceController::class, 'topupAdmin'])->name('finance.topup-admin');
     Route::post('/keuangan/transfer', [\App\Http\Controllers\Admin\FinanceController::class, 'transfer'])->name('finance.transfer');
 
+    // Penarikan Saldo (Withdrawals / WD)
+    Route::get('/penarikan-saldo', [\App\Http\Controllers\Admin\WithdrawalController::class, 'index'])->name('withdrawals.index');
+    Route::post('/penarikan-saldo', [\App\Http\Controllers\Admin\WithdrawalController::class, 'store'])->name('withdrawals.store');
+    Route::post('/penarikan-saldo/{withdrawal}/approve', [\App\Http\Controllers\Admin\WithdrawalController::class, 'approve'])->name('withdrawals.approve');
+    Route::post('/penarikan-saldo/{withdrawal}/reject', [\App\Http\Controllers\Admin\WithdrawalController::class, 'reject'])->name('withdrawals.reject');
+
     // Settings
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
