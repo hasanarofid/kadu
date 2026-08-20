@@ -1,17 +1,21 @@
 <script setup>
+import { ref } from 'vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { User, Mail, Phone, Lock, Eye, EyeOff, QrCode, ArrowRight } from '@lucide/vue';
 
 const form = useForm({
     name: '',
     email: '',
+    phone: '',
     password: '',
     password_confirmation: '',
+    team_code: '',
 });
+
+const showPassword = ref(false);
+const showConfirmPassword = ref(false);
 
 const submit = () => {
     form.post(route('register'), {
@@ -22,92 +26,202 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Register" />
+        <Head title="Daftar Mitra - Mitra Syiar Baitullah" />
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="name" value="Name" />
-
-                <TextInput
-                    id="name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
-
-                <InputError class="mt-2" :message="form.errors.name" />
+        <div class="relative z-10 w-full p-6 sm:p-8 rounded-[30px] border-2 border-[#e09d49]/60 bg-gradient-to-b from-white/95 to-[#fffaf2]/90 shadow-[0_26px_70px_rgba(92,44,36,0.18)] backdrop-blur-md">
+            <!-- Header Branding -->
+            <div class="text-center space-y-1 mb-4">
+                <h1 class="text-lg sm:text-xl font-black tracking-tight text-[#5c2c24] uppercase leading-tight">
+                    DAFTAR MITRA SYIAR BAITULLAH
+                </h1>
+                <p class="text-xs font-semibold text-[#9d7c64]">
+                    Lengkapi data untuk membuat akun mitra baru
+                </p>
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="email" value="Email" />
+            <!-- Form Registration -->
+            <form @submit.prevent="submit" class="space-y-3.5">
+                <!-- Nama Lengkap -->
+                <div>
+                    <label for="name" class="flex items-center gap-2 mb-1 text-xs font-extrabold text-[#5c2c24]">
+                        <User class="w-3.5 h-3.5 text-[#e98318]" />
+                        <span>Nama Lengkap</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#9d7c64]">
+                            <User class="w-4 h-4" />
+                        </div>
+                        <input
+                            id="name"
+                            type="text"
+                            v-model="form.name"
+                            required
+                            autofocus
+                            autocomplete="name"
+                            placeholder="Masukkan nama lengkap Anda"
+                            class="w-full h-11 bg-white/80 border border-[#e09d49]/70 rounded-xl pl-9 pr-4 text-xs font-medium text-[#5c2c24] placeholder-[#9d7c64]/60 focus:outline-none focus:border-[#e98318] focus:ring-2 focus:ring-[#e98318]/20 transition-all shadow-sm"
+                        />
+                    </div>
+                    <InputError class="mt-1" :message="form.errors.name" />
+                </div>
 
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autocomplete="username"
-                />
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <!-- Email -->
+                    <div>
+                        <label for="email" class="flex items-center gap-2 mb-1 text-xs font-extrabold text-[#5c2c24]">
+                            <Mail class="w-3.5 h-3.5 text-[#e98318]" />
+                            <span>Email</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#9d7c64]">
+                                <Mail class="w-4 h-4" />
+                            </div>
+                            <input
+                                id="email"
+                                type="email"
+                                v-model="form.email"
+                                required
+                                autocomplete="username"
+                                placeholder="nama@email.com"
+                                class="w-full h-11 bg-white/80 border border-[#e09d49]/70 rounded-xl pl-9 pr-4 text-xs font-medium text-[#5c2c24] placeholder-[#9d7c64]/60 focus:outline-none focus:border-[#e98318] focus:ring-2 focus:ring-[#e98318]/20 transition-all shadow-sm"
+                            />
+                        </div>
+                        <InputError class="mt-1" :message="form.errors.email" />
+                    </div>
 
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
+                    <!-- WhatsApp -->
+                    <div>
+                        <label for="phone" class="flex items-center gap-2 mb-1 text-xs font-extrabold text-[#5c2c24]">
+                            <Phone class="w-3.5 h-3.5 text-[#e98318]" />
+                            <span>No. WhatsApp</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#9d7c64]">
+                                <Phone class="w-4 h-4" />
+                            </div>
+                            <input
+                                id="phone"
+                                type="tel"
+                                v-model="form.phone"
+                                required
+                                autocomplete="tel"
+                                placeholder="08xxxxxxxxxx"
+                                class="w-full h-11 bg-white/80 border border-[#e09d49]/70 rounded-xl pl-9 pr-4 text-xs font-medium text-[#5c2c24] placeholder-[#9d7c64]/60 focus:outline-none focus:border-[#e98318] focus:ring-2 focus:ring-[#e98318]/20 transition-all shadow-sm"
+                            />
+                        </div>
+                        <InputError class="mt-1" :message="form.errors.phone" />
+                    </div>
+                </div>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <!-- Password -->
+                    <div>
+                        <label for="password" class="flex items-center gap-2 mb-1 text-xs font-extrabold text-[#5c2c24]">
+                            <Lock class="w-3.5 h-3.5 text-[#e98318]" />
+                            <span>Kata Sandi</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#9d7c64]">
+                                <Lock class="w-4 h-4" />
+                            </div>
+                            <input
+                                id="password"
+                                :type="showPassword ? 'text' : 'password'"
+                                v-model="form.password"
+                                required
+                                autocomplete="new-password"
+                                placeholder="Minimal 8 karakter"
+                                class="w-full h-11 bg-white/80 border border-[#e09d49]/70 rounded-xl pl-9 pr-9 text-xs font-medium text-[#5c2c24] placeholder-[#9d7c64]/60 focus:outline-none focus:border-[#e98318] focus:ring-2 focus:ring-[#e98318]/20 transition-all shadow-sm"
+                            />
+                            <button 
+                                type="button" 
+                                @click="showPassword = !showPassword"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-[#9d7c64] hover:text-[#e98318] transition-colors"
+                            >
+                                <Eye v-if="!showPassword" class="w-4 h-4" />
+                                <EyeOff v-else class="w-4 h-4" />
+                            </button>
+                        </div>
+                        <InputError class="mt-1" :message="form.errors.password" />
+                    </div>
 
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
+                    <!-- Password Confirmation -->
+                    <div>
+                        <label for="password_confirmation" class="flex items-center gap-2 mb-1 text-xs font-extrabold text-[#5c2c24]">
+                            <Lock class="w-3.5 h-3.5 text-[#e98318]" />
+                            <span>Ulangi Sandi</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#9d7c64]">
+                                <Lock class="w-4 h-4" />
+                            </div>
+                            <input
+                                id="password_confirmation"
+                                :type="showConfirmPassword ? 'text' : 'password'"
+                                v-model="form.password_confirmation"
+                                required
+                                autocomplete="new-password"
+                                placeholder="Ulangi kata sandi"
+                                class="w-full h-11 bg-white/80 border border-[#e09d49]/70 rounded-xl pl-9 pr-9 text-xs font-medium text-[#5c2c24] placeholder-[#9d7c64]/60 focus:outline-none focus:border-[#e98318] focus:ring-2 focus:ring-[#e98318]/20 transition-all shadow-sm"
+                            />
+                            <button 
+                                type="button" 
+                                @click="showConfirmPassword = !showConfirmPassword"
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-[#9d7c64] hover:text-[#e98318] transition-colors"
+                            >
+                                <Eye v-if="!showConfirmPassword" class="w-4 h-4" />
+                                <EyeOff v-else class="w-4 h-4" />
+                            </button>
+                        </div>
+                        <InputError class="mt-1" :message="form.errors.password_confirmation" />
+                    </div>
+                </div>
 
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
+                <!-- Kode Team -->
+                <div>
+                    <label for="team_code" class="flex items-center gap-2 mb-1 text-xs font-extrabold text-[#5c2c24]">
+                        <QrCode class="w-3.5 h-3.5 text-[#e98318]" />
+                        <span>Kode Team / Referral</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#9d7c64]">
+                            <QrCode class="w-4 h-4" />
+                        </div>
+                        <input
+                            id="team_code"
+                            type="text"
+                            v-model="form.team_code"
+                            required
+                            placeholder="Masukkan kode team Anda"
+                            class="w-full h-11 bg-white/80 border border-[#e09d49]/70 rounded-xl pl-9 pr-4 text-xs font-medium text-[#5c2c24] placeholder-[#9d7c64]/60 focus:outline-none focus:border-[#e98318] focus:ring-2 focus:ring-[#e98318]/20 transition-all shadow-sm"
+                        />
+                    </div>
+                    <InputError class="mt-1" :message="form.errors.team_code" />
+                </div>
 
-            <div class="mt-4">
-                <InputLabel
-                    for="password_confirmation"
-                    value="Confirm Password"
-                />
-
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError
-                    class="mt-2"
-                    :message="form.errors.password_confirmation"
-                />
-            </div>
-
-            <div class="mt-4 flex items-center justify-end">
-                <Link
-                    :href="route('login')"
-                    class="text-xs font-semibold text-slate-400 hover:text-indigo-400 hover:underline transition-colors"
-                >
-                    Already registered?
-                </Link>
-
-                <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
+                <!-- Submit Button -->
+                <button
+                    type="submit"
                     :disabled="form.processing"
+                    class="w-full h-12 mt-2 rounded-full bg-gradient-to-r from-[#e98318] via-[#e09d49] to-[#5c2c24] hover:brightness-105 active:scale-[0.99] text-white text-xs sm:text-sm font-black tracking-wide shadow-lg shadow-[#e98318]/25 flex items-center justify-center gap-3 transition-all disabled:opacity-50 cursor-pointer"
                 >
-                    Register
-                </PrimaryButton>
-            </div>
-        </form>
+                    <span>Daftar Sebagai Mitra</span>
+                    <ArrowRight class="w-4 h-4" />
+                </button>
+            </form>
+
+            <p class="mt-3 text-[11px] leading-relaxed text-center text-[#9d7c64]">
+                Dengan mendaftar, Anda menyetujui syarat & ketentuan Mitra Syiar Baitullah.
+            </p>
+
+            <!-- Back to Login -->
+            <p class="mt-4 text-center text-xs font-semibold text-[#9d7c64]">
+                Sudah punya akun?
+                <Link :href="route('login')" class="ml-1 font-bold text-[#e98318] hover:underline underline-offset-2">
+                    Masuk Sekarang
+                </Link>
+            </p>
+        </div>
     </GuestLayout>
 </template>
+

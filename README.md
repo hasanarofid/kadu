@@ -1,34 +1,45 @@
-# Xseller.id - Trade Promotion Program System
+# Mitra Syiar Baitullah - System Marketing Plan & Member Portal
 
-Aplikasi Trade Promotion Program berbasis E-Commerce, Affiliasi, dan Komunitas dengan sistem **Binary 2 Kaki** dan **Multi-Tier Bonus (Generasi 1-15)** yang dibangun menggunakan **Laravel 11**, **Vue 3 (Inertia.js)**, **Tailwind CSS**, dan **Spatie Permission**.
+Sistem Aplikasi Kemitraan & Syiar Umroh/Haji berbasis Multi-Tier Komisi Team (Generasi 1-12) dan Komisi Prestasi Agen yang dibangun menggunakan **Laravel 11**, **Vue 3 (Inertia.js)**, **Tailwind CSS**, dan **Spatie Permission**.
 
-Official Website: [https://xseller.id](https://xseller.id)
+Official Website: [https://mitrasyiarbaitullah.com/](https://mitrasyiarbaitullah.com/)
 
 ---
 
-## ⚡ Ringkasan Model Bisnis & PRD 2026
+## ⚡ Ringkasan Marketing Plan MLM Mitra Syiar Baitullah (2026)
 
-### 1. Konsep & Terminologi
-- **Beli Voucher (= Beli Produk):** Transaksi kemitraan dan produk menggunakan istilah **Voucher** alih-alih PIN.
-- **Struktur Kemitraan:** Binary System Standard 2 Kaki (Leg Kiri & Leg Kanan).
-- **Tier (Generasi):** Level kedalaman bonus generasi dari Tier 1 s/d Tier 15.
-- **Upgrade Paket:** Berlaku sistem **Overwrite** (kecuali fitur **Steping** untuk Paket Rp 125.000).
+### 1. Konsep & Pendaftaran
+- **Pendaftaran Mitra Agen (DP Calon Jamaah):** Rp 500.000,-
+- **Dana Operasional / Ujroh Direct Sponsor:** Rp 250.000,- / Jamaah Baru.
+- **Semboyan Balik Modal:** *Sponsori 2 Mitra sudah Balik Modal* ($2 \times \text{Rp } 250.000 = \text{Rp } 500.000$).
+- **Catatan Skema:** Skema lama (Komisi Rp 2.500.000 saat bayar lunas) ditiadakan dan digantikan penuh oleh Dana Operasional DP Rp 250.000 serta Komisi Team Multi-Tier.
 
-### 2. Paket Join (Membership)
-| Nama Paket | Nominal | Direct Referral (20%) | Max Tier | Team Poin | Fitur Tambahan |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Starter** | Rp 125.000 | Rp 20.000 | Tier 3 (Up to 15 via Steping) | 0 Poin | - |
-| **Basic** | Rp 550.000 | Rp 100.000 | Tier 5 | 1 Poin | Alokasi Gen 1: 100k, Gen 2-15: 5k |
-| **Medium** | Rp 2.100.000 | Rp 400.000 | Tier 8 | 4 Poin | Alokasi Gen 1: 400k, Gen 2-15: 15k |
-| **Pro** | Rp 4.300.000 | Rp 800.000 | Tier 12 | 8 Poin | Alokasi Gen 1: 800k, Gen 2-15: 30k + Fitur TPR (7%/bln) |
-| **Ultimate** | Rp 10.500.000 | Rp 2.000.000 | Tier 15 | 12 Poin | Alokasi Gen 1: 2jt, Gen 2-15: 100k + Fitur TPR (9%/bln) |
+### 2. Komisi Team (Multi-Tier Bonus Generasi 1 - 12)
+| Level Team | Jumlah Mitra / Akun | Komisi per Mitra | Total Komisi Potensial |
+| :--- | :--- | :--- | :--- |
+| **Team 1** | 5 Mitra | Rp 5.000 | Rp 25.000 |
+| **Team 2** | 25 Mitra | Rp 5.000 | Rp 125.000 |
+| **Team 3** | 125 Mitra | Rp 5.000 | Rp 625.000 |
+| **Team 4** | 625 Mitra | Rp 5.000 | Rp 3.125.000 |
+| **Team 5** | 3.125 Mitra | Rp 5.000 | Rp 15.625.000 |
+| **Team 6** | 15.625 Mitra | Rp 5.000 | Rp 78.125.000 |
+| **Team 7** | 78.125 Mitra | Rp 5.000 | Rp 390.625.000 |
+| **Team 8** | 390.625 Mitra | Rp 3.000 | Rp 1.171.875.000 |
+| **Team 9** | 1.953.125 Mitra | Rp 2.000 | Rp 3.906.250.000 |
+| **Team 10** | 7.765.625 Mitra | Rp 2.000 | Rp 19.531.250.000 |
+| **Team 11** | 48.828.125 Mitra | Rp 1.000 | Rp 48.828.125.000 |
+| **Team 12** | 244.140.625 Mitra | Rp 1.000 | Rp 244.140.625.000 |
 
-### 3. Fitur Utama Sistem
-- **Mekanisme Steping (Paket Rp 125k):** Membuka Tier 4 s/d 15 berdasarkan akumulasi Sponsor Direct Paket Rp 4.300.000.
-- **Team Poin Redemption:** Akumulasi poin redemption dari pembelanjaan downline (35 Poin s/d 5.000 Poin).
-- **Repeat Order (RO) Paket Rp 125k:** Memberikan 1 Poin RO + Bonus Sponsor Rp 20.000 + Matching Bonus 20%.
-- **Purchase Order (PO) & Personal Poin:** Pembelian produk tambahan dengan alokasi 15 Generasi dan akumulasi Personal Poin Reward.
-- **TPR Fitur (Titip Produk / Trade Promotion Rate):** Sharing profit 7% & 9% selama 3 bulan dengan Rebate Sponsor 20% & 40%.
+### 3. Komisi Prestasi Agen (Reward Syiar Prestasi)
+| Total Akumulasi Mitra | Reward Cash / Prestasi |
+| :--- | :--- |
+| **100 Mitra** | Rp 500.000 |
+| **300 Mitra** | Rp 1.000.000 |
+| **2.000 Mitra** | Rp 5.000.000 |
+| **6.000 Mitra** | Rp 15.000.000 |
+| **20.000 Mitra** | Rp 100.000.000 |
+| **150.000 Mitra** | Rp 500.000.000 |
+| **400.000 Mitra** | Rp 1.000.000.000 |
 
 ---
 
@@ -61,4 +72,5 @@ php artisan serve
 
 ## 👨‍💻 Owner & Development Team
 - **Owner**: [@hasanarofid.site](https://hasanarofid.site)
-- **Website**: [https://xseller.id](https://xseller.id)
+- **Website**: [https://mitrasyiarbaitullah.com/](https://mitrasyiarbaitullah.com/)
+

@@ -1,34 +1,63 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
-import { Layers } from '@lucide/vue';
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#0d131d] text-slate-100 font-sans antialiased relative overflow-hidden flex flex-col items-center justify-center p-6 selection:bg-indigo-500 selection:text-white">
-    <!-- Background Ambient Radial Glows -->
-    <div class="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-indigo-600/15 via-cyan-500/10 to-transparent blur-[120px] pointer-events-none"></div>
-    <div class="absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full bg-gradient-to-tl from-emerald-600/15 via-blue-600/10 to-transparent blur-[120px] pointer-events-none"></div>
+  <div class="min-h-screen relative font-sans antialiased text-[#5c2c24] bg-[#f8efdf] selection:bg-[#e98318] selection:text-white flex flex-col justify-between overflow-x-hidden">
+    <!-- Ambient Background Gradients -->
+    <div class="fixed inset-0 pointer-events-none z-0 bg-[radial-gradient(circle_at_73%_13%,_rgba(255,255,255,0.95)_0%,_transparent_30%),_linear-gradient(135deg,_#fffdf8_0%,_#f6e0b9_52%,_#e09d49_100%)]"></div>
+    
+    <div class="fixed inset-0 pointer-events-none z-0 opacity-40 mix-blend-screen bg-[radial-gradient(circle_at_8%_15%,_rgba(255,255,255,0.8),_transparent_20%),_radial-gradient(circle_at_88%_42%,_rgba(158,197,202,0.4),_transparent_25%)]"></div>
 
-    <!-- Card Container -->
-    <div class="w-full sm:max-w-md bg-[#111927] border border-slate-800 backdrop-blur-xl shadow-2xl rounded-3xl p-8 relative z-10 space-y-6">
-      <!-- Branding -->
-      <div class="flex flex-col items-center gap-3">
-        <Link href="/" class="group relative p-3.5 bg-gradient-to-tr from-indigo-600 to-cyan-500 rounded-2xl shadow-xl shadow-indigo-500/20 hover:scale-105 transition-all">
-          <Layers class="w-7 h-7 text-white transition-transform group-hover:rotate-12" />
-        </Link>
-        <div class="text-center space-y-1">
-          <div class="flex items-center justify-center gap-2">
-            <h1 class="text-2xl font-extrabold text-white tracking-tight uppercase">XSELLER</h1>
-            <span class="px-2 py-0.5 text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 rounded-md">v2.4</span>
+    <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 min-h-screen">
+      <!-- Left Hero Section -->
+      <div class="hidden lg:block lg:col-span-7 relative min-h-screen overflow-hidden bg-gradient-to-r from-black/10 to-transparent">
+        <div 
+          class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 scale-105"
+          style="background-image: url('/images/mekkah.jpg');"
+        ></div>
+        
+        <!-- Hero Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-r from-[#2e395d]/60 via-[#2e395d]/30 to-[#f8efdf]/90"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#2e395d]/80 via-transparent to-black/20"></div>
+        
+        <!-- Hero Text Content -->
+        <div class="absolute bottom-16 left-16 right-16 z-10 text-white space-y-4 max-w-xl">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#e98318]/90 border border-[#e09d49]/50 shadow-lg text-xs font-extrabold tracking-wider uppercase">
+            <span>Syiar Travel Umroh & Haji</span>
           </div>
-          <p class="text-xs text-slate-400 font-medium tracking-wide">Sistem MLM Binary 2 Kaki & E-Commerce Trade Promotion</p>
+          <h2 class="text-4xl font-black tracking-tight leading-tight drop-shadow-md">
+            Wujudkan Niat Suci Beribadah ke Tanah Haram
+          </h2>
+          <p class="text-sm font-medium text-slate-200 leading-relaxed drop-shadow">
+            Sistem Kemitraan & Syiar Baitullah yang transparan, terpercaya, serta menghadirkan keberkahan bagi setiap jamaah dan agen mitra syiar.
+          </p>
+
+          <div class="pt-4 flex items-center gap-6 text-xs text-slate-300">
+            <div class="flex items-center gap-2">
+              <div class="w-2.5 h-2.5 rounded-full bg-[#9ec5ca] animate-pulse"></div>
+              <span>Program Syiar Multi-Tier</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-2.5 h-2.5 rounded-full bg-[#e09d49]"></div>
+              <span>Ujroh Operasional Transparan</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Form Content Slot -->
-      <div class="space-y-4">
-        <slot />
+      <!-- Right Form Section -->
+      <div class="col-span-1 lg:col-span-5 relative flex items-center justify-center p-4 sm:p-8 min-h-screen">
+        <!-- Floating Backdrop Geometry -->
+        <div class="absolute -right-24 -top-24 w-96 h-96 rounded-full border-[28px] border-[#e09d49]/20 shadow-[0_0_60px_rgba(233,131,24,0.15)] transform rotate-12 pointer-events-none hidden sm:block"></div>
+        <div class="absolute -right-20 -bottom-20 w-[420px] h-72 rounded-full border-[24px] border-[#9d7c64]/20 shadow-[0_0_50px_rgba(92,44,36,0.1)] transform -rotate-12 pointer-events-none hidden sm:block"></div>
+
+        <!-- Auth Card Slot -->
+        <div class="w-full max-w-md relative z-10">
+          <slot />
+        </div>
       </div>
     </div>
   </div>
 </template>
+

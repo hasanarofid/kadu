@@ -1,6 +1,6 @@
-# Aturan Pengembangan & Dokumentasi Sistem - Proyek XSELLER.ID
+# Aturan Pengembangan & Dokumentasi Sistem - Proyek MITRA SYIAR BAITULLAH
 
-- **Domain Utama:** https://xseller.id
+- **Domain Utama:** https://mitrasyiarbaitullah.com/
 - **Branch Utama:** `main` / `master`
 - **Lisensi & Owner:** [@hasanarofid.site](https://hasanarofid.site)
 
@@ -8,134 +8,75 @@
 
 ## 1. Identitas, Peran & Lingkungan Proyek
 
-- **Peran AI:** Senior Full-Stack Developer spesialis Laravel 11, Vue 3 (Inertia.js), System Binary MLM/Affiliate, & Manajemen Bonus Multi-Tier.
+- **Peran AI:** Senior Full-Stack Developer spesialis Laravel 11, Vue 3 (Inertia.js), System Binary & Multi-Tier MLM Syiar Travel Umroh/Haji, & Manajemen Bonus Multi-Tier.
 - **Tech Stack Utama:**
   - **Backend:** Laravel 11 (PHP 8.2+).
   - **Frontend:** Vue 3 (Inertia.js), Tailwind CSS, `@lucide/vue`, Headless UI / Shadcn-Vue components.
   - **Database:** MySQL.
   - **Auth & Authorization:** Laravel Sanctum & Spatie Laravel Permission.
 - **Aturan Istilah & Terminologi (Wajib Dipatuhi):**
-  - **DILARANG** menggunakan istilah "PIN" atau "Beli PIN". **Gunakan istilah "VOUCHER" atau "BELI VOUCHER"** untuk transaksi produk/kemitraan agar bisnis model tampak sebagai E-Commerce Trade Promotion Program & Affiliasi.
-  - **Tier:** Menyebutkan level/generasi keanggotaan (Generasi 1 s/d Generasi 15).
-  - **Jaringan Binary:** Struktur jaringan 2 kaki (Left Leg & Right Leg).
+  - **DILARANG** menggunakan istilah "PIN" atau "Beli PIN". **Gunakan istilah "VOUCHER" atau "BELI VOUCHER"** untuk transaksi kemitraan & syiar umroh.
+  - **Ujroh Sponsor / Dana Operasional:** Istilah resmi untuk komisi sponsor langsung sebesar Rp 250.000 / jamaah.
+  - **Team (Generasi):** Level kedalaman bonus keanggotaan (Team 1 s/d Team 12).
   - **Prosedur Migration Database Production:**
-    - Karena terminal SSH di server live terkadang mengalami kendala/error, cara merunning database migration di server production adalah dengan membuka URL: **`https://xseller.id/run_migrate.php`** di browser setelah melakukan `git push origin master`.
+    - Jika terminal SSH di server live mengalami kendala/error, cara menjalankan database migration di server production adalah dengan membuka URL: **`https://mitrasyiarbaitullah.com/run_migrate.php`** di browser setelah melakukan `git push origin master`.
 
 ---
 
-## 2. Arsitektur Sistem Bisnis & Plan XSELLER (PRD 2026)
+## 2. Arsitektur Sistem Bisnis & Plan Mitra Syiar Baitullah (PRD 2026)
 
-### A. Paket Join (Membership Packages)
-1. **Paket Rp 125.000 (Starter / Steping Base)**
-   - Benefit: Produk Madu/Kopi/Teh.
-   - Bonus Direct Referral (Sponsor): Rp 20.000 (20%).
-   - Tier Allocation: Tidak ada alokasi.
-   - Team Poin: 0 Poin.
-   - Max Generasi Tier: Tier 3 Generasi (Bisa di-Steping hingga Tier 15).
-2. **Paket Rp 550.000 (Basic)**
-   - Benefit: Produk.
-   - Bonus Direct Referral: Rp 100.000 (20%).
-   - Tier Allocation: Generasi 1 = Rp 100.000, Generasi 2-15 = Rp 5.000/gen.
-   - Team Poin: 1 Poin Redemption.
-   - Max Generasi Tier: Tier 5 Generasi.
-3. **Paket Rp 2.100.000 (Medium)**
-   - Benefit: Produk.
-   - Bonus Direct Referral: Rp 400.000 (20%).
-   - Tier Allocation: Generasi 1 = Rp 400.000, Generasi 2-15 = Rp 15.000/gen.
-   - Team Poin: 4 Poin Redemption.
-   - Max Generasi Tier: Tier 8 Generasi.
-4. **Paket Rp 4.300.000 (Pro)**
-   - Benefit: Produk + Akses Fitur TPR.
-   - Bonus Direct Referral: Rp 800.000 (20%).
-   - Tier Allocation: Generasi 1 = Rp 800.000, Generasi 2-15 = Rp 30.000/gen.
-   - Team Poin: 8 Poin Redemption.
-   - Max Generasi Tier: Tier 12 Generasi.
-   - TPR Fitur: Profit share 7% / bulan selama 3 bulan.
-5. **Paket Rp 10.500.000 (Ultimate)**
-   - Benefit: Produk + Akses Fitur TPR.
-   - Bonus Direct Referral: Rp 2.000.000 (20%).
-   - Tier Allocation: Generasi 1 = Rp 2.000.000, Generasi 2-15 = Rp 100.000/gen.
-   - Team Poin: 12 Poin Redemption.
-   - Max Generasi Tier: Tier 15 Generasi.
-   - TPR Fitur: Profit share 9% / bulan selama 3 bulan.
+### A. Paket Join & Dana Operasional Sponsor
+1. **Biaya Join / DP Calon Jamaah:**
+   - **Nominal DP Min:** Rp 500.000,-
+   - **Benefit:** Pendaftaran Agen / Mitra Syiar Baitullah & Hak Akses Dashboard.
+2. **Dana Operasional / Ujroh Direct Sponsor:**
+   - **Bonus Sponsor:** Rp 250.000,- per Jamaah / Mitra Baru.
+   - **Semboyan / Target Balik Modal:** *Sponsori 2 Mitra sudah Balik Modal* (2 x Rp 250.000 = Rp 500.000).
+   - **Catatan Penting:** Skema lama *"Jamaah bayar lunas umroh komisi Rp 2.500.000"* ditiadakan (dicoret) dan digantikan penuh oleh skema Dana Operasional DP Rp 250.000 & Komisi Team Multi-Tier.
 
 ---
 
-### B. Mekaismes Steping (Khusus Paket Rp 125.000)
-Paket Rp 125.000 dapat membuka kedalaman Tier tanpa Overwrite Paket, dengan syarat pencapaian Direct Referral Paket Rp 4.300.000:
-- **Go to Tier 4:** Direct Referral 2 Paket Rp 4.300.000
-- **Go to Tier 5:** Direct Referral 4 Paket Rp 4.300.000
-- **Go to Tier 6:** Direct Referral 8 Paket Rp 4.300.000
-- **Go to Tier 7:** Direct Referral 10 Paket Rp 4.300.000
-- **Go to Tier 9:** Direct Referral 12 Paket Rp 4.300.000
-- **Go to Tier 11:** Direct Referral 14 Paket Rp 4.300.000
-- **Go to Tier 13:** Direct Referral 17 Paket Rp 4.300.000
-- **Go to Tier 15:** Direct Referral 20 Paket Rp 4.300.000
+### B. Komisi Team (Multi-Tier Bonus Generasi 1 s/d 12)
+Komisi didistribusikan berdasarkan pertumbuhan jumlah Mitra/Akun pada setiap kedalaman Team (Generasi):
 
-*Catatan:* Selain paket Rp 125.000, kenaikan paket berlaku sistem **Overwrite**.
-
----
-
-### C. Reward Team Poin (Redemption)
-Poin diakumulasikan dari alokasi Team Poin paket join bawahan.
-- **35 Poin:** Cash Rp 500.000
-- **90 Poin:** Cash Rp 1.500.000
-- **300 Poin:** Cash Rp 6.000.000
-- **2.000 Poin:** Cash Rp 35.000.000
-- **5.000 Poin:** Cash Rp 80.000.000
-*Ketentuan Reset:* Poin akan di-reset untuk pencapaian s/d 350 poin. Di atas 350 poin, sisa poin akan di-HOLD untuk reward tahapan selanjutnya.
+| Level Team | Jumlah Mitra / Akun | Komisi per Mitra | Total Komisi Potensial |
+| :--- | :--- | :--- | :--- |
+| **Team 1** | 5 Mitra | Rp 5.000 | Rp 25.000 |
+| **Team 2** | 25 Mitra | Rp 5.000 | Rp 125.000 |
+| **Team 3** | 125 Mitra | Rp 5.000 | Rp 625.000 |
+| **Team 4** | 625 Mitra | Rp 5.000 | Rp 3.125.000 |
+| **Team 5** | 3.125 Mitra | Rp 5.000 | Rp 15.625.000 |
+| **Team 6** | 15.625 Mitra | Rp 5.000 | Rp 78.125.000 |
+| **Team 7** | 78.125 Mitra | Rp 5.000 | Rp 390.625.000 |
+| **Team 8** | 390.625 Mitra | Rp 3.000 | Rp 1.171.875.000 |
+| **Team 9** | 1.953.125 Mitra | Rp 2.000 | Rp 3.906.250.000 |
+| **Team 10** | 7.765.625 Mitra | Rp 2.000 | Rp 19.531.250.000 |
+| **Team 11** | 48.828.125 Mitra | Rp 1.000 | Rp 48.828.125.000 |
+| **Team 12** | 244.140.625 Mitra | Rp 1.000 | Rp 244.140.625.000 |
 
 ---
 
-### D. Incentive Promotion (Target Omset & Income)
-- Target Omset 250.000 -> Income Rp 5.000.000
-- Target Omset 1.500.000 -> Income Rp 15.000.000
-- Target Omset 5.000.000 -> Income Rp 50.000.000
-- Target Omset 10.000.000 -> Income Rp 100.000.000
-- Target Omset 40.000.000 -> Income Rp 400.000.000
+### C. Komisi Prestasi Agen (Reward Syiar Prestasi)
+Reward tambahan yang diberikan kepada Agen berdasarkan pencapaian total akumulasi Mitra dalam jaringannya:
 
----
-
-### E. Repeat Order (Paket RO)
-- **Harga Paket RO:** Rp 125.000 (hanya berlaku pada nominal ini).
-- **Kompensasi RO:** 1 Poin RO (Dapat dikonversi menjadi Rp 500.000 saat mencapai 35 Poin RO).
-- **Bonus RO:** Direct Referral Rp 20.000 + Matching Bonus 20%.
-
----
-
-### F. Purchase Order (PO) & Personal Poin Reward
-Pembelian produk tambahan (PO) memberikan alokasi Tier hingga 15 Generasi:
-1. **PO Paket Rp 550.000:**
-   - Alokasi 15 Generasi: Rp 10.000 / gen.
-   - Additional Product: +3 Botol/Pouch/Box dari paket Join.
-   - Personal Poin Reward: 2 Poin.
-2. **PO Paket Rp 2.100.000:**
-   - Alokasi 15 Generasi: Rp 50.000 / gen.
-   - Additional Product: +10 Botol/Pouch/Box dari paket Join.
-   - Personal Poin Reward: 8 Poin.
-
-**Reward Poin Personal (Hasil Akumulasi Poin PO):**
-- **35 Poin:** Rp 1.000.000 (PAL Bonus => Rp 200.000)
-- **90 Poin:** Rp 3.000.000 (PAL Bonus => Rp 600.000)
-- **300 Poin:** Rp 12.000.000 (PAL Bonus => Rp 2.400.000)
-- **2.000 Poin:** Rp 70.000.000 (PAL Bonus => Rp 14.000.000)
-- **5.000 Poin:** Rp 150.000.000 (PAL Bonus => Rp 30.000.000)
-
----
-
-### G. Fitur TPR (Trade Promotion Program / Titip Produk)
-Program menitipkan produk ke perusahaan untuk mendapatkan profit sharing bulanan selama 3 bulan:
-- **Paket Rp 4.300.000:** Profit Share 7% / bulan (3 bulan). Bonus Rebate TPR untuk Sponsor Langsung: 20% dari sharing.
-- **Paket Rp 10.500.000:** Profit Share 9% / bulan (3 bulan). Bonus Rebate TPR untuk Sponsor Langsung: 40% dari sharing.
+| Total Akumulasi Mitra | Reward Cash / Prestasi |
+| :--- | :--- |
+| **100 Mitra** | Rp 500.000 |
+| **300 Mitra** | Rp 1.000.000 |
+| **2.000 Mitra** | Rp 5.000.000 |
+| **6.000 Mitra** | Rp 15.000.000 |
+| **20.000 Mitra** | Rp 100.000.000 |
+| **150.000 Mitra** | Rp 500.000.000 |
+| **400.000 Mitra** | Rp 1.000.000.000 |
 
 ---
 
 ## 3. Kualitas Kode & Standar Pemrograman
 
-1. **Clean & Maintainable:** DRY (Don't Repeat Yourself) dan KISS (Keep It Simple, Stupid).
-2. **Strict DB Transactions:** Semua logika kalkulasi bonus, distribusi alokasi tier, pencatatan transaksi voucher, dan mutasi e-wallet WAJIB dibungkus `DB::transaction()` untuk menjamin keutuhan data.
-3. **Optimasi Binary Tree Query:** Gunakan pola database tree yang efisien (seperti Nested Set Model atau Closure Table / CTE Recursive) untuk penelusuran 2 kaki binary dan perhitungan 15 generasi tanpa masalah performa.
-4. **Validasi & Integritas Data:** Selalu buat Form Request & DTO/Service layer terpisah dari Controller untuk logika perhitungan bonus.
+1. **Clean & Maintainable:** Terapkan prinsip DRY (Don't Repeat Yourself) dan KISS (Keep It Simple, Stupid).
+2. **Strict DB Transactions:** Semua kalkulasi Ujroh Sponsor, distribusi Komisi Team (Gen 1-12), dan mutasi e-wallet Syiar WAJIB dibungkus `DB::transaction()` demi keutuhan data.
+3. **Optimasi Network/Tree Query:** Gunakan struktur query database tree yang efisien (seperti Closure Table / CTE Recursive / Nested Set) untuk penelusuran jaringan 12 generasi tanpa mengorbankan performa.
+4. **Validasi & Integritas Data:** Buat Form Request & Service Layer terpisah dari Controller untuk logika alokasi ujroh dan reward.
 
 ---
 
