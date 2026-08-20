@@ -228,8 +228,8 @@ const logout = () => {
           'flex flex-col min-h-screen transition-all duration-300 ease-in-out'
         ]"
       >
-        <!-- Top Bar Header (Dark Midnight Bar matching Gambar 2) -->
-        <header class="flex items-center justify-between h-16 px-6 md:px-8 bg-[#0d131d] text-white sticky top-0 z-30 shadow-md">
+        <!-- Top Bar Header (Deep Navy Bar matching Palette #166873) -->
+        <header class="flex items-center justify-between h-16 px-6 md:px-8 bg-[#2e395d] text-white sticky top-0 z-30 shadow-md">
           <div class="flex items-center gap-4">
             <button 
               @click="isSidebarOpen = true" 
@@ -238,26 +238,25 @@ const logout = () => {
               <Menu class="w-6 h-6" />
             </button>
             
-            <!-- Left Header Logo Badge: DUTA SYNERGY v2.4 Binary -->
+            <!-- Left Header Logo Badge: MITRA SYIAR BAITULLAH -->
             <div class="flex items-center gap-3">
-              <div class="w-7 h-7 rounded-lg bg-emerald-500 flex items-center justify-center text-white font-extrabold text-sm shadow-md">
-                <span>D</span>
+              <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#e98318] to-[#e09d49] flex items-center justify-center text-white font-extrabold text-sm shadow-md border border-[#e09d49]/40">
+                <span>M</span>
               </div>
               <div>
                 <div class="flex items-center gap-2">
-                  <h1 class="text-xs font-black tracking-wider text-emerald-400 uppercase">DUTA SYNERGY</h1>
-                  <span class="px-1.5 py-0.2 text-[9px] font-bold bg-slate-800 text-slate-300 border border-slate-700 rounded">v2.4 Binary</span>
+                  <h1 class="text-xs font-black tracking-wider text-[#e09d49] uppercase">MITRA SYIAR BAITULLAH</h1>
+                  <span class="px-2 py-0.5 text-[9px] font-bold bg-[#e98318]/20 text-[#e09d49] border border-[#e09d49]/30 rounded-md">Syiar Portal</span>
                 </div>
-                <p class="text-[9px] text-slate-400 font-medium tracking-tight hidden sm:block">SISTEM MLM 2 KAKI LENGKAP & REAL-TIME</p>
+                <p class="text-[9px] text-slate-300 font-medium tracking-tight hidden sm:block">SISTEM KEMITRAAN & TRAVEL UMROH/HAJI TERPERCAYA</p>
               </div>
             </div>
 
-            <span class="text-slate-700 hidden md:inline">•</span>
+            <span class="text-[#e09d49]/40 hidden md:inline">•</span>
 
-            <!-- Brand title: XSELLER (without .id) -->
             <div class="hidden md:flex items-center gap-2">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span class="text-xs font-black tracking-wide text-white uppercase">XSELLER</span>
+              <span class="w-2 h-2 rounded-full bg-[#e98318] animate-pulse"></span>
+              <span class="text-xs font-serif italic text-slate-200">Bersama Menjadi Tamu Allah</span>
             </div>
           </div>
 
@@ -266,41 +265,41 @@ const logout = () => {
             <!-- Notification Bell -->
             <button 
               @click="isNotificationsOpen = !isNotificationsOpen"
-              class="relative p-2 rounded-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 transition-colors cursor-pointer"
+              class="relative p-2 rounded-full bg-[#e98318]/15 hover:bg-[#e98318]/25 text-[#e09d49] transition-colors cursor-pointer"
             >
               <Bell class="w-4 h-4" />
-              <span class="absolute top-1 right-1 w-2 h-2 bg-rose-500 rounded-full animate-ping"></span>
+              <span class="absolute top-1 right-1 w-2 h-2 bg-[#e98318] rounded-full animate-ping"></span>
             </button>
 
             <!-- User Avatar Circle -->
-            <div class="w-7 h-7 rounded-full bg-slate-800 border border-slate-700 text-slate-200 font-bold flex items-center justify-center text-xs">
-              {{ user.name ? user.name.charAt(0).toUpperCase() : 'P' }}
+            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-[#5c2c24] to-[#2e395d] border-2 border-[#e09d49] text-white font-bold flex items-center justify-center text-xs shadow-md">
+              {{ user.name ? user.name.charAt(0).toUpperCase() : 'M' }}
             </div>
 
             <!-- Role Badge Text -->
             <div class="hidden sm:flex items-center gap-2">
-              <span class="text-[11px] text-slate-400">MASUK SEBAGAI:</span>
+              <span class="text-[11px] text-slate-300">AKUN:</span>
               <span class="font-bold text-white text-xs">{{ user.name }}</span>
-              <span class="px-2 py-0.5 text-[9px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-md">Admin</span>
+              <span class="px-2 py-0.5 text-[9px] font-bold bg-[#e98318]/20 text-[#e09d49] border border-[#e09d49]/30 rounded-md">Mitra Syiar</span>
             </div>
 
             <!-- Admin Switch Button Dropdown Pill -->
             <div class="relative">
               <button 
                 @click="isUserMenuOpen = !isUserMenuOpen"
-                class="px-3 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                class="px-3 py-1.5 rounded-full bg-[#5c2c24] hover:bg-[#5c2c24]/80 border border-[#e09d49]/40 text-white text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
               >
-                <Users class="w-3.5 h-3.5 text-amber-400" />
-                <span>Admin</span>
-                <ChevronDown class="w-3.5 h-3.5 text-slate-400" />
+                <Users class="w-3.5 h-3.5 text-[#e09d49]" />
+                <span>Menu</span>
+                <ChevronDown class="w-3.5 h-3.5 text-slate-300" />
               </button>
 
               <div v-if="isUserMenuOpen" @click="isUserMenuOpen = false" class="fixed inset-0 z-10"></div>
-              <div v-if="isUserMenuOpen" class="absolute right-0 mt-2 w-48 bg-white text-slate-800 border border-slate-200 rounded-xl shadow-xl py-1 z-20 overflow-hidden">
-                <Link :href="route('profile.edit')" class="block px-4 py-2 text-xs font-semibold hover:bg-slate-100">
+              <div v-if="isUserMenuOpen" class="absolute right-0 mt-2 w-48 bg-white text-[#5c2c24] border border-[#e09d49]/30 rounded-xl shadow-xl py-1 z-20 overflow-hidden">
+                <Link :href="route('profile.edit')" class="block px-4 py-2 text-xs font-semibold hover:bg-[#fffaf2]">
                   Pengaturan Profil
                 </Link>
-                <button @click="logout" class="w-full text-left block px-4 py-2 text-xs font-bold text-rose-600 hover:bg-slate-100 border-t border-slate-100">
+                <button @click="logout" class="w-full text-left block px-4 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 border-t border-slate-100">
                   Keluar
                 </button>
               </div>
@@ -309,21 +308,20 @@ const logout = () => {
         </header>
 
         <!-- Main Dashboard Content Area -->
-        <main class="flex-1 p-6 md:p-8">
+        <main class="flex-1 p-4 md:p-8 bg-[#f8efdf]/50">
           <slot />
         </main>
 
-        <!-- Main Footer (Matching Gambar 2 Footer) -->
-        <footer class="p-4 text-center text-[11px] text-slate-500 border-t border-slate-200 bg-white">
-          <p>© 2026 Duta Synergy Corp. Hak Cipta Dilindungi Undang-Undang. Aplikasi Simulasi MLM Binary 2 Kaki Terintegrasi.</p>
+        <!-- Main Footer -->
+        <footer class="p-4 text-center text-[11px] text-[#9d7c64] border-t border-[#e09d49]/30 bg-[#fffaf2]">
+          <p>© 2026 Mitra Syiar Baitullah. Hak Cipta Dilindungi Undang-Undang. Bersama Menjadi Tamu Allah.</p>
         </footer>
       </div>
     </div>
 
-    <!-- Bottom Dark Banner Disclaimer (Matching Gambar 2 Bottom Bar) -->
-    <div class="w-full py-2 bg-[#0d131d] text-slate-400 text-center text-[11px] font-medium border-t border-slate-800">
-      <span>This app was developed by another user. It may be inaccurate or unsafe. </span>
-      <a href="#" class="text-slate-300 underline hover:text-white">Report legal issue</a>
+    <!-- Bottom Banner Disclaimer -->
+    <div class="w-full py-2 bg-[#2e395d] text-slate-300 text-center text-[11px] font-medium border-t border-[#e09d49]/20">
+      <span>Mitra Syiar Baitullah — Portal Kemitraan & Travel Umroh Terpercaya</span>
     </div>
 
   </div>
