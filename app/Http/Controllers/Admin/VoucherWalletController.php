@@ -18,37 +18,38 @@ use Inertia\Inertia;
 class VoucherWalletController extends Controller
 {
     /**
-     * Display the Voucher / PIN Wallet Management page.
+     * Display DP Awal Management page (previously Voucher/PIN Wallet).
      */
     public function index()
     {
         $user = auth()->user();
+        $voucherPrice = (float) (Setting::get('voucher_price', 500000));
 
-        // Count active vouchers
+        // Count active DP Awal vouchers
         $voucherCount = Voucher::where('user_id', $user->id)->where('status', 'active')->count();
 
-        // Get all vouchers owned by user
+        // Get all DP Awal vouchers owned by user
         $vouchers = Voucher::where('user_id', $user->id)
             ->with('usedBy')
             ->latest()
             ->get()
             ->map(function ($v) {
                 $isAvailable = $v->status === 'active';
-                $usedByUsername = $v->usedBy ? $v->usedBy->username : 'member';
+                $usedByUsername = $v->usedBy ? $v->usedBy->username : 'mitra';
                 $usedDate = $v->used_at ? $v->used_at->format('j/n/Y') : $v->updated_at->format('j/n/Y');
 
                 return [
-                    'id' => $v->id,
-                    'code' => $v->code,
-                    'created_at' => $v->created_at->format('j/n/Y'),
-                    'status' => $isAvailable ? 'TERSEDIA' : 'TERPAKAI',
-                    'keterangan' => $isAvailable
-                        ? 'Menunggu pendaftaran'
-                        : 'Diaktifkan oleh member ID: @' . $usedByUsername . ' pada ' . $usedDate,
+                    'id'          => $v->id,
+                    'code'        => $v->code,
+                    'created_at'  => $v->created_at->format('j/n/Y'),
+                    'status'      => $isAvailable ? 'TERSEDIA' : 'TERPAKAI',
+                    'keterangan'  => $isAvailable
+                        ? 'Menunggu pendaftaran mitra baru'
+                        : 'Diaktifkan oleh mitra ID: @' . $usedByUsername . ' pada ' . $usedDate,
                 ];
             });
 
-        // Get available vouchers for transfer select options
+        // Get available DP Awal vouchers for transfer select options
         $availableVouchers = Voucher::where('user_id', $user->id)
             ->where('status', 'active')
             ->get(['id', 'code']);
@@ -62,42 +63,42 @@ class VoucherWalletController extends Controller
             ->map(function ($t) use ($user) {
                 $isSender = $t->sender_id === $user->id;
                 $targetName = $isSender 
-                    ? ($t->recipient ? $t->recipient->name . ' (@' . $t->recipient->username . ')' : 'Member')
-                    : ($t->sender ? $t->sender->name . ' (@' . $t->sender->username . ')' : 'Member');
+                    ? ($t->recipient ? $t->recipient->name . ' (@' . $t->recipient->username . ')' : 'Mitra')
+                    : ($t->sender ? $t->sender->name . ' (@' . $t->sender->username . ')' : 'Mitra');
 
                 return [
-                    'id' => $t->id,
-                    'type' => $isSender ? 'DIKIRIM' : 'DITERIMA',
-                    'keterangan' => $isSender ? 'Mengirim ke ' . $targetName : 'Menerima dari ' . $targetName,
-                    'created_at' => $t->created_at->format('j/n/Y, H:i.s'),
+                    'id'           => $t->id,
+                    'type'         => $isSender ? 'DIKIRIM' : 'DITERIMA',
+                    'keterangan'   => $isSender ? 'Mengirim DP Awal ke ' . $targetName : 'Menerima DP Awal dari ' . $targetName,
+                    'created_at'   => $t->created_at->format('j/n/Y, H:i.s'),
                     'voucher_code' => $t->voucher_code,
                 ];
             });
 
         return Inertia::render('Admin/VoucherWallet', [
             'wallet' => [
-                'saldo' => (float) ($user->saldo ?? 2500000),
-                'total_bonus' => (float) ($user->total_bonus ?? 400000),
+                'saldo'         => (float) ($user->saldo ?? 2500000),
+                'total_bonus'   => (float) ($user->total_bonus ?? 400000),
                 'voucher_count' => $voucherCount,
             ],
-            'voucher_price' => 100000,
-            'vouchers' => $vouchers,
+            'voucher_price'      => $voucherPrice,
+            'vouchers'           => $vouchers,
             'available_vouchers' => $availableVouchers,
-            'transfers' => $transfers,
-            'is_admin' => $user->hasRole('admin'),
+            'transfers'          => $transfers,
+            'is_admin'           => $user->hasRole('admin'),
         ]);
     }
 
     /**
-     * Purchase a voucher using wallet balance.
+     * Purchase a DP Awal code using wallet balance.
      */
     public function buy(Request $request)
     {
         $user = auth()->user();
-        $price = 100000;
+        $price = (float) (Setting::get('voucher_price', 500000));
 
         if (($user->saldo ?? 2500000) < $price) {
-            return back()->with('error', 'Saldo wallet Anda tidak mencukupi untuk membeli Voucher!');
+            return back()->with('error', 'Saldo wallet Anda tidak mencukupi untuk membeli DP Awal (Rp ' . number_format($price, 0, ',', '.') . ')!');
         }
 
         DB::transaction(function () use ($user, $price) {
@@ -105,28 +106,28 @@ class VoucherWalletController extends Controller
                 $user->decrement('saldo', $price);
             }
 
-            $code = 'PIN-' . rand(1000, 9999) . '-' . strtoupper(Str::random(3));
+            $code = 'INV-DP-' . rand(1000, 9999) . '-' . strtoupper(Str::random(3));
 
             Voucher::create([
-                'code' => $code,
-                'user_id' => $user->id,
-                'package_name' => 'Basic',
-                'status' => 'active',
+                'code'         => $code,
+                'user_id'      => $user->id,
+                'package_name' => 'DP Join Rp 500rb',
+                'status'       => 'active',
             ]);
         });
 
-        return back()->with('success', 'Berhasil membeli 1 Voucher Aktivasi!');
+        return back()->with('success', 'Berhasil membeli 1 DP Awal Aktivasi!');
     }
 
     /**
-     * Admin action to produce free voucher.
+     * Admin action to produce free DP Awal code.
      */
     public function produce(Request $request)
     {
         $admin = auth()->user();
 
         if (!$admin->hasRole('admin')) {
-            return back()->with('error', 'Hanya Admin yang berhak memproduksi voucher gratis!');
+            return back()->with('error', 'Hanya Admin yang berhak memproduksi DP Awal gratis!');
         }
 
         $targetUser = $admin;
@@ -138,26 +139,26 @@ class VoucherWalletController extends Controller
         }
 
         DB::transaction(function () use ($targetUser) {
-            $code = 'PIN-' . rand(1000, 9999) . '-' . strtoupper(Str::random(3));
+            $code = 'INV-DP-' . rand(1000, 9999) . '-' . strtoupper(Str::random(3));
 
             Voucher::create([
-                'code' => $code,
-                'user_id' => $targetUser->id,
-                'package_name' => 'Basic',
-                'status' => 'active',
+                'code'         => $code,
+                'user_id'      => $targetUser->id,
+                'package_name' => 'DP Join Rp 500rb',
+                'status'       => 'active',
             ]);
         });
 
-        return back()->with('success', 'Berhasil memproduksi Voucher Aktivasi gratis untuk @' . $targetUser->username . '!');
+        return back()->with('success', 'Berhasil memproduksi DP Awal Aktivasi gratis untuk @' . $targetUser->username . '!');
     }
 
     /**
-     * Transfer voucher to another member by username.
+     * Transfer DP Awal code to another member by username.
      */
     public function transfer(Request $request)
     {
         $request->validate([
-            'voucher_id' => 'required|exists:vouchers,id',
+            'voucher_id'         => 'required|exists:vouchers,id',
             'recipient_username' => 'required|string',
         ]);
 
@@ -169,7 +170,7 @@ class VoucherWalletController extends Controller
             ->first();
 
         if (!$voucher) {
-            return back()->with('error', 'Voucher tidak valid atau sudah terpakai!');
+            return back()->with('error', 'Kode DP Awal tidak valid atau sudah terpakai!');
         }
 
         $recipient = User::where('username', $request->recipient_username)->first();
@@ -179,7 +180,7 @@ class VoucherWalletController extends Controller
         }
 
         if ($recipient->id === $sender->id) {
-            return back()->with('error', 'Tidak dapat mentransfer voucher ke akun sendiri!');
+            return back()->with('error', 'Tidak dapat mentransfer DP Awal ke akun sendiri!');
         }
 
         DB::transaction(function () use ($voucher, $sender, $recipient) {
@@ -188,14 +189,14 @@ class VoucherWalletController extends Controller
             ]);
 
             VoucherTransfer::create([
-                'voucher_id' => $voucher->id,
+                'voucher_id'   => $voucher->id,
                 'voucher_code' => $voucher->code,
-                'sender_id' => $sender->id,
+                'sender_id'    => $sender->id,
                 'recipient_id' => $recipient->id,
             ]);
         });
 
-        return back()->with('success', 'Berhasil mentransfer voucher ' . $voucher->code . ' ke @' . $recipient->username . '!');
+        return back()->with('success', 'Berhasil mentransfer DP Awal ' . $voucher->code . ' ke @' . $recipient->username . '!');
     }
 
     /**
@@ -228,7 +229,7 @@ class VoucherWalletController extends Controller
     }
 
     /**
-     * Verifikasi payment order — terbitkan voucher otomatis.
+     * Verifikasi payment order — terbitkan DP Awal otomatis.
      */
     public function verifyPayment(Request $request, PaymentOrder $order)
     {
@@ -240,18 +241,17 @@ class VoucherWalletController extends Controller
         $voucherCodes = [];
 
         DB::transaction(function () use ($order, $admin, &$voucherCodes) {
-            // Tentukan pemilik voucher: user yang login saat order, atau cari by email
             $targetUser = $order->user
                 ?? User::where('email', $order->email)->first();
 
             if ($targetUser) {
                 for ($i = 0; $i < $order->voucher_qty; $i++) {
-                    $code = 'VCR-' . strtoupper(Str::random(4)) . '-' . rand(1000, 9999);
+                    $code = 'INV-DP-' . rand(1000, 9999) . '-' . strtoupper(Str::random(3));
                     $voucherCodes[] = $code;
                     Voucher::create([
                         'code'         => $code,
                         'user_id'      => $targetUser->id,
-                        'package_name' => 'Basic',
+                        'package_name' => 'DP Join Rp 500rb',
                         'status'       => 'active',
                     ]);
                 }
@@ -275,7 +275,7 @@ class VoucherWalletController extends Controller
             ]));
         }
 
-        return back()->with('success', "Order #{$order->id} ({$order->name}) berhasil diverifikasi. {$order->voucher_qty} Voucher telah diterbitkan!");
+        return back()->with('success', "Order #{$order->id} ({$order->name}) berhasil diverifikasi. {$order->voucher_qty} Kode DP Awal telah diterbitkan!");
     }
 
     /**
