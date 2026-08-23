@@ -48,7 +48,7 @@ const formatRupiah = (val) => {
 </script>
 
 <template>
-  <Head title="Direktori Semua Member Jaringan - XSELLER" />
+  <Head title="Direktori Semua Mitra Jaringan - Mitra Syiar Baitullah" />
 
   <AdminLayout>
     <div class="space-y-6">
@@ -72,7 +72,7 @@ const formatRupiah = (val) => {
       <div v-if="is_impersonating" class="p-4 bg-amber-50 border border-amber-300 text-amber-900 rounded-2xl text-xs font-bold flex items-center justify-between shadow-sm">
         <div class="flex items-center gap-2">
           <ShieldCheck class="w-5 h-5 text-amber-600 shrink-0" />
-          <span>Anda saat ini sedang berada dalam mode pengujian / perspektif login member lain.</span>
+          <span>Anda saat ini sedang berada dalam mode pengujian / perspektif login mitra lain.</span>
         </div>
         <button 
           @click="stopImpersonating"
@@ -94,10 +94,10 @@ const formatRupiah = (val) => {
             </div>
             <div>
               <h2 class="text-base md:text-lg font-black text-slate-900 tracking-tight">
-                Direktori Semua Member Jaringan
+                Direktori Semua Mitra Jaringan
               </h2>
-              <p class="text-xs text-slate-500 font-medium mt-0.5">
-                Cari, tinjau, dan ganti perspektif login untuk melihat bonus dan pohon jaringan member lain.
+              <p class="text-xs text-slate-500">
+                Cari, tinjau, dan ganti perspektif login untuk melihat bonus dan jaringan mitra lain.
               </p>
             </div>
           </div>
@@ -193,7 +193,7 @@ const formatRupiah = (val) => {
 
               <tr v-if="members.length === 0">
                 <td colspan="6" class="py-12 text-center text-slate-400 text-xs italic">
-                  Tidak ada member jaringan yang ditemukan.
+                    Tidak ada mitra jaringan yang ditemukan.
                 </td>
               </tr>
             </tbody>

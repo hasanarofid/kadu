@@ -15,7 +15,8 @@
   - **Database:** MySQL.
   - **Auth & Authorization:** Laravel Sanctum & Spatie Laravel Permission.
 - **Aturan Istilah & Terminologi (Wajib Dipatuhi):**
-  - **DILARANG** menggunakan istilah "PIN" atau "Beli PIN". **Gunakan istilah "VOUCHER" atau "BELI VOUCHER"** untuk transaksi kemitraan & syiar umroh.
+  - **DILARANG MENGGUNAKAN KATA "MEMBER"**. **WAJIB MENGGUNAKAN KATA "MITRA" ATAU "MITRA SYIAR"** pada seluruh antarmuka, label, dan konten sistem.
+  - **DILARANG** menggunakan istilah "PIN" atau "Beli PIN". **Gunakan istilah "DP AWAL" atau "KODE DP AWAL"** untuk pendaftaran kemitraan.
   - **Ujroh Sponsor / Dana Operasional:** Istilah resmi untuk komisi sponsor langsung sebesar Rp 250.000 / jamaah.
   - **Team (Generasi):** Level kedalaman bonus keanggotaan (Team 1 s/d Team 12).
   - **Prosedur Migration Database Production:**

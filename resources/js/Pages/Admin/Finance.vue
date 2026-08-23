@@ -172,16 +172,16 @@ const formatRupiah = (val) => {
             </form>
           </div>
 
-          <!-- 4. KIRIM SALDO KE MEMBER CARD -->
+          <!-- 4. KIRIM SALDO KE MITRA CARD -->
           <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-4">
             <div class="flex items-start gap-3">
               <div class="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl shrink-0">
                 <ArrowRightLeft class="w-5 h-5" />
               </div>
               <div>
-                <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wide">KIRIM SALDO KE MEMBER</h3>
+                <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wide">KIRIM SALDO KE MITRA</h3>
                 <p class="text-xs text-slate-500 mt-0.5 leading-relaxed">
-                  Transfer saldo secara instan ke sesama member di jaringan tanpa biaya admin.
+                  Transfer saldo secara instan ke sesama mitra di jaringan tanpa biaya admin.
                 </p>
               </div>
             </div>
@@ -248,7 +248,7 @@ const formatRupiah = (val) => {
           <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-4">
             <div class="flex items-center justify-between border-b border-slate-100 pb-4">
               <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wide">
-                RIWAYAT KEUANGAN & PENCAIRAN BONUS (SEMUA MEMBER)
+                RIWAYAT KEUANGAN & PENCAIRAN BONUS (SEMUA MITRA)
               </h3>
               <span class="px-2.5 py-1 text-[10px] font-extrabold bg-slate-100 text-slate-600 rounded-full">
                 {{ transactions.length }} Catatan

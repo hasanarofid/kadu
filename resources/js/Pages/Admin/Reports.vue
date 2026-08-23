@@ -37,7 +37,7 @@ const formatRupiah = (val) => {
 };
 
 const reportTabs = [
-  { type: 'member', label: 'Laporan Member' },
+  { type: 'member', label: 'Laporan Mitra' },
   { type: 'bonus', label: 'Laporan Bonus' },
   { type: 'pencairan', label: 'Laporan Pencairan' },
   { type: 'topup', label: 'Laporan Topup' },
@@ -57,7 +57,7 @@ const reportTabs = [
             Menu Laporan
           </h2>
           <p class="text-xs text-slate-500 font-medium mt-0.5">
-            Export data transaksi dan member ke Excel atau PDF.
+            Export data transaksi dan mitra ke Excel atau PDF.
           </p>
         </div>
 
@@ -104,11 +104,11 @@ const reportTabs = [
       <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
         <div class="overflow-x-auto">
           
-          <!-- TAB 1: LAPORAN MEMBER -->
+          <!-- TAB 1: LAPORAN MITRA -->
           <table v-if="active_type === 'member'" class="w-full text-left text-xs border-collapse">
             <thead>
-              <tr class="border-b border-slate-100 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
-                <th class="py-3.5 px-4">MEMBER</th>
+              <tr class="bg-[#f8efdf] text-[#5c2c24] font-black uppercase text-[11px]">
+                <th class="py-3.5 px-4">MITRA</th>
                 <th class="py-3.5 px-4">SPONSOR</th>
                 <th class="py-3.5 px-4">TITIK JARINGAN</th>
                 <th class="py-3.5 px-4">SALDO WALLET</th>
@@ -149,7 +149,7 @@ const reportTabs = [
 
               <tr v-if="report_data.length === 0">
                 <td colspan="5" class="py-12 text-center text-slate-400 text-xs italic">
-                  Belum ada data member terdaftar.
+                  Belum ada data mitra terdaftar.
                 </td>
               </tr>
             </tbody>
@@ -159,9 +159,9 @@ const reportTabs = [
           <table v-else-if="active_type === 'bonus'" class="w-full text-left text-xs border-collapse">
             <thead>
               <tr class="border-b border-slate-100 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
-                <th class="py-3.5 px-4">MEMBER</th>
+                <th class="py-3.5 px-4">MITRA</th>
+                <th class="py-3.5 px-4">SUMBER MITRA</th>
                 <th class="py-3.5 px-4">JENIS BONUS</th>
-                <th class="py-3.5 px-4">SUMBER MEMBER</th>
                 <th class="py-3.5 px-4">DESKRIPSI</th>
                 <th class="py-3.5 px-4">NOMINAL BONUS</th>
                 <th class="py-3.5 px-4 text-right">TANGGAL</th>
