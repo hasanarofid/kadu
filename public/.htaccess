@@ -23,3 +23,13 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# Performance & Execution Time Limit Boost
+<IfModule mod_php7.c>
+    php_value max_execution_time 300
+    php_value memory_limit 512M
+</IfModule>
+<IfModule mod_php.c>
+    php_value max_execution_time 300
+    php_value memory_limit 512M
+</IfModule>
