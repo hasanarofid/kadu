@@ -25,22 +25,26 @@ const flashSuccess = computed(() => page.props.flash?.success);
 const flashError = computed(() => page.props.flash?.error);
 
 const form = useForm({
-  pin_price: props.config?.pin_price || 200000,
-  sponsor_percent: props.config?.sponsor_percent || 100,
-  pairing_percent: props.config?.pairing_percent || 50,
-  titik_percent: props.config?.titik_percent || 1,
-  silver_reward_percent: props.config?.silver_reward_percent || 500,
-  gold_reward_percent: props.config?.gold_reward_percent || 2500,
-  platinum_reward_percent: props.config?.platinum_reward_percent || 12500,
+  pin_price:              props.config?.pin_price || 200000,
+  voucher_price:          props.config?.voucher_price || 500000,
+  payment_bank_name:      props.config?.payment_bank_name || 'BCA',
+  payment_account_no:     props.config?.payment_account_no || '',
+  payment_account_name:   props.config?.payment_account_name || 'Mitra Syiar Baitullah',
+  sponsor_percent:        props.config?.sponsor_percent || 100,
+  pairing_percent:        props.config?.pairing_percent || 50,
+  titik_percent:          props.config?.titik_percent || 1,
+  silver_reward_percent:  props.config?.silver_reward_percent || 500,
+  gold_reward_percent:    props.config?.gold_reward_percent || 2500,
+  platinum_reward_percent:props.config?.platinum_reward_percent || 12500,
   diamond_reward_percent: props.config?.diamond_reward_percent || 75000,
-  crown_reward_percent: props.config?.crown_reward_percent || 375000,
-  business_mode: props.config?.business_mode ?? true,
-  min_withdrawal: props.config?.min_withdrawal || 50000,
-  max_level_depth: props.config?.max_level_depth || 0,
-  allow_sponsor_exceed: props.config?.allow_sponsor_exceed ?? true,
-  allow_pairing_exceed: props.config?.allow_pairing_exceed ?? true,
-  allow_titik_exceed: props.config?.allow_titik_exceed ?? true,
-  allow_reward_exceed: props.config?.allow_reward_exceed ?? true,
+  crown_reward_percent:   props.config?.crown_reward_percent || 375000,
+  business_mode:          props.config?.business_mode ?? true,
+  min_withdrawal:         props.config?.min_withdrawal || 50000,
+  max_level_depth:        props.config?.max_level_depth || 0,
+  allow_sponsor_exceed:   props.config?.allow_sponsor_exceed ?? true,
+  allow_pairing_exceed:   props.config?.allow_pairing_exceed ?? true,
+  allow_titik_exceed:     props.config?.allow_titik_exceed ?? true,
+  allow_reward_exceed:    props.config?.allow_reward_exceed ?? true,
 });
 
 const formatRupiah = (val) => {
@@ -222,6 +226,66 @@ const saveRewards = () => {
                   <span>Nilai Cair:</span>
                   <strong class="text-emerald-600 font-mono">{{ calcBonus(form.titik_percent) }}</strong>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 1b: PEMBAYARAN MANUAL (Harga Voucher & Rekening Tujuan) -->
+          <div class="bg-amber-50/60 border border-amber-200/80 rounded-2xl p-5 space-y-4">
+            <h3 class="text-xs font-black text-amber-900 uppercase tracking-tight flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+              1b. PEMBAYARAN MANUAL — HARGA VOUCHER & REKENING TUJUAN
+            </h3>
+            <p class="text-[11px] text-amber-700">Konfigurasi ini akan ditampilkan di halaman publik <code class="bg-amber-100 px-1 rounded">/beli-voucher</code> untuk calon member yang ingin beli Voucher via transfer bank.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Harga Voucher -->
+              <div>
+                <label class="block text-[10px] font-bold text-amber-700 uppercase tracking-wider mb-1">HARGA PER VOUCHER (Rp)</label>
+                <input
+                  v-model="form.voucher_price"
+                  type="number"
+                  required
+                  step="10000"
+                  class="w-full px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-slate-900 text-xs font-black focus:outline-none focus:border-amber-500"
+                />
+                <p class="text-[10px] text-amber-600 mt-1">Default Rp 500.000 (sesuai DP Join). Calon member bayar sesuai jumlah voucher × harga ini.</p>
+              </div>
+
+              <!-- Nama Bank -->
+              <div>
+                <label class="block text-[10px] font-bold text-amber-700 uppercase tracking-wider mb-1">NAMA BANK TUJUAN</label>
+                <input
+                  v-model="form.payment_bank_name"
+                  type="text"
+                  required
+                  placeholder="Contoh: BCA, BRI, Mandiri, BSI"
+                  class="w-full px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-slate-900 text-xs font-semibold focus:outline-none focus:border-amber-500"
+                />
+              </div>
+
+              <!-- No Rekening -->
+              <div>
+                <label class="block text-[10px] font-bold text-amber-700 uppercase tracking-wider mb-1">NOMOR REKENING</label>
+                <input
+                  v-model="form.payment_account_no"
+                  type="text"
+                  required
+                  placeholder="Contoh: 1234567890"
+                  class="w-full px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-slate-900 text-xs font-black font-mono tracking-wider focus:outline-none focus:border-amber-500"
+                />
+              </div>
+
+              <!-- Nama Pemilik Rekening -->
+              <div>
+                <label class="block text-[10px] font-bold text-amber-700 uppercase tracking-wider mb-1">NAMA PEMILIK REKENING</label>
+                <input
+                  v-model="form.payment_account_name"
+                  type="text"
+                  required
+                  placeholder="Nama sesuai rekening bank"
+                  class="w-full px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-slate-900 text-xs font-semibold focus:outline-none focus:border-amber-500"
+                />
               </div>
             </div>
           </div>

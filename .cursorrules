@@ -71,16 +71,62 @@ Reward tambahan yang diberikan kepada Agen berdasarkan pencapaian total akumulas
 
 ---
 
-## 3. Kualitas Kode & Standar Pemrograman
+## 3. Fitur Pembayaran Manual & Notifikasi SMTP Terbatas (PRD Agustus 2026)
+
+### A. Pembayaran Manual & Upload Bukti Transfer
+1. **Form Publik Pembelian Voucher (`/beli-voucher`):**
+   - Dapat diakses oleh calon member baru (tanpa login) maupun member lama.
+   - Form mengumpulkan: Nama Lengkap, Email, No. WhatsApp, Jumlah Voucher, dan File Bukti Transfer (JPG/PNG/PDF maks 5MB).
+   - Menampilkan total bayar (`jumlah_voucher x voucher_price`) dan rekening bank tujuan.
+2. **Halaman Cek Status (`/beli-voucher/status/{uuid}`):**
+   - Halaman publik berbasis UUID untuk memantau status order (Pending / Terverifikasi / Ditolak).
+3. **Verifikasi Admin (`/admin/payment-orders`):**
+   - Admin memeriksa bukti transfer.
+   - **Verifikasi Order:** Secara otomatis menerbitkan Voucher sejumlah pesanan ke akun member dan mengabari via email.
+   - **Tolak Order:** Menyimpan alasan penolakan dari admin.
+4. **Pengaturan Pembayaran & Rekening (`/admin/settings` - Section 1b):**
+   - Diatur dari Settings Admin: `voucher_price` (Default Rp 500.000,-), `payment_bank_name`, `payment_account_no`, dan `payment_account_name`.
+
+---
+
+### B. Notifikasi SMTP Terbatas
+- **SMTP Driver & Server:** Sumopod (`smtp.sumopod.com`, Port `465`, SSL).
+- **Aturan Penggunaan Email:** SMTP DILARANG digunakan untuk blast/spam marketing. SMTP HANYA dipicu pada 3 skenario resmi:
+  1. **Registrasi Akun Baru:** (`App\Mail\WelcomeMail`)
+  2. **Perubahan Password:** (`App\Mail\PasswordChangedMail`)
+  3. **Notifikasi Sistem MLM:** (`App\Mail\BonusMlmMail`)
+     - Bonus Ujroh Direct Sponsor masuk.
+     - Bonus Komisi Team (Gen 1-12) masuk.
+     - Achievement Reward Prestasi Agen.
+     - Pembayaran Voucher Terverifikasi oleh Admin.
+     - Update Status Penarikan Saldo (WD).
+
+---
+
+### C. Alur Git & Deployment Production (Plesk Auto-Deploy)
+1. **Aturan Asset Terkompilasi (`public/build`):**
+   - Karena server Plesk production melakukan Git Pull/Deploy otomatis tanpa menjalankan `npm run build` di server, **folder `public/build` WAJIB di-commit dan di-push** ke repository.
+2. **Prosedur Push Production:**
+   ```bash
+   npm run build
+   git add .
+   git commit -m "feat/fix: deskripsi perubahan"
+   git push origin master
+   ```
+   *Setelah push, buka `https://mitrasyiarbaitullah.com/run_migrate.php` jika ada perubahan pada migration database.*
+
+---
+
+## 4. Kualitas Kode & Standar Pemrograman
 
 1. **Clean & Maintainable:** Terapkan prinsip DRY (Don't Repeat Yourself) dan KISS (Keep It Simple, Stupid).
-2. **Strict DB Transactions:** Semua kalkulasi Ujroh Sponsor, distribusi Komisi Team (Gen 1-12), dan mutasi e-wallet Syiar WAJIB dibungkus `DB::transaction()` demi keutuhan data.
+2. **Strict DB Transactions:** Semua kalkulasi Ujroh Sponsor, distribusi Komisi Team (Gen 1-12), mutasi e-wallet, serta verifikasi `PaymentOrder` WAJIB dibungkus `DB::transaction()` demi keutuhan data.
 3. **Optimasi Network/Tree Query:** Gunakan struktur query database tree yang efisien (seperti Closure Table / CTE Recursive / Nested Set) untuk penelusuran jaringan 12 generasi tanpa mengorbankan performa.
 4. **Validasi & Integritas Data:** Buat Form Request & Service Layer terpisah dari Controller untuk logika alokasi ujroh dan reward.
 
 ---
 
-## 4. Gaya Komunikasi AI
+## 5. Gaya Komunikasi AI
 
 - Jawab secara singkat, padat, dan langsung ke poin solusi teknis.
 - Tampilkan hanya snippet / diff kode yang berubah.

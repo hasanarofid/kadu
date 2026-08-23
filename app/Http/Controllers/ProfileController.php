@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PasswordChangedMail;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -85,6 +87,11 @@ class ProfileController extends Controller
             $user->password = Hash::make($validated['password']);
         }
         $user->save();
+
+        // Kirim notifikasi email jika password diubah
+        if ($request->filled('password')) {
+            Mail::to($user->email)->queue(new PasswordChangedMail($user));
+        }
 
         return Redirect::route('profile.edit')->with('success', 'Profil Instansi & Identitas Perusahaan berhasil diperbarui.');
     }

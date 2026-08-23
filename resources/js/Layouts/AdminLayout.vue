@@ -25,7 +25,8 @@ import {
   CheckCircle2,
   Activity,
   Crown,
-  Download
+  Download,
+  ClipboardList,
 } from '@lucide/vue';
 
 const page = usePage();
@@ -53,6 +54,7 @@ const navigation = [
   { name: 'Pohon Jaringan', href: route('admin.pohon-jaringan'), icon: GitFork, current: route().current('admin.pohon-jaringan') },
   { name: 'Aktivasi Member', href: route('admin.activation.index'), icon: UserPlus, current: route().current('admin.activation.index') },
   { name: 'PIN Wallet', href: route('admin.voucher-wallet.index'), icon: KeyRound, current: route().current('admin.voucher-wallet.index') },
+  { name: 'Order Pembayaran', href: route('admin.payment-orders.index'), icon: ClipboardList, current: route().current('admin.payment-orders.index') },
   { name: 'Keuangan', href: route('admin.finance.index'), icon: Wallet, current: route().current('admin.finance.index') },
   { name: 'Penarikan Saldo', href: route('admin.withdrawals.index'), icon: ArrowUpRight, current: route().current('admin.withdrawals.index') },
   { name: 'Data Jaringan', href: route('admin.network-data.index'), icon: Users, current: route().current('admin.network-data.index') },

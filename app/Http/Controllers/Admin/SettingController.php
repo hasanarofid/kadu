@@ -59,22 +59,26 @@ class SettingController extends Controller
 
         return Inertia::render('Admin/Settings', [
             'config' => [
-                'pin_price' => (float) ($settings['pin_price'] ?? 200000),
-                'sponsor_percent' => (float) ($settings['sponsor_percent'] ?? 100),
-                'pairing_percent' => (float) ($settings['pairing_percent'] ?? 50),
-                'titik_percent' => (float) ($settings['titik_percent'] ?? 1),
-                'silver_reward_percent' => (float) ($settings['silver_reward_percent'] ?? 500),
-                'gold_reward_percent' => (float) ($settings['gold_reward_percent'] ?? 2500),
-                'platinum_reward_percent' => (float) ($settings['platinum_reward_percent'] ?? 12500),
+                'pin_price'              => (float) ($settings['pin_price'] ?? 200000),
+                'voucher_price'          => (float) ($settings['voucher_price'] ?? 500000),
+                'payment_bank_name'      => $settings['payment_bank_name'] ?? 'BCA',
+                'payment_account_no'     => $settings['payment_account_no'] ?? '',
+                'payment_account_name'   => $settings['payment_account_name'] ?? 'Mitra Syiar Baitullah',
+                'sponsor_percent'        => (float) ($settings['sponsor_percent'] ?? 100),
+                'pairing_percent'        => (float) ($settings['pairing_percent'] ?? 50),
+                'titik_percent'          => (float) ($settings['titik_percent'] ?? 1),
+                'silver_reward_percent'  => (float) ($settings['silver_reward_percent'] ?? 500),
+                'gold_reward_percent'    => (float) ($settings['gold_reward_percent'] ?? 2500),
+                'platinum_reward_percent'=> (float) ($settings['platinum_reward_percent'] ?? 12500),
                 'diamond_reward_percent' => (float) ($settings['diamond_reward_percent'] ?? 75000),
-                'crown_reward_percent' => (float) ($settings['crown_reward_percent'] ?? 375000),
-                'business_mode' => ($settings['business_mode'] ?? 'pin') === 'pin',
-                'min_withdrawal' => (float) ($settings['min_withdrawal'] ?? 50000),
-                'max_level_depth' => (int) ($settings['max_level_depth'] ?? 0),
-                'allow_sponsor_exceed' => ($settings['allow_sponsor_exceed'] ?? '1') === '1',
-                'allow_pairing_exceed' => ($settings['allow_pairing_exceed'] ?? '1') === '1',
-                'allow_titik_exceed' => ($settings['allow_titik_exceed'] ?? '1') === '1',
-                'allow_reward_exceed' => ($settings['allow_reward_exceed'] ?? '1') === '1',
+                'crown_reward_percent'   => (float) ($settings['crown_reward_percent'] ?? 375000),
+                'business_mode'          => ($settings['business_mode'] ?? 'pin') === 'pin',
+                'min_withdrawal'         => (float) ($settings['min_withdrawal'] ?? 50000),
+                'max_level_depth'        => (int) ($settings['max_level_depth'] ?? 0),
+                'allow_sponsor_exceed'   => ($settings['allow_sponsor_exceed'] ?? '1') === '1',
+                'allow_pairing_exceed'   => ($settings['allow_pairing_exceed'] ?? '1') === '1',
+                'allow_titik_exceed'     => ($settings['allow_titik_exceed'] ?? '1') === '1',
+                'allow_reward_exceed'    => ($settings['allow_reward_exceed'] ?? '1') === '1',
             ],
             'rewards' => $rewards,
         ]);
@@ -86,25 +90,33 @@ class SettingController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'pin_price' => 'required|numeric|min:0',
-            'sponsor_percent' => 'required|numeric|min:0',
-            'pairing_percent' => 'required|numeric|min:0',
-            'titik_percent' => 'required|numeric|min:0',
-            'silver_reward_percent' => 'nullable|numeric|min:0',
-            'gold_reward_percent' => 'nullable|numeric|min:0',
-            'platinum_reward_percent' => 'nullable|numeric|min:0',
+            'pin_price'            => 'required|numeric|min:0',
+            'voucher_price'        => 'required|numeric|min:0',
+            'payment_bank_name'    => 'required|string|max:100',
+            'payment_account_no'   => 'required|string|max:50',
+            'payment_account_name' => 'required|string|max:100',
+            'sponsor_percent'      => 'required|numeric|min:0',
+            'pairing_percent'      => 'required|numeric|min:0',
+            'titik_percent'        => 'required|numeric|min:0',
+            'silver_reward_percent'  => 'nullable|numeric|min:0',
+            'gold_reward_percent'    => 'nullable|numeric|min:0',
+            'platinum_reward_percent'=> 'nullable|numeric|min:0',
             'diamond_reward_percent' => 'nullable|numeric|min:0',
-            'crown_reward_percent' => 'nullable|numeric|min:0',
-            'business_mode' => 'required|boolean',
-            'min_withdrawal' => 'required|numeric|min:0',
-            'max_level_depth' => 'required|integer|min:0',
+            'crown_reward_percent'   => 'nullable|numeric|min:0',
+            'business_mode'        => 'required|boolean',
+            'min_withdrawal'       => 'required|numeric|min:0',
+            'max_level_depth'      => 'required|integer|min:0',
             'allow_sponsor_exceed' => 'nullable|boolean',
             'allow_pairing_exceed' => 'nullable|boolean',
-            'allow_titik_exceed' => 'nullable|boolean',
-            'allow_reward_exceed' => 'nullable|boolean',
+            'allow_titik_exceed'   => 'nullable|boolean',
+            'allow_reward_exceed'  => 'nullable|boolean',
         ]);
 
         Setting::setValue('pin_price', $validated['pin_price'], 'text');
+        Setting::setValue('voucher_price', $validated['voucher_price'], 'text');
+        Setting::setValue('payment_bank_name', $validated['payment_bank_name'], 'text');
+        Setting::setValue('payment_account_no', $validated['payment_account_no'], 'text');
+        Setting::setValue('payment_account_name', $validated['payment_account_name'], 'text');
         Setting::setValue('sponsor_percent', $validated['sponsor_percent'], 'text');
         Setting::setValue('pairing_percent', $validated['pairing_percent'], 'text');
         Setting::setValue('titik_percent', $validated['titik_percent'], 'text');

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PaymentOrderController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\PageController;
@@ -13,6 +14,11 @@ use App\Http\Controllers\HomeController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+
+// Publik — Order Beli Voucher via Transfer Manual (tanpa login)
+Route::get('/beli-voucher', [PaymentOrderController::class, 'create'])->name('payment.create');
+Route::post('/beli-voucher', [PaymentOrderController::class, 'store'])->name('payment.store');
+Route::get('/beli-voucher/status/{uuid}', [PaymentOrderController::class, 'status'])->name('payment.status');
 
 Route::get('/dashboard', function () {
     return redirect()->route('admin.dashboard');
@@ -41,6 +47,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/voucher-wallet/buy', [\App\Http\Controllers\Admin\VoucherWalletController::class, 'buy'])->name('voucher-wallet.buy');
     Route::post('/voucher-wallet/produce', [\App\Http\Controllers\Admin\VoucherWalletController::class, 'produce'])->name('voucher-wallet.produce');
     Route::post('/voucher-wallet/transfer', [\App\Http\Controllers\Admin\VoucherWalletController::class, 'transfer'])->name('voucher-wallet.transfer');
+
+    // Kelola Order Pembayaran Manual (Bukti Transfer)
+    Route::get('/payment-orders', [\App\Http\Controllers\Admin\VoucherWalletController::class, 'paymentOrders'])->name('payment-orders.index');
+    Route::post('/payment-orders/{order}/verify', [\App\Http\Controllers\Admin\VoucherWalletController::class, 'verifyPayment'])->name('payment-orders.verify');
+    Route::post('/payment-orders/{order}/reject', [\App\Http\Controllers\Admin\VoucherWalletController::class, 'rejectPayment'])->name('payment-orders.reject');
 
     // Keuangan (Finance & E-Wallet Management)
     Route::get('/keuangan', [\App\Http\Controllers\Admin\FinanceController::class, 'index'])->name('finance.index');

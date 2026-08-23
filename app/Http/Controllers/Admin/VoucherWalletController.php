@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\BonusMlmMail;
+use App\Models\PaymentOrder;
+use App\Models\Setting;
 use App\Models\User;
 use App\Models\Voucher;
 use App\Models\VoucherTransfer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -192,5 +196,106 @@ class VoucherWalletController extends Controller
         });
 
         return back()->with('success', 'Berhasil mentransfer voucher ' . $voucher->code . ' ke @' . $recipient->username . '!');
+    }
+
+    /**
+     * List semua payment orders (admin view).
+     */
+    public function paymentOrders()
+    {
+        $orders = PaymentOrder::with(['user', 'verifier'])
+            ->latest()
+            ->get()
+            ->map(fn($o) => [
+                'id'             => $o->id,
+                'uuid'           => $o->uuid,
+                'name'           => $o->name,
+                'email'          => $o->email,
+                'phone'          => $o->phone,
+                'voucher_qty'    => $o->voucher_qty,
+                'amount'         => (float) $o->amount,
+                'status'         => $o->status,
+                'admin_notes'    => $o->admin_notes,
+                'transfer_proof' => $o->transfer_proof ? asset('storage/' . $o->transfer_proof) : null,
+                'verified_by'    => $o->verifier?->name,
+                'verified_at'    => $o->verified_at?->format('d/m/Y H:i'),
+                'created_at'     => $o->created_at->format('d/m/Y H:i'),
+            ]);
+
+        return Inertia::render('Admin/PaymentOrders', [
+            'orders' => $orders,
+        ]);
+    }
+
+    /**
+     * Verifikasi payment order — terbitkan voucher otomatis.
+     */
+    public function verifyPayment(Request $request, PaymentOrder $order)
+    {
+        if ($order->status !== 'pending') {
+            return back()->with('error', 'Order ini sudah diproses sebelumnya.');
+        }
+
+        $admin = auth()->user();
+        $voucherCodes = [];
+
+        DB::transaction(function () use ($order, $admin, &$voucherCodes) {
+            // Tentukan pemilik voucher: user yang login saat order, atau cari by email
+            $targetUser = $order->user
+                ?? User::where('email', $order->email)->first();
+
+            if ($targetUser) {
+                for ($i = 0; $i < $order->voucher_qty; $i++) {
+                    $code = 'VCR-' . strtoupper(Str::random(4)) . '-' . rand(1000, 9999);
+                    $voucherCodes[] = $code;
+                    Voucher::create([
+                        'code'         => $code,
+                        'user_id'      => $targetUser->id,
+                        'package_name' => 'Basic',
+                        'status'       => 'active',
+                    ]);
+                }
+            }
+
+            $order->update([
+                'status'      => 'verified',
+                'verified_by' => $admin->id,
+                'verified_at' => now(),
+                'admin_notes' => $request->input('admin_notes'),
+            ]);
+        });
+
+        // Kirim email notifikasi jika ada user terdaftar
+        $targetUser = $order->user ?? User::where('email', $order->email)->first();
+        if ($targetUser) {
+            Mail::to($targetUser->email)->queue(new BonusMlmMail($targetUser, 'payment_verified', [
+                'voucher_qty'   => $order->voucher_qty,
+                'amount'        => $order->amount,
+                'voucher_codes' => $voucherCodes,
+            ]));
+        }
+
+        return back()->with('success', "Order #{$order->id} ({$order->name}) berhasil diverifikasi. {$order->voucher_qty} Voucher telah diterbitkan!");
+    }
+
+    /**
+     * Tolak payment order.
+     */
+    public function rejectPayment(Request $request, PaymentOrder $order)
+    {
+        if ($order->status !== 'pending') {
+            return back()->with('error', 'Order ini sudah diproses sebelumnya.');
+        }
+
+        $request->validate(['admin_notes' => 'required|string|max:500']);
+
+        $order->update([
+            'status'      => 'rejected',
+            'verified_by' => auth()->id(),
+            'verified_at' => now(),
+            'admin_notes' => $request->admin_notes,
+        ]);
+
+        return back()->with('success', "Order #{$order->id} telah ditolak.");
     }
 }
