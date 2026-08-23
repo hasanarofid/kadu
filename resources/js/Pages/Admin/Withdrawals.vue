@@ -13,7 +13,10 @@ import {
   Banknote,
   ListFilter,
   Building2,
-  UserCheck
+  UserCheck,
+  PiggyBank,
+  ShieldAlert,
+  HelpCircle
 } from '@lucide/vue';
 
 const props = defineProps({
@@ -35,6 +38,12 @@ const form = useForm({
   bank_account_name: props.user_bank?.bank_account_name || '',
   amount: '',
 });
+
+// Real-time calculation previews
+const grossAmount = computed(() => Number(form.amount) || 0);
+const adminFeeCalc = computed(() => grossAmount.value * 0.10);
+const umrohSavingCalc = computed(() => grossAmount.value * 0.10);
+const netReceivedCalc = computed(() => grossAmount.value * 0.80);
 
 const toggleProfileBank = () => {
   isUsingProfileBank.value = !isUsingProfileBank.value;
@@ -99,7 +108,7 @@ const bankList = [
 </script>
 
 <template>
-  <Head title="Penarikan Saldo (WD) - XSELLER" />
+  <Head title="Penarikan Bonus (WD) - Mitra Syiar Baitullah" />
 
   <AdminLayout>
     <div class="space-y-6">
@@ -119,25 +128,36 @@ const bankList = [
         </div>
       </div>
 
-      <!-- 1. TOP HEADER SUMMARY CARD (White Card matching Mockup) -->
-      <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <!-- 1. TOP HEADER SUMMARY CARD -->
+      <div class="bg-white border border-[#e09d49]/30 rounded-3xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div class="space-y-1">
-          <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 block">
-            SALDO E-WALLET ANDA SAAT INI
+          <span class="text-[10px] font-extrabold uppercase tracking-widest text-[#9d7c64] block">
+            SALDO BONUS UTAMA TERSEDIA
           </span>
-          <h2 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
-            {{ formatRupiah(wallet?.saldo || 2500000) }}
+          <h2 class="text-3xl md:text-4xl font-black text-[#5c2c24] tracking-tight">
+            {{ formatRupiah(wallet?.saldo || 0) }}
           </h2>
-          <p class="text-xs text-slate-500 font-medium pt-0.5">
-            Min. Penarikan: <strong class="text-slate-800">{{ formatRupiah(wallet?.min_withdrawal || 50000) }}</strong> | Biaya Admin: <strong class="text-emerald-600">{{ formatRupiah(wallet?.admin_fee || 0) }}</strong>
+          <p class="text-xs text-[#9d7c64] font-medium pt-0.5">
+            Min. Penarikan: <strong class="text-[#5c2c24] font-bold">{{ formatRupiah(wallet?.min_withdrawal || 50000) }}</strong> | Potongan WD: <strong class="text-amber-700 font-bold">10% Admin + 10% Tabungan Umroh</strong> (Diterima Bersih: <strong>80%</strong>)
           </p>
         </div>
 
-        <!-- Right Side Badges (Total Cair & Sedang Diproses) -->
+        <!-- Right Side Badges (Saldo Umroh, Total Cair, & Sedang Diproses) -->
         <div class="flex items-center gap-3 shrink-0 flex-wrap">
+          <!-- Saldo Tabungan Umroh Badge -->
+          <div class="px-4 py-3 bg-[#fffaf2] border border-[#e09d49]/40 rounded-2xl flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-[#5c2c24] text-[#e09d49] flex items-center justify-center shrink-0 shadow-sm">
+              <PiggyBank class="w-5 h-5" />
+            </div>
+            <div>
+              <span class="text-[9px] font-extrabold text-[#5c2c24] uppercase tracking-wider block">TABUNGAN UMROH</span>
+              <span class="text-sm font-black text-[#e98318] font-mono">{{ formatRupiah(wallet?.saldo_umroh || 0) }}</span>
+            </div>
+          </div>
+
           <!-- Total Cair Badge Pill -->
-          <div class="px-5 py-3 bg-emerald-50/80 border border-emerald-200/80 rounded-2xl flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-sm">
+          <div class="px-4 py-3 bg-emerald-50/80 border border-emerald-200/80 rounded-2xl flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm">
               <Wallet class="w-5 h-5" />
             </div>
             <div>
@@ -147,7 +167,7 @@ const bankList = [
           </div>
 
           <!-- Sedang Diproses Badge Pill -->
-          <div class="px-5 py-3 bg-amber-50/80 border border-amber-200/80 rounded-2xl flex items-center gap-3">
+          <div class="px-4 py-3 bg-amber-50/80 border border-amber-200/80 rounded-2xl flex items-center gap-3">
             <div class="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-sm">
               <Clock class="w-5 h-5" />
             </div>
@@ -164,12 +184,12 @@ const bankList = [
         
         <!-- LEFT COLUMN: Formulir Penarikan Saldo (5 Cols) -->
         <div class="lg:col-span-5 space-y-6">
-          <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-5">
-            <div class="flex items-center gap-2 border-b border-slate-100 pb-4">
-              <div class="p-2 bg-emerald-50 text-emerald-600 rounded-xl">
+          <div class="bg-white border border-[#e09d49]/30 rounded-3xl p-6 shadow-sm space-y-5">
+            <div class="flex items-center gap-2 border-b border-[#e09d49]/20 pb-4">
+              <div class="p-2 bg-[#e98318]/15 text-[#e98318] rounded-xl">
                 <Banknote class="w-5 h-5" />
               </div>
-              <h3 class="text-xs font-black text-slate-900 uppercase tracking-tight">FORMULIR PENARIKAN SALDO</h3>
+              <h3 class="text-xs font-black text-[#5c2c24] uppercase tracking-tight">FORMULIR PENARIKAN BONUS</h3>
             </div>
 
             <!-- Profile Bank Toggle Badge Button -->
@@ -177,11 +197,11 @@ const bankList = [
               type="button"
               @click="toggleProfileBank"
               :class="[
-                isUsingProfileBank ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-emerald-50/70 text-emerald-700 border-emerald-200 hover:bg-emerald-100',
+                isUsingProfileBank ? 'bg-[#5c2c24] text-white border-[#5c2c24]' : 'bg-[#fffaf2] text-[#5c2c24] border-[#e09d49]/60 hover:bg-[#e98318]/10',
                 'w-full py-2.5 px-4 rounded-xl border text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer'
               ]"
             >
-              <div :class="[isUsingProfileBank ? 'bg-emerald-600 text-white' : 'border border-emerald-400 bg-white text-transparent', 'w-4 h-4 rounded flex items-center justify-center transition-colors']">
+              <div :class="[isUsingProfileBank ? 'bg-[#e98318] text-white' : 'border border-[#e09d49] bg-white text-transparent', 'w-4 h-4 rounded flex items-center justify-center transition-colors']">
                 <Check class="w-3 h-3 stroke-[3]" />
               </div>
               <span>Gunakan Rekening Bank di Profil Saya</span>
@@ -191,13 +211,13 @@ const bankList = [
             <form @submit.prevent="submitWithdrawal" class="space-y-4">
               <!-- Pilih Bank Tujuan -->
               <div>
-                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                <label class="block text-[10px] font-extrabold text-[#5c2c24] uppercase tracking-wider mb-1">
                   PILIH BANK TUJUAN
                 </label>
                 <select 
                   v-model="form.bank_name"
                   required
-                  class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-xs font-medium focus:outline-none focus:border-emerald-500"
+                  class="w-full px-3.5 py-2.5 bg-[#fffaf2] border border-[#e09d49]/60 rounded-xl text-[#5c2c24] text-xs font-bold focus:outline-none focus:border-[#e98318]"
                 >
                   <option v-for="bank in bankList" :key="bank" :value="bank">
                     {{ bank }}
@@ -207,7 +227,7 @@ const bankList = [
 
               <!-- Nomor Rekening / No HP -->
               <div>
-                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                <label class="block text-[10px] font-extrabold text-[#5c2c24] uppercase tracking-wider mb-1">
                   NOMOR REKENING / NO. HP
                 </label>
                 <input 
@@ -215,13 +235,13 @@ const bankList = [
                   type="text"
                   required
                   placeholder="Masukkan nomor rekening tujuan"
-                  class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 text-xs font-medium focus:outline-none focus:border-emerald-500"
+                  class="w-full px-3.5 py-2.5 bg-[#fffaf2] border border-[#e09d49]/60 rounded-xl text-[#5c2c24] placeholder-[#9d7c64]/50 text-xs font-semibold focus:outline-none focus:border-[#e98318]"
                 />
               </div>
 
               <!-- Nama Pemilik Rekening -->
               <div>
-                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                <label class="block text-[10px] font-extrabold text-[#5c2c24] uppercase tracking-wider mb-1">
                   NAMA PEMILIK REKENING
                 </label>
                 <input 
@@ -229,13 +249,13 @@ const bankList = [
                   type="text"
                   required
                   placeholder="Nama lengkap pemilik rekening"
-                  class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 text-xs font-medium focus:outline-none focus:border-emerald-500"
+                  class="w-full px-3.5 py-2.5 bg-[#fffaf2] border border-[#e09d49]/60 rounded-xl text-[#5c2c24] placeholder-[#9d7c64]/50 text-xs font-semibold focus:outline-none focus:border-[#e98318]"
                 />
               </div>
 
               <!-- Nominal Penarikan (Rupiah) -->
               <div>
-                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                <label class="block text-[10px] font-extrabold text-[#5c2c24] uppercase tracking-wider mb-1">
                   NOMINAL PENARIKAN (RUPIAH)
                 </label>
                 <input 
@@ -245,11 +265,31 @@ const bankList = [
                   min="50000"
                   step="1000"
                   placeholder="Min. Rp 50.000"
-                  class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 text-xs font-bold focus:outline-none focus:border-emerald-500"
+                  class="w-full px-3.5 py-2.5 bg-[#fffaf2] border border-[#e09d49]/60 rounded-xl text-[#5c2c24] placeholder-[#9d7c64]/50 text-xs font-black focus:outline-none focus:border-[#e98318]"
                 />
                 <div class="flex items-center justify-between text-[10px] mt-1.5 font-medium">
-                  <span class="text-slate-400">Min. {{ formatRupiah(wallet?.min_withdrawal || 50000) }}</span>
-                  <span class="text-slate-500">Max. Bisa ditarik: <strong class="text-emerald-600 font-bold">{{ formatRupiah(wallet?.saldo || 2500000) }}</strong></span>
+                  <span class="text-[#9d7c64]">Min. {{ formatRupiah(wallet?.min_withdrawal || 50000) }}</span>
+                  <span class="text-[#9d7c64]">Max: <strong class="text-[#e98318] font-bold">{{ formatRupiah(wallet?.saldo || 0) }}</strong></span>
+                </div>
+              </div>
+
+              <!-- Real-time Deduction Breakdown Card -->
+              <div v-if="grossAmount > 0" class="p-3.5 bg-[#fffaf2] border border-[#e09d49]/40 rounded-2xl space-y-2 text-xs">
+                <div class="flex items-center justify-between text-[11px] text-[#5c2c24]">
+                  <span>Nominal WD Kotor (100%):</span>
+                  <strong class="font-mono font-bold">{{ formatRupiah(grossAmount) }}</strong>
+                </div>
+                <div class="flex items-center justify-between text-[11px] text-amber-800">
+                  <span>Potongan Admin (10%):</span>
+                  <span class="font-mono">- {{ formatRupiah(adminFeeCalc) }}</span>
+                </div>
+                <div class="flex items-center justify-between text-[11px] text-[#e98318]">
+                  <span>Tabungan Umroh (10%):</span>
+                  <span class="font-mono">+ {{ formatRupiah(umrohSavingCalc) }}</span>
+                </div>
+                <div class="pt-2 border-t border-[#e09d49]/30 flex items-center justify-between font-black text-[#5c2c24]">
+                  <span>Transfer Bersih Diterima (80%):</span>
+                  <span class="font-mono text-emerald-700 text-sm">{{ formatRupiah(netReceivedCalc) }}</span>
                 </div>
               </div>
 
@@ -257,7 +297,7 @@ const bankList = [
               <button 
                 type="submit"
                 :disabled="form.processing"
-                class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-bold rounded-2xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                class="w-full py-3.5 bg-gradient-to-r from-[#e98318] via-[#e09d49] to-[#5c2c24] hover:brightness-105 active:scale-[0.99] text-white text-xs font-black rounded-2xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 <Send class="w-4 h-4" />
                 <span>Kirim Permohonan WD</span>
@@ -266,24 +306,24 @@ const bankList = [
           </div>
         </div>
 
-        <!-- RIGHT COLUMN: Antrean Penarikan Semua Member (7 Cols) -->
+        <!-- RIGHT COLUMN: Antrean Penarikan Semua Mitra (7 Cols) -->
         <div class="lg:col-span-7 space-y-6">
-          <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div class="bg-white border border-[#e09d49]/30 rounded-3xl p-6 shadow-sm space-y-4">
+            <div class="flex items-center justify-between border-b border-[#e09d49]/20 pb-4">
               <div class="flex items-center gap-2">
-                <ListFilter class="w-4 h-4 text-emerald-600" />
-                <h3 class="text-xs font-black text-slate-900 uppercase tracking-tight">
-                  {{ is_admin ? 'ANTREAN PENARIKAN SEMUA MEMBER (ADMIN)' : 'RIWAYAT PENARIKAN SALDO ANDA' }}
+                <ListFilter class="w-4 h-4 text-[#e98318]" />
+                <h3 class="text-xs font-black text-[#5c2c24] uppercase tracking-tight">
+                  {{ is_admin ? 'ANTREAN PENARIKAN SEMUA MITRA (ADMIN)' : 'RIWAYAT PENARIKAN SALDO ANDA' }}
                 </h3>
               </div>
-              <span class="px-2.5 py-1 text-[10px] font-extrabold bg-slate-100 text-slate-600 rounded-full">
+              <span class="px-2.5 py-1 text-[10px] font-extrabold bg-[#e98318]/15 text-[#e98318] rounded-full border border-[#e09d49]/30">
                 {{ withdrawals.length }} Transaksi
               </span>
             </div>
 
             <!-- Withdrawals Queue List / Empty State -->
-            <div v-if="withdrawals.length === 0" class="p-12 text-center border-2 border-dashed border-slate-100 rounded-3xl bg-slate-50/50">
-              <p class="text-xs text-slate-400 italic font-medium">
+            <div v-if="withdrawals.length === 0" class="p-12 text-center border-2 border-dashed border-[#e09d49]/30 rounded-3xl bg-[#fffaf2]/50">
+              <p class="text-xs text-[#9d7c64] italic font-medium">
                 Belum ada permohonan penarikan saldo di sistem.
               </p>
             </div>
@@ -292,12 +332,12 @@ const bankList = [
               <div 
                 v-for="item in withdrawals" 
                 :key="item.id"
-                class="p-4 bg-slate-50/70 border border-slate-100 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-50 transition-colors"
+                class="p-4 bg-[#fffaf2] border border-[#e09d49]/30 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-white transition-colors"
               >
-                <div class="space-y-1">
+                <div class="space-y-1.5">
                   <div class="flex items-center gap-2">
-                    <span class="font-bold text-slate-800 text-xs">{{ item.user_name }}</span>
-                    <span class="text-[10px] text-slate-400 font-medium">@{{ item.user_username }}</span>
+                    <span class="font-bold text-[#5c2c24] text-xs">{{ item.user_name }}</span>
+                    <span class="text-[10px] text-[#9d7c64] font-medium">@{{ item.user_username }}</span>
                     <span 
                       :class="[
                         item.status === 'approved' ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : 
@@ -310,11 +350,18 @@ const bankList = [
                     </span>
                   </div>
 
-                  <p class="text-xs text-slate-600 font-medium">
-                    {{ item.bank_name }} - <strong class="text-slate-900 font-mono">{{ item.bank_account_number }}</strong> a.n {{ item.bank_account_name }}
+                  <p class="text-xs text-slate-700 font-medium">
+                    {{ item.bank_name }} - <strong class="text-[#5c2c24] font-mono">{{ item.bank_account_number }}</strong> a.n {{ item.bank_account_name }}
                   </p>
 
-                  <p class="text-[10px] text-slate-400">
+                  <!-- Breakdown Badge Pill -->
+                  <div class="text-[10px] text-[#9d7c64] flex items-center gap-3 pt-0.5 flex-wrap">
+                    <span>Admin 10%: <strong class="text-slate-700 font-mono">{{ formatRupiah(item.fee) }}</strong></span>
+                    <span>Tabungan Umroh 10%: <strong class="text-[#e98318] font-mono">{{ formatRupiah(item.umroh_saving) }}</strong></span>
+                    <span>Transfer Bersih 80%: <strong class="text-emerald-700 font-bold font-mono">{{ formatRupiah(item.net_received) }}</strong></span>
+                  </div>
+
+                  <p class="text-[10px] text-[#9d7c64]">
                     Diajukan pada: {{ item.created_at }}
                     <span v-if="item.admin_notes" class="text-rose-500 font-semibold block mt-0.5">Catatan: {{ item.admin_notes }}</span>
                   </p>
@@ -322,7 +369,8 @@ const bankList = [
 
                 <!-- Right Side: Amount & Admin Actions -->
                 <div class="flex flex-col items-end gap-2 shrink-0">
-                  <span class="text-sm font-black text-slate-900 font-mono tracking-tight">
+                  <span class="text-xs text-[#9d7c64] font-bold">WD Kotor:</span>
+                  <span class="text-sm font-black text-[#5c2c24] font-mono tracking-tight">
                     {{ formatRupiah(item.amount) }}
                   </span>
 

@@ -19,6 +19,7 @@
   - **DILARANG** menggunakan istilah "PIN" atau "Beli PIN". **Gunakan istilah "DP AWAL" atau "KODE DP AWAL"** untuk pendaftaran kemitraan.
   - **Ujroh Sponsor / Dana Operasional:** Istilah resmi untuk komisi sponsor langsung sebesar Rp 250.000 / jamaah.
   - **Team (Generasi):** Level kedalaman bonus keanggotaan (Team 1 s/d Team 12).
+  - **Ketentuan Penarikan Saldo (Withdrawal / WD):** Setiap permohonan WD dikenakan total potongan 20%, yang terdiri dari **10% Biaya Admin** dan **10% Saldo Tabungan Umroh** (dialokasikan ke akun mitra). Mitra menerima transfer bersih sebesar **80%** dari nominal WD.
   - **Prosedur Migration Database Production:**
     - Jika terminal SSH di server live mengalami kendala/error, cara menjalankan database migration di server production adalah dengan membuka URL: **`https://mitrasyiarbaitullah.com/run_migrate.php`** di browser setelah melakukan `git push origin master`.
 
