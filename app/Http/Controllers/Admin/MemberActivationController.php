@@ -18,7 +18,7 @@ class MemberActivationController extends Controller
     {
         $currentUser = auth()->user() ?: User::first();
 
-        // Get user's active vouchers
+        // Get user's active DP Awal vouchers
         $vouchers = Voucher::where('user_id', $currentUser->id)
             ->where('status', 'active')
             ->get()
@@ -26,45 +26,42 @@ class MemberActivationController extends Controller
                 return [
                     'code' => $v->code,
                     'package_name' => $v->package_name,
-                    'label' => $v->code . ' (Paket ' . $v->package_name . ')',
+                    'label' => 'Kode DP Awal: ' . $v->code . ' (DP Rp 500.000)',
                 ];
             });
 
-        // List of all active users to choose as Sponsor / Parent Placement
+        // List of active users to choose as Sponsor
         $allUsers = User::select('id', 'name', 'username', 'email')->get()->map(function ($u) {
             return [
                 'username' => $u->username ?: strtolower(explode(' ', $u->name)[0]),
-                'name' => $u->name,
-                'label' => '@' . ($u->username ?: strtolower(explode(' ', $u->name)[0])) . ' (' . $u->name . ')',
+                'name'     => $u->name,
+                'label'    => '@' . ($u->username ?: strtolower(explode(' ', $u->name)[0])) . ' (' . $u->name . ')',
             ];
         });
 
         return Inertia::render('Admin/Activation/Index', [
-            'vouchers' => $vouchers,
-            'users' => $allUsers,
+            'vouchers'        => $vouchers,
+            'users'           => $allUsers,
             'default_sponsor' => $currentUser->username ?: 'admin',
-            'default_parent' => $currentUser->username ?: 'admin',
         ]);
     }
 
     /**
-     * Process member activation and placement in binary tree.
+     * Process member activation with DP Awal code.
      */
     public function store(Request $request)
     {
         $request->validate([
-            'username' => 'required|string|alpha_dash|max:50|unique:users,username',
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email',
+            'username'         => 'required|string|alpha_dash|max:50|unique:users,username',
+            'name'             => 'required|string|max:255',
+            'email'            => 'required|string|email|max:255|unique:users,email',
             'sponsor_username' => 'required|string|exists:users,username',
-            'parent_username' => 'required|string|exists:users,username',
-            'position' => 'required|in:left,right',
-            'voucher_code' => 'required|string|exists:vouchers,code',
+            'voucher_code'     => 'required|string|exists:vouchers,code',
         ]);
 
         $currentUser = auth()->user() ?: User::first();
 
-        // Verify voucher
+        // Verify DP Awal code (voucher)
         $voucher = Voucher::where('code', $request->voucher_code)
             ->where('user_id', $currentUser->id)
             ->where('status', 'active')
@@ -72,60 +69,45 @@ class MemberActivationController extends Controller
 
         if (!$voucher) {
             throw ValidationException::withMessages([
-                'voucher_code' => 'VOUCHER Aktivasi tidak valid, telah digunakan, atau bukan milik Anda.',
+                'voucher_code' => 'Kode DP Awal tidak valid, sudah digunakan, atau bukan milik Anda.',
             ]);
         }
 
-        $parentUser = User::where('username', $request->parent_username)->first();
-        if (!$parentUser) {
+        $sponsorUser = User::where('username', $request->sponsor_username)->first();
+        if (!$sponsorUser) {
             throw ValidationException::withMessages([
-                'parent_username' => 'Username Parent Placement tidak ditemukan.',
+                'sponsor_username' => 'Username Sponsor tidak ditemukan.',
             ]);
         }
 
-        // Check if parent position is already occupied
-        $existingChild = User::where('parent_id', $parentUser->id)
-            ->where('position', $request->position)
-            ->exists();
+        // Auto determine leg position if binary structure needs it
+        $hasLeft = User::where('parent_id', $sponsorUser->id)->where('position', 'left')->exists();
+        $autoPosition = $hasLeft ? 'right' : 'left';
 
-        if ($existingChild) {
-            $posText = $request->position === 'left' ? 'Kiri (Left)' : 'Kanan (Right)';
-            throw ValidationException::withMessages([
-                'position' => "Posisi Kaki {$posText} pada parent @{$parentUser->username} sudah terisi! Silakan pilih posisi lain atau tentukan parent placement baru.",
-            ]);
-        }
-
-        // Create new member
+        // Create new member directly linked to Sponsor
         $newUser = User::create([
-            'name' => $request->name,
-            'username' => strtolower($request->username),
-            'email' => $request->email,
-            'password' => bcrypt('password'),
-            'parent_id' => $parentUser->id,
-            'position' => $request->position,
-            'package_name' => $voucher->package_name ?: 'Basic',
-            'left_count' => 0,
-            'right_count' => 0,
-            'left_points' => 0,
+            'name'         => $request->name,
+            'username'     => strtolower($request->username),
+            'email'        => $request->email,
+            'password'     => bcrypt('password'),
+            'parent_id'    => $sponsorUser->id,
+            'position'     => $autoPosition,
+            'package_name' => 'DP Join Rp 500rb',
+            'left_count'   => 0,
+            'right_count'  => 0,
+            'left_points'  => 0,
             'right_points' => 0,
         ]);
         $newUser->assignRole('client');
 
-        // Mark voucher as used
+        // Mark DP Awal code as used
         $voucher->update([
-            'status' => 'used',
+            'status'     => 'used',
             'used_by_id' => $newUser->id,
-            'used_at' => now(),
+            'used_at'    => now(),
         ]);
 
-        // Update binary leg counters for parent
-        if ($request->position === 'left') {
-            $parentUser->increment('left_count');
-        } else {
-            $parentUser->increment('right_count');
-        }
-
-        return redirect()->route('admin.pohon-jaringan', ['focus_id' => $newUser->id])
-            ->with('success', "Member baru @{$newUser->username} ({$newUser->name}) berhasil didaftarkan & diaktifkan!");
+        return redirect()->route('admin.team.index')
+            ->with('success', "Mitra baru @{$newUser->username} ({$newUser->name}) berhasil didaftarkan & diaktifkan dengan DP Awal!");
     }
 }
