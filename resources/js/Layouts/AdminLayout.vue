@@ -60,6 +60,7 @@ const closeAllToasts = () => {
 const navigation = [
   { name: 'Dashboard', href: route('admin.dashboard'), icon: LayoutDashboard, current: route().current('admin.dashboard') },
   { name: 'Pohon Jaringan', href: route('admin.pohon-jaringan'), icon: GitFork, current: route().current('admin.pohon-jaringan') },
+  { name: 'Team Saya (Generasi)', href: route('admin.team.index'), icon: Users, current: route().current('admin.team.index') },
   { name: 'Aktivasi Member', href: route('admin.activation.index'), icon: UserPlus, current: route().current('admin.activation.index') },
   { name: 'PIN Wallet', href: route('admin.voucher-wallet.index'), icon: KeyRound, current: route().current('admin.voucher-wallet.index') },
   { name: 'Order Pembayaran', href: route('admin.payment-orders.index'), icon: ClipboardList, current: route().current('admin.payment-orders.index') },

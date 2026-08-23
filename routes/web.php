@@ -38,6 +38,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Pohon Jaringan (Genealogy Binary Tree)
     Route::get('/pohon-jaringan', [\App\Http\Controllers\Admin\GenealogyController::class, 'index'])->name('pohon-jaringan');
 
+    // Team Saya (Multi-Tier Team Generation Level 1-12)
+    Route::get('/team', [\App\Http\Controllers\Admin\TeamController::class, 'index'])->name('team.index');
+
     // Aktivasi Member Baru
     Route::get('/aktivasi-member', [\App\Http\Controllers\Admin\MemberActivationController::class, 'index'])->name('activation.index');
     Route::post('/aktivasi-member', [\App\Http\Controllers\Admin\MemberActivationController::class, 'store'])->name('activation.store');
