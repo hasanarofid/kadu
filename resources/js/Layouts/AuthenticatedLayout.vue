@@ -1,192 +1,181 @@
 <script setup>
-import { ref } from 'vue';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
+import { Link, router, usePage } from '@inertiajs/vue3';
+import { Bell, Users, ChevronDown, UserCheck, KeyRound, Wallet, LogOut } from '@lucide/vue';
 
-const showingNavigationDropdown = ref(false);
+const page = usePage();
+const user = computed(() => page.props.auth?.user || { name: 'Member' });
+
+const isUserMenuOpen = ref(false);
+const isNotificationsOpen = ref(false);
+
+const notifications = ref([
+  { id: 1, title: 'Bonus Sponsor Masuk', desc: 'Rp 250.000 dari pendaftaran member baru', time: '10 min lalu', read: false },
+  { id: 2, title: 'Pembayaran Voucher Terverifikasi', desc: 'Order pembelian voucher telah disetujui admin', time: '1 jam lalu', read: false },
+  { id: 3, title: 'Komisi Team Generasi 2', desc: 'Rp 5.000 dikreditkan ke e-Wallet Syiar Anda', time: '3 jam lalu', read: true },
+]);
+const unreadNotificationsCount = computed(() => notifications.value.filter(n => !n.read).length);
+const markAllRead = () => { notifications.value.forEach(n => n.read = true); };
+
+const logout = () => {
+  router.post(route('logout'));
+};
 </script>
 
 <template>
-    <div>
-        <div class="min-h-screen bg-[#f8efdf]/60 text-[#5c2c24] font-sans antialiased">
-            <nav class="border-b border-[#e09d49]/40 bg-[#2e395d] text-white shadow-md">
-                <!-- Primary Navigation Menu -->
-                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div class="flex h-16 justify-between items-center">
-                        <div class="flex items-center gap-6">
-                            <!-- Logo -->
-                            <div class="flex shrink-0 items-center">
-                                <Link :href="route('dashboard')" class="flex items-center gap-2.5">
-                                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#e98318] to-[#e09d49] flex items-center justify-center text-white font-black shadow-md border border-[#e09d49]/50">
-                                        M
+    <div class="min-h-screen bg-[#f8efdf]/60 text-[#5c2c24] font-sans antialiased flex flex-col justify-between">
+        <div>
+            <!-- Header Navbar -->
+            <header class="flex items-center justify-between min-h-16 py-2 px-4 md:px-8 bg-[#2e395d] text-white sticky top-0 z-30 shadow-md border-b border-[#e09d49]/40">
+                <!-- Sisi Kiri (Anak Panah 1: Renggangkan & Kebaca) -->
+                <div class="flex items-center gap-4 lg:gap-8">
+                    <!-- Branding Logo & Titles -->
+                    <Link :href="route('dashboard')" class="flex items-center gap-3.5 sm:gap-4">
+                        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-[#e98318] to-[#e09d49] flex items-center justify-center text-white font-black text-base shadow-md border border-[#e09d49]/50 shrink-0">
+                            <span>M</span>
+                        </div>
+                        <div class="space-y-0.5 text-left">
+                            <div class="flex items-center gap-2.5 flex-wrap">
+                                <h1 class="text-xs sm:text-sm font-black tracking-wider text-[#e09d49] uppercase leading-tight">MITRA SYIAR BAITULLAH</h1>
+                                <span class="px-2.5 py-0.5 text-[9.5px] font-extrabold bg-[#e98318]/25 text-[#f5c68b] border border-[#e09d49]/40 rounded-md tracking-wide shrink-0">Syiar Portal</span>
+                            </div>
+                            <p class="text-[10px] sm:text-[11px] text-slate-300 font-medium tracking-normal hidden sm:block">SISTEM KEMITRAAN & TRAVEL UMROH/HAJI TERPERCAYA</p>
+                        </div>
+                    </Link>
+
+                    <span class="text-[#e09d49]/40 hidden lg:inline text-lg font-light">•</span>
+
+                    <!-- Slogan Sisi Kiri -->
+                    <div class="hidden lg:flex items-center gap-2.5 px-3.5 py-1 bg-white/10 border border-[#e09d49]/30 rounded-full text-xs font-serif italic text-slate-100 backdrop-blur-xs shadow-xs">
+                        <span class="w-2 h-2 rounded-full bg-[#e98318] animate-pulse shadow-[0_0_8px_#e98318]"></span>
+                        <span>Bersama Menjadi Tamu Allah</span>
+                    </div>
+                </div>
+
+                <!-- Sisi Kanan (Anak Panah 2: Fungsi Notifikasi & Dropdown Menu) -->
+                <div class="flex items-center gap-3 sm:gap-4 text-xs font-semibold">
+                    
+                    <!-- Notification Bell Dropdown -->
+                    <div class="relative">
+                        <button 
+                            @click="isNotificationsOpen = !isNotificationsOpen"
+                            class="relative p-2 rounded-full bg-[#e98318]/20 hover:bg-[#e98318]/35 text-[#e09d49] transition-all cursor-pointer border border-[#e09d49]/30"
+                            title="Notifikasi"
+                        >
+                            <Bell class="w-4 h-4" />
+                            <span v-if="unreadNotificationsCount > 0" class="absolute -top-1 -right-1 min-w-4 h-4 px-1 bg-rose-500 text-white text-[9px] font-black rounded-full flex items-center justify-center border border-[#2e395d] animate-pulse">
+                                {{ unreadNotificationsCount }}
+                            </span>
+                        </button>
+
+                        <!-- Notifications Dropdown Popover -->
+                        <div v-if="isNotificationsOpen" @click="isNotificationsOpen = false" class="fixed inset-0 z-20"></div>
+                        <div 
+                            v-if="isNotificationsOpen" 
+                            class="absolute right-0 mt-2 w-80 sm:w-96 bg-white text-[#5c2c24] border border-[#e09d49]/40 rounded-2xl shadow-2xl z-30 overflow-hidden animate-in fade-in slide-in-from-top-2"
+                        >
+                            <div class="flex items-center justify-between px-4 py-3 bg-[#5c2c24] text-white border-b border-[#e09d49]/30">
+                                <div class="flex items-center gap-2">
+                                    <Bell class="w-4 h-4 text-[#e09d49]" />
+                                    <span class="font-bold text-xs">Notifikasi Sistem</span>
+                                    <span v-if="unreadNotificationsCount > 0" class="px-1.5 py-0.5 text-[9px] bg-[#e98318] rounded-full font-black text-white">{{ unreadNotificationsCount }} Baru</span>
+                                </div>
+                                <button @click="markAllRead" class="text-[10px] text-[#e09d49] hover:underline font-semibold">Tandai Dibaca</button>
+                            </div>
+
+                            <div class="divide-y divide-gray-100 max-h-72 overflow-y-auto">
+                                <div 
+                                    v-for="item in notifications" 
+                                    :key="item.id"
+                                    :class="['p-3.5 hover:bg-[#fffaf2] transition-colors cursor-pointer flex gap-3 items-start', !item.read ? 'bg-[#fffaf2]/80' : '']"
+                                >
+                                    <div class="w-2 h-2 rounded-full bg-[#e98318] mt-1.5 shrink-0" v-if="!item.read"></div>
+                                    <div class="flex-1 space-y-0.5">
+                                        <div class="flex justify-between items-center">
+                                            <span class="font-bold text-xs text-[#5c2c24]">{{ item.title }}</span>
+                                            <span class="text-[9px] text-[#9d7c64] font-medium">{{ item.time }}</span>
+                                        </div>
+                                        <p class="text-[11px] text-[#9d7c64] leading-relaxed">{{ item.desc }}</p>
                                     </div>
-                                    <div class="hidden sm:block text-left">
-                                        <span class="text-xs font-black tracking-wider text-[#e09d49] block uppercase">MITRA SYIAR BAITULLAH</span>
-                                        <span class="text-[9px] font-medium text-slate-300 block">Sistem Kemitraan Umroh</span>
-                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-2.5 bg-gray-50 border-t border-gray-100 text-center">
+                                <Link :href="route('admin.activities.index')" class="text-xs text-[#e98318] font-bold hover:underline">
+                                    Lihat Semua Riwayat Aktivitas →
                                 </Link>
                             </div>
-
-                            <!-- Navigation Links -->
-                            <div class="hidden space-x-6 sm:-my-px sm:flex">
-                                <NavLink
-                                    :href="route('dashboard')"
-                                    :active="route().current('dashboard')"
-                                    class="text-xs font-bold text-white hover:text-[#e09d49] transition-colors"
-                                >
-                                    Dashboard
-                                </NavLink>
-                            </div>
                         </div>
+                    </div>
 
-                        <div class="hidden sm:ms-6 sm:flex sm:items-center">
-                            <!-- Settings Dropdown -->
-                            <div class="relative ms-3">
-                                <Dropdown align="right" width="48">
-                                    <template #trigger>
-                                        <span class="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                class="inline-flex items-center rounded-full border border-[#e09d49]/40 bg-[#5c2c24] px-4 py-2 text-xs font-bold text-white transition duration-150 ease-in-out hover:bg-[#5c2c24]/80 shadow-sm"
-                                            >
-                                                <span>{{ $page.props.auth.user.name }}</span>
-
-                                                <svg
-                                                    class="-me-0.5 ms-2 h-4 w-4 text-[#e09d49]"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fill-rule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clip-rule="evenodd"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </template>
-
-                                    <template #content>
-                                        <DropdownLink
-                                            :href="route('profile.edit')"
-                                        >
-                                            Profile
-                                        </DropdownLink>
-                                        <DropdownLink
-                                            :href="route('logout')"
-                                            method="post"
-                                            as="button"
-                                        >
-                                            Log Out
-                                        </DropdownLink>
-                                    </template>
-                                </Dropdown>
-                            </div>
+                    <!-- User Avatar & AKUN info -->
+                    <div class="hidden sm:flex items-center gap-2.5 bg-white/5 border border-white/10 px-3 py-1 rounded-full">
+                        <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-[#e98318] to-[#5c2c24] border border-[#e09d49] text-white font-bold flex items-center justify-center text-xs shadow-xs">
+                            {{ user.name ? user.name.charAt(0).toUpperCase() : 'M' }}
                         </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] text-slate-300 font-semibold">AKUN:</span>
+                            <span class="font-bold text-white text-xs max-w-[120px] truncate">{{ user.name }}</span>
+                            <span class="px-2 py-0.5 text-[9px] font-bold bg-[#e98318]/25 text-[#e09d49] border border-[#e09d49]/30 rounded-md">
+                                {{ user.roles?.[0]?.name === 'admin' ? 'Administrator' : 'Mitra Syiar' }}
+                            </span>
+                        </div>
+                    </div>
 
-                        <!-- Hamburger -->
-                        <div class="-me-2 flex items-center sm:hidden">
-                            <button
-                                @click="showingNavigationDropdown = !showingNavigationDropdown"
-                                class="inline-flex items-center justify-center rounded-lg p-2 text-slate-200 hover:bg-[#5c2c24] hover:text-white"
-                            >
-                                <svg
-                                    class="h-6 w-6"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        :class="{
-                                            hidden: showingNavigationDropdown,
-                                            'inline-flex': !showingNavigationDropdown,
-                                        }"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        :class="{
-                                            hidden: !showingNavigationDropdown,
-                                            'inline-flex': showingNavigationDropdown,
-                                        }"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
+                    <!-- Menu Dropdown Pill Button -->
+                    <div class="relative">
+                        <button 
+                            @click="isUserMenuOpen = !isUserMenuOpen"
+                            class="px-3.5 py-1.5 rounded-full bg-[#5c2c24] hover:bg-[#6e352b] border border-[#e09d49]/50 text-white text-xs font-bold flex items-center gap-2 transition-all shadow-md cursor-pointer"
+                        >
+                            <Users class="w-3.5 h-3.5 text-[#e09d49]" />
+                            <span>Menu</span>
+                            <ChevronDown :class="['w-3.5 h-3.5 text-slate-300 transition-transform', isUserMenuOpen ? 'rotate-180' : '']" />
+                        </button>
+
+                        <div v-if="isUserMenuOpen" @click="isUserMenuOpen = false" class="fixed inset-0 z-20"></div>
+                        <div v-if="isUserMenuOpen" class="absolute right-0 mt-2 w-52 bg-white text-[#5c2c24] border border-[#e09d49]/30 rounded-2xl shadow-2xl py-1.5 z-30 overflow-hidden animate-in fade-in slide-in-from-top-2">
+                            <div class="px-4 py-2 bg-[#fffaf2] border-b border-[#e09d49]/20">
+                                <p class="font-bold text-xs text-[#5c2c24] truncate">{{ user.name }}</p>
+                                <p class="text-[10px] text-[#9d7c64] truncate">@{{ user.username || 'mitra' }}</p>
+                            </div>
+                            <Link :href="route('profile.edit')" class="flex items-center gap-2 px-4 py-2.5 text-xs font-semibold hover:bg-[#fffaf2] transition-colors">
+                                <UserCheck class="w-3.5 h-3.5 text-[#e98318]" />
+                                <span>Pengaturan Profil</span>
+                            </Link>
+                            <Link :href="route('admin.voucher-wallet.index')" class="flex items-center gap-2 px-4 py-2.5 text-xs font-semibold hover:bg-[#fffaf2] transition-colors">
+                                <KeyRound class="w-3.5 h-3.5 text-[#e98318]" />
+                                <span>Voucher / PIN Wallet</span>
+                            </Link>
+                            <Link :href="route('admin.finance.index')" class="flex items-center gap-2 px-4 py-2.5 text-xs font-semibold hover:bg-[#fffaf2] transition-colors">
+                                <Wallet class="w-3.5 h-3.5 text-[#e98318]" />
+                                <span>Keuangan & Saldo</span>
+                            </Link>
+                            <button @click="logout" class="w-full text-left flex items-center gap-2 px-4 py-2.5 text-xs font-bold text-rose-600 hover:bg-rose-50 border-t border-gray-100 transition-colors cursor-pointer">
+                                <LogOut class="w-3.5 h-3.5 text-rose-500" />
+                                <span>Keluar</span>
                             </button>
                         </div>
                     </div>
+
                 </div>
-
-                <!-- Responsive Navigation Menu -->
-                <div
-                    :class="{
-                        block: showingNavigationDropdown,
-                        hidden: !showingNavigationDropdown,
-                    }"
-                    class="sm:hidden border-t border-[#e09d49]/30 bg-[#2e395d]"
-                >
-                    <div class="space-y-1 pb-3 pt-2">
-                        <ResponsiveNavLink
-                            :href="route('dashboard')"
-                            :active="route().current('dashboard')"
-                            class="text-white"
-                        >
-                            Dashboard
-                        </ResponsiveNavLink>
-                    </div>
-
-                    <!-- Responsive Settings Options -->
-                    <div class="border-t border-[#e09d49]/30 pb-1 pt-4">
-                        <div class="px-4">
-                            <div class="text-base font-medium text-white">
-                                {{ $page.props.auth.user.name }}
-                            </div>
-                            <div class="text-sm font-medium text-slate-300">
-                                {{ $page.props.auth.user.email }}
-                            </div>
-                        </div>
-
-                        <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :href="route('profile.edit')">
-                                Profile
-                            </ResponsiveNavLink>
-                            <ResponsiveNavLink
-                                :href="route('logout')"
-                                method="post"
-                                as="button"
-                            >
-                                Log Out
-                            </ResponsiveNavLink>
-                        </div>
-                    </div>
-                </div>
-            </nav>
+            </header>
 
             <!-- Page Heading -->
-            <header
-                class="bg-white/80 backdrop-blur-md shadow-xs border-b border-[#e09d49]/30"
-                v-if="$slots.header"
-            >
-                <div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+            <header class="bg-white/80 backdrop-blur-md shadow-xs border-b border-[#e09d49]/30" v-if="$slots.header">
+                <div class="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
                     <slot name="header" />
                 </div>
             </header>
 
             <!-- Page Content -->
-            <main class="py-6">
+            <main class="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
                 <slot />
             </main>
         </div>
+
+        <footer class="p-4 text-center text-[11px] text-[#9d7c64] border-t border-[#e09d49]/30 bg-[#fffaf2]">
+            <p>© 2026 Mitra Syiar Baitullah. Hak Cipta Dilindungi Undang-Undang. Bersama Menjadi Tamu Allah.</p>
+        </footer>
     </div>
 </template>
-
