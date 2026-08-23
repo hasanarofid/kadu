@@ -56,23 +56,28 @@ const closeAllToasts = () => {
   toastStack.value = [];
 };
 
-// Navigation items matching Gambar 2 sidebar
-const navigation = [
-  { name: 'Dashboard', href: route('admin.dashboard'), icon: LayoutDashboard, current: route().current('admin.dashboard') },
-  { name: 'Pohon Jaringan', href: route('admin.pohon-jaringan'), icon: GitFork, current: route().current('admin.pohon-jaringan') },
-  { name: 'Team Saya (Generasi)', href: route('admin.team.index'), icon: Users, current: route().current('admin.team.index') },
-  { name: 'Aktivasi Member', href: route('admin.activation.index'), icon: UserPlus, current: route().current('admin.activation.index') },
-  { name: 'PIN Wallet', href: route('admin.voucher-wallet.index'), icon: KeyRound, current: route().current('admin.voucher-wallet.index') },
-  { name: 'Order Pembayaran', href: route('admin.payment-orders.index'), icon: ClipboardList, current: route().current('admin.payment-orders.index') },
-  { name: 'Keuangan', href: route('admin.finance.index'), icon: Wallet, current: route().current('admin.finance.index') },
-  { name: 'Penarikan Saldo', href: route('admin.withdrawals.index'), icon: ArrowUpRight, current: route().current('admin.withdrawals.index') },
-  { name: 'Data Jaringan', href: route('admin.network-data.index'), icon: Users, current: route().current('admin.network-data.index') },
-  { name: 'Aktivitas', href: route('admin.activities.index'), icon: Activity, current: route().current('admin.activities.index') },
-  { name: 'Laporan', href: route('admin.reports.index'), icon: FileText, current: route().current('admin.reports.index') },
-  { name: 'Pengaturan Profil', href: route('profile.edit'), icon: UserCheck, current: route().current('profile.edit') },
-  { name: 'Pengaturan Sistem', href: route('admin.settings.index'), icon: SettingsIcon, current: route().current('admin.settings.index'), special: 'amber' },
-  { name: 'Backup Data (JSON)', href: route('admin.backup-json'), icon: Download, current: false, special: 'blue', external: true },
-];
+// Navigation items matching spesifikasi menu terbaru
+const navigation = computed(() => {
+  const items = [
+    { name: 'Dashboard', href: route('admin.dashboard'), icon: LayoutDashboard, current: route().current('admin.dashboard') },
+    { name: 'Team', href: route('admin.team.index'), icon: Users, current: route().current('admin.team.index') },
+    { name: 'Aktivasi Mitra', href: route('admin.activation.index'), icon: UserPlus, current: route().current('admin.activation.index') },
+    { name: 'DP Awal', href: route('admin.voucher-wallet.index'), icon: KeyRound, current: route().current('admin.voucher-wallet.index') },
+    { name: 'Keuangan', href: route('admin.finance.index'), icon: Wallet, current: route().current('admin.finance.index') },
+    { name: 'Penarikan Bonus', href: route('admin.withdrawals.index'), icon: ArrowUpRight, current: route().current('admin.withdrawals.index') },
+    { name: 'Data Team', href: route('admin.network-data.index'), icon: Users, current: route().current('admin.network-data.index') },
+    { name: 'Aktivitas', href: route('admin.activities.index'), icon: Activity, current: route().current('admin.activities.index') },
+    { name: 'Laporan', href: route('admin.reports.index'), icon: FileText, current: route().current('admin.reports.index') },
+    { name: 'Pengaturan Profile', href: route('profile.edit'), icon: UserCheck, current: route().current('profile.edit') },
+  ];
+
+  if (user.value.roles?.[0]?.name === 'admin') {
+    items.push({ name: 'Order Pembayaran', href: route('admin.payment-orders.index'), icon: ClipboardList, current: route().current('admin.payment-orders.index') });
+    items.push({ name: 'Pengaturan Sistem', href: route('admin.settings.index'), icon: SettingsIcon, current: route().current('admin.settings.index'), special: 'amber' });
+  }
+
+  return items;
+});
 
 const logout = () => {
   router.post(route('logout'));
@@ -139,18 +144,18 @@ const logout = () => {
             </button>
           </div>
 
-          <!-- Sidebar User Profile Summary Card (Matching Gambar Mockup) -->
+          <!-- Sidebar User Profile Summary Card (Matching Gambar Mockup Budi Santoso) -->
           <div v-if="!isSidebarCollapsed" class="p-4 flex flex-col items-center text-center space-y-2 border-b border-slate-100">
             <div class="w-14 h-14 rounded-full bg-[#1e293b] text-white font-extrabold flex items-center justify-center text-xl shadow-lg border-2 border-slate-100">
-              {{ user.name ? user.name.charAt(0).toUpperCase() : 'P' }}
+              {{ user.name ? user.name.charAt(0).toUpperCase() : 'B' }}
             </div>
             <div>
               <h3 class="text-xs font-black text-slate-800 tracking-tight leading-tight">{{ user.name }}</h3>
-              <p class="text-[10px] text-slate-400 font-medium">@{{ user.username || 'admin' }}</p>
+              <p class="text-[10px] text-slate-400 font-medium">@{{ user.username || 'budi' }}</p>
             </div>
             <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full border border-amber-500/40 text-amber-600 bg-amber-50/60 text-[9px] font-extrabold uppercase tracking-wider">
               <Crown class="w-3 h-3 text-amber-500" />
-              <span>MEMBER</span>
+              <span>MITRA</span>
             </div>
 
             <!-- Dompet Saya Card Widget matching Mockup -->
@@ -159,8 +164,8 @@ const logout = () => {
               <p class="text-sm font-black text-slate-900 leading-tight">Rp 2.500.000</p>
               <div class="grid grid-cols-2 gap-1 pt-1.5 border-t border-slate-200/60 text-[9px]">
                 <div>
-                  <span class="text-slate-400 font-medium block">PIN WALLET:</span>
-                  <span class="font-bold text-slate-800">2 Pcs</span>
+                  <span class="text-slate-400 font-medium block">DP AWAL:</span>
+                  <span class="font-bold text-slate-800">2x</span>
                 </div>
                 <div>
                   <span class="text-slate-400 font-medium block">TOTAL BONUS:</span>
