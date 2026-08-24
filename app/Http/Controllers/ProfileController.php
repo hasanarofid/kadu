@@ -65,7 +65,7 @@ class ProfileController extends Controller
             'username'            => 'required|string|max:50|unique:users,username,' . $user->id,
             'email'               => 'required|email|max:100|unique:users,email,' . $user->id,
             'phone'               => 'nullable|string|max:20',
-            'password'            => 'nullable|string|min:6',
+            'password'            => 'nullable|string|min:8|confirmed',
             'bank_name'           => 'nullable|string|max:100',
             'bank_account_number' => 'nullable|string|max:100',
             'bank_account_name'   => 'nullable|string|max:100',
@@ -115,7 +115,12 @@ class ProfileController extends Controller
 
         // Send email alert if password changed
         if ($request->filled('password')) {
-            Mail::to($user->email)->queue(new PasswordChangedMail($user));
+            try {
+                Mail::to($user->email)->send(new PasswordChangedMail($user));
+            } catch (\Throwable $e) {
+                // Log SMTP error silently if email delivery fails so profile save isn't blocked
+                \Illuminate\Support\Facades\Log::error('Failed to send password changed email: ' . $e->getMessage());
+            }
         }
 
         return Redirect::route('profile.edit')->with('success', 'Profil akun Anda berhasil diperbarui.');

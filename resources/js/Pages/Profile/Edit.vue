@@ -34,11 +34,15 @@ const form = useForm({
   username: props.user_profile?.username || currentUser.value?.username || '',
   email: props.user_profile?.email || currentUser.value?.email || '',
   password: '',
+  password_confirmation: '',
 });
 
 const submitProfile = () => {
   form.patch(route('profile.update'), {
     preserveScroll: true,
+    onSuccess: () => {
+      form.reset('password', 'password_confirmation');
+    },
   });
 };
 </script>
@@ -124,14 +128,28 @@ const submitProfile = () => {
               Ubah Password (Kosongkan Jika Tidak Diubah)
             </h3>
 
-            <div>
-              <label class="block font-bold text-slate-300 mb-1.5">Password Baru</label>
-              <input 
-                v-model="form.password"
-                type="password"
-                placeholder="Masukkan Password Baru..."
-                class="w-full h-11 bg-slate-950 border border-slate-800 rounded-xl px-4 text-xs font-semibold text-white focus:border-indigo-500 focus:ring-0"
-              />
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              <div>
+                <label class="block font-bold text-slate-300 mb-1.5">Password Baru</label>
+                <input 
+                  v-model="form.password"
+                  type="password"
+                  placeholder="Masukkan Password Baru..."
+                  class="w-full h-11 bg-slate-950 border border-slate-800 rounded-xl px-4 text-xs font-semibold text-white focus:border-indigo-500 focus:ring-0"
+                />
+                <p v-if="form.errors.password" class="mt-1.5 text-xs font-bold text-rose-400">{{ form.errors.password }}</p>
+              </div>
+
+              <div>
+                <label class="block font-bold text-slate-300 mb-1.5">Konfirmasi Password Baru</label>
+                <input 
+                  v-model="form.password_confirmation"
+                  type="password"
+                  placeholder="Ulangi Password Baru..."
+                  class="w-full h-11 bg-slate-950 border border-slate-800 rounded-xl px-4 text-xs font-semibold text-white focus:border-indigo-500 focus:ring-0"
+                />
+                <p v-if="form.errors.password_confirmation" class="mt-1.5 text-xs font-bold text-rose-400">{{ form.errors.password_confirmation }}</p>
+              </div>
             </div>
           </div>
 
