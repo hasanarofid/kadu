@@ -16,10 +16,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        if (auth()->check()) {
-            return redirect()->route('admin.dashboard');
-        }
+        $settings = [
+            'site_name' => 'KADU (Karsa Edukasi Vokasi)',
+            'site_description' => 'Generator RPP Deep Learning, Literasi & Numerasi Terapan Vokasi SMK Terintegrasi Payment Gateway',
+            'site_logo_url' => null,
+            'whatsapp_number' => '6281234567890',
+        ];
 
-        return redirect()->route('login');
+        return Inertia::render('Welcome', [
+            'settings' => $settings,
+            'navigation' => [],
+        ]);
     }
 }
