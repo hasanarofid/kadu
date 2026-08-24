@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\WalletTransaction;
 use App\Models\Withdrawal;
+use App\Mail\BonusMlmMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -170,6 +172,16 @@ class WithdrawalController extends Controller
         });
 
         $netReceived = $withdrawal->amount * 0.80;
+
+        // Kirim email notifikasi ke user bahwa penarikan disetujui
+        if ($withdrawal->user && $withdrawal->user->email) {
+            Mail::to($withdrawal->user->email)->send(new BonusMlmMail($withdrawal->user, 'withdrawal', [
+                'status_label' => 'DISETUJUI / DITRANSFER',
+                'amount'       => $withdrawal->amount,
+                'notes'        => 'Penarikan saldo sebesar Rp ' . number_format($netReceived, 0, ',', '.') . ' (Transfer Bersih) telah berhasil diproses ke rekening ' . $withdrawal->bank_name . ' (' . $withdrawal->bank_account_number . ').',
+            ]));
+        }
+
         return back()->with('success', 'Penarikan saldo #' . $withdrawal->id . ' sebesar Rp ' . number_format($withdrawal->amount, 0, ',', '.') . ' disetujui! Mitra menerima bersih Rp ' . number_format($netReceived, 0, ',', '.') . ' & Tabungan Umroh +Rp ' . number_format($withdrawal->amount * 0.10, 0, ',', '.') . '.');
     }
 
@@ -209,6 +221,15 @@ class WithdrawalController extends Controller
                 'description' => 'Pengembalian dana penarikan saldo (WD #' . $withdrawal->id . ' ditolak)',
             ]);
         });
+
+        // Kirim email notifikasi penolakan ke user
+        if ($withdrawal->user && $withdrawal->user->email) {
+            Mail::to($withdrawal->user->email)->send(new BonusMlmMail($withdrawal->user, 'withdrawal', [
+                'status_label' => 'DITOLAK (Saldo Dikembalikan)',
+                'amount'       => $withdrawal->amount,
+                'notes'        => $request->notes ?? 'Penarikan ditolak oleh Admin. Saldo sebesar Rp ' . number_format($withdrawal->amount, 0, ',', '.') . ' telah dikembalikan ke saldo wallet Anda.',
+            ]));
+        }
 
         return back()->with('success', 'Penarikan saldo #' . $withdrawal->id . ' ditolak dan dana Rp ' . number_format($withdrawal->amount, 0, ',', '.') . ' telah dikembalikan ke saldo wallet mitra.');
     }

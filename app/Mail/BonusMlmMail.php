@@ -31,6 +31,8 @@ class BonusMlmMail extends Mailable
             'team'             => 'Bonus Komisi Team Masuk!',
             'reward'           => 'Selamat! Reward Prestasi Anda Telah Diproses!',
             'payment_verified' => 'Pembayaran Voucher Terverifikasi - Voucher Siap Digunakan!',
+            'payment_rejected' => 'Status Pembayaran Voucher Anda',
+            'token_purchase'   => 'Pembelian Token AI RPP Berhasil!',
             'withdrawal'       => 'Update Status Penarikan Saldo Anda',
         ];
 

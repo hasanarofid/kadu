@@ -10,6 +10,8 @@
   .header.team     { background:linear-gradient(135deg,#1a4b6e,#2980b9); }
   .header.reward   { background:linear-gradient(135deg,#7d6008,#e98318); }
   .header.payment  { background:linear-gradient(135deg,#5c2c24,#e98318); }
+  .header.rejected { background:linear-gradient(135deg,#c0392b,#e74c3c); }
+  .header.token    { background:linear-gradient(135deg,#4f46e5,#7c3aed); }
   .header.withdrawal { background:linear-gradient(135deg,#2c3e50,#7f8c8d); }
   .header h1 { color:#fff; margin:0; font-size:20px; font-weight:900; }
   .header p  { color:rgba(255,255,255,.8); margin:6px 0 0; font-size:13px; }
@@ -93,6 +95,44 @@
       @endif
     </div>
     <a href="{{ url('/admin/voucher-wallet') }}" class="btn">Lihat Voucher Saya</a>
+  </div>
+
+  @elseif($type === 'payment_rejected')
+  <div class="header rejected">
+    <h1>❌ Pembayaran Ditolak</h1>
+    <p>KADU &mdash; Karsa Edukasi Vokasi</p>
+  </div>
+  <div class="body">
+    <h2>Halo, {{ $user->name }}!</h2>
+    <p>Mohon maaf, bukti pembayaran Anda untuk Order #{{ $data['order_id'] ?? '' }} <strong>ditolak oleh Admin</strong>.</p>
+    <div class="info-box">
+      <b>Catatan Admin:</b><br>
+      {{ $data['notes'] ?? 'Bukti transfer tidak sesuai atau tidak terbaca.' }}
+    </div>
+    <p>Silakan melakukan pemesanan ulang dan mengunggah bukti transfer yang sah.</p>
+    <a href="{{ url('/beli-voucher') }}" class="btn">Pesan Ulang</a>
+  </div>
+
+  @elseif($type === 'token_purchase')
+  <div class="header token">
+    <h1>⚡ Pembelian Token AI Berhasil!</h1>
+    <p>KADU &mdash; Generator RPP Deep Learning AI</p>
+  </div>
+  <div class="body">
+    <h2>Terima Kasih, {{ $user->name }}!</h2>
+    <p>Pembayaran Token AI RPP Anda telah dikonfirmasi dan <strong>token telah berhasil ditambahkan</strong> ke akun Anda.</p>
+    <div class="amount-box" style="border-color: #7c3aed;">
+      <div class="label">Token Ditambahkan</div>
+      <div class="amount" style="color: #4f46e5;">+{{ number_format($data['tokens'] ?? 0, 0, ',', '.') }} Token</div>
+    </div>
+    <div class="info-box" style="border-left-color: #7c3aed;">
+      <b>📋 Detail Transaksi:</b><br>
+      <b>Order ID:</b> {{ $data['order_id'] ?? '-' }}<br>
+      <b>Paket:</b> {{ $data['package_name'] ?? 'Paket Token' }}<br>
+      <b>Total Pembayaran:</b> Rp {{ number_format($data['amount'] ?? 0, 0, ',', '.') }}<br>
+      <b>Total Saldo Token Saat Ini:</b> {{ number_format($data['total_tokens'] ?? 0, 0, ',', '.') }} Token
+    </div>
+    <a href="{{ url('/rpp/create') }}" class="btn" style="background: linear-gradient(90deg,#4f46e5,#7c3aed);">Mulai Buat RPP AI</a>
   </div>
 
   @elseif($type === 'withdrawal')

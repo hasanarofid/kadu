@@ -296,6 +296,15 @@ class VoucherWalletController extends Controller
             'admin_notes' => $request->admin_notes,
         ]);
 
+        // Kirim email notifikasi penolakan ke pemesan
+        $targetUser = $order->user ?? User::where('email', $order->email)->first();
+        if ($targetUser) {
+            Mail::to($targetUser->email)->queue(new BonusMlmMail($targetUser, 'payment_rejected', [
+                'order_id' => $order->id,
+                'notes'    => $request->admin_notes,
+            ]));
+        }
+
         return back()->with('success', "Order #{$order->id} telah ditolak.");
     }
 }

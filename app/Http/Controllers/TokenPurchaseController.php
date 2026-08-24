@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\TokenPackage;
 use App\Models\TokenTransaction;
 use App\Models\TokenLog;
+use App\Mail\BonusMlmMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -119,6 +121,17 @@ class TokenPurchaseController extends Controller
                     'balance_after' => $user->fresh()->tokens,
                     'description' => "Pembelian {$transaction->tokens} Token via Midtrans ({$transaction->order_id})",
                 ]);
+
+                // Kirim Notifikasi Email Pembelian Token Berhasil
+                if ($user && $user->email) {
+                    Mail::to($user->email)->send(new BonusMlmMail($user, 'token_purchase', [
+                        'tokens'       => $transaction->tokens,
+                        'amount'       => $transaction->amount,
+                        'order_id'     => $transaction->order_id,
+                        'package_name' => $transaction->package?->name ?? 'Paket Token RPP',
+                        'total_tokens' => $user->tokens,
+                    ]));
+                }
             }
         } elseif (in_array($transactionStatus, ['cancel', 'deny', 'expire'])) {
             $transaction->update(['payment_status' => 'failed']);

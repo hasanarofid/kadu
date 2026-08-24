@@ -83,7 +83,31 @@ Payment Gateway menghubungkan frontend, backend Laravel, dan jaringan bank / pen
 
 ---
 
-## 3. Alur Git & Auto-Deploy Niagahoster (Production Setup)
+## 3. Ketentuan SMTP Email & Notifikasi Sistem
+
+1. **Konfigurasi SMTP Hostinger (`kadu@andibakhtiar.com`):**
+   - Mailer: `smtp`, Host: `smtp.hostinger.com`, Port: `465` (SSL).
+2. **Aktivasi & Otentikasi User:**
+   - User wajib melalui verifikasi email (`MustVerifyEmail` di `User.php`).
+   - Setiap registrasi memicu kirim link verifikasi & `WelcomeMail`.
+   - Setiap perubahan password di halaman Profile wajib memicu pengiriman notifikasi `PasswordChangedMail` via SMTP. Login selanjutnya dapat menggunakan email dan password baru tersebut.
+3. **Notifikasi Transaksi Sistem:**
+   - Pembelian Token RPP via Midtrans (Webhook Callback): Mengirim email konfirmasi token ditambahkan (`BonusMlmMail` / `token_purchase`).
+   - Verifikasi / Penolakan Pembayaran Voucher: Mengirim email notifikasi penerbitan voucher atau penolakan transaksi (`payment_verified` / `payment_rejected`).
+   - Pencairan Saldo / WD: Mengirim email notifikasi persetujuan (dengan rincian transfer bersih) atau penolakan WD (`withdrawal`).
+
+---
+
+## 4. Aturan Bisnis & Pembatasan Generator RPP AI
+
+1. **Persyaratan Token RPP:**
+   - Pembuatan / generation RPP AI **TIDAK BISA** dilakukan sebelum pengguna memiliki saldo Token RPP (Token > 0).
+   - Pengguna dengan saldo 0 Token yang mencoba mengakses form pembuatan RPP akan di-redirect ke halaman pembelian Token RPP via Midtrans Payment Gateway.
+   - Setiap pembuatan 1 RPP AI akan memotong 1 Token RPP dan mencatat `TokenLog` mutasi.
+
+---
+
+## 5. Alur Git & Auto-Deploy Niagahoster (Production Setup)
 
 1. **Repository Target:** `git@github.com:hasanarofid/kadu.git`
 2. **Aturan Asset Terkompilasi (`public/build`):**
@@ -98,7 +122,7 @@ Payment Gateway menghubungkan frontend, backend Laravel, dan jaringan bank / pen
 
 ---
 
-## 4. Kualitas Kode & Standar Pemrograman
+## 6. Kualitas Kode & Standar Pemrograman
 
 1. **Clean & Maintainable:** Gunakan prinsip DRY dan KISS.
 2. **Strict DB Transactions:** Pembelian voucher/paket, mutasi transaksi, dan pemrosesan Webhook wajib terbungkus `DB::transaction()`.
@@ -106,7 +130,7 @@ Payment Gateway menghubungkan frontend, backend Laravel, dan jaringan bank / pen
 
 ---
 
-## 5. Gaya Komunikasi AI
+## 7. Gaya Komunikasi AI
 
 - Jawab secara singkat, padat, dan langsung ke poin solusi teknis.
 - Tampilkan hanya snippet / diff kode yang berubah.
