@@ -8,10 +8,9 @@ require __DIR__ . '/../vendor/autoload.php';
 // Bootstrap Laravel Application
 $app = require_once __DIR__ . '/../bootstrap/app.php';
 
-$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
-$response = $kernel->handle(
-    $request = Illuminate\Http\Request::capture()
-);
+// Bootstrap Console Kernel to initialize Facades
+$kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);
+$kernel->bootstrap();
 
 header('Content-Type: text/html; charset=utf-8');
 ?>
