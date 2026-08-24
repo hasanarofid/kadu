@@ -60,6 +60,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // 2. List User & Topup Token Manual
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/{user}/history', [UserController::class, 'history'])->name('users.history');
     Route::post('/users/{user}/topup', [UserController::class, 'topupTokens'])->name('users.topup');
     Route::post('/users/{user}/role', [UserController::class, 'updateRole'])->name('users.role');
 

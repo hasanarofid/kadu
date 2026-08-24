@@ -5,19 +5,26 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\TokenLog;
+use App\Models\Rpp;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class UserController extends Controller
 {
     /**
-     * Display a listing of users with token count and role management.
+     * Display a listing of users with token count, RPP count, and role management.
      */
     public function index(Request $request)
     {
         $search = $request->query('search');
 
-        $query = User::with('roles');
+        $query = User::with('roles')
+            ->withCount('rpps')
+            ->with(['tokenLogs' => function ($q) {
+                $q->latest()->take(10);
+            }, 'rpps' => function ($q) {
+                $q->latest()->take(10);
+            }]);
 
         if ($search) {
             $query->where(function ($q) use ($search) {
@@ -34,6 +41,27 @@ class UserController extends Controller
             'filters' => [
                 'search' => $search,
             ]
+        ]);
+    }
+
+    /**
+     * Get detailed history of token usage and RPPs created for a user.
+     */
+    public function history(User $user)
+    {
+        $user->load(['roles', 'tokenLogs' => function ($q) {
+            $q->with('rpp')->latest();
+        }, 'rpps' => function ($q) {
+            $q->latest();
+        }, 'tokenTransactions' => function ($q) {
+            $q->with('package')->latest();
+        }]);
+
+        return response()->json([
+            'user' => $user,
+            'token_logs' => $user->tokenLogs,
+            'rpps' => $user->rpps,
+            'transactions' => $user->tokenTransactions,
         ]);
     }
 
