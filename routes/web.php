@@ -14,6 +14,20 @@ use App\Http\Controllers\HomeController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// Web Migration & Seeder Script Runner (Public Route for Hosting Deployment)
+Route::get('/run-migrate', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+        \Illuminate\Support\Facades\Artisan::call('config:clear');
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        \Illuminate\Support\Facades\Artisan::call('route:clear');
+
+        return "<h1>✅ BERHASIL! Database Migration & Seeder Selesai.</h1><pre>" . \Illuminate\Support\Facades\Artisan::output() . "</pre><br><a href='/'>Ke Landing Page KADU</a> | <a href='/login'>Ke Halaman Login</a>";
+    } catch (\Throwable $e) {
+        return "<h1>❌ Error: " . htmlspecialchars($e->getMessage()) . "</h1><pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
+    }
+});
 
 // Publik — Order Beli Voucher via Transfer Manual (tanpa login)
 Route::get('/beli-voucher', [PaymentOrderController::class, 'create'])->name('payment.create');

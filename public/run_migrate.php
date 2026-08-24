@@ -1,56 +1,66 @@
 <?php
 
-use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Support\Facades\Artisan;
 
-define('LARAVEL_START', microtime(true));
+// Load Composer Autoloader
+require __DIR__ . '/../vendor/autoload.php';
 
-require __DIR__.'/../vendor/autoload.php';
+// Bootstrap Laravel Application
+$app = require_once __DIR__ . '/../bootstrap/app.php';
 
-$app = require_once __DIR__.'/../bootstrap/app.php';
+$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+$response = $kernel->handle(
+    $request = Illuminate\Http\Request::capture()
+);
 
-$kernel = $app->make(Kernel::class);
+header('Content-Type: text/html; charset=utf-8');
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Runner - KADU</title>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; background: #020617; color: #f8fafc; padding: 40px 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; background: #0f172a; border: 1px solid #1e293b; padding: 30px; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        h1 { color: #818cf8; font-size: 24px; margin-top: 0; }
+        h3 { color: #cbd5e1; font-size: 16px; margin-top: 25px; }
+        pre { background: #020617; color: #38bdf8; padding: 16px; border-radius: 12px; border: 1px solid #1e293b; overflow-x: auto; font-size: 13px; font-family: monospace; }
+        .success { color: #34d399; background: #064e3b; padding: 15px; border-radius: 12px; border: 1px solid #059669; font-weight: bold; margin-top: 25px; }
+        .error { color: #fca5a5; background: #450a0a; padding: 15px; border-radius: 12px; border: 1px solid #dc2626; font-weight: bold; margin-top: 25px; }
+        a { color: #818cf8; font-weight: bold; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 KADU Database Migration & Seeder Runner</h1>
 
-try {
-    // 1. Run Composer dump-autoload / install if shell execution is supported
-    $composerLog = '';
-    if (function_exists('shell_exec')) {
-        $output = @shell_exec('composer dump-autoload 2>&1');
-        if ($output) {
-            $composerLog = "Composer Output:\n" . $output . "\n\n";
+        <?php
+        try {
+            echo "<h3>1. Running Database Migration...</h3>";
+            Artisan::call('migrate', ['--force' => true]);
+            echo "<pre>" . (Artisan::output() ?: "Migration completed successfully.") . "</pre>";
+
+            echo "<h3>2. Running Database Seeder...</h3>";
+            Artisan::call('db:seed', ['--force' => true]);
+            echo "<pre style='color:#34d399;'>" . (Artisan::output() ?: "Seeder completed successfully.") . "</pre>";
+
+            echo "<h3>3. Clearing & Optimizing Caches...</h3>";
+            Artisan::call('config:clear');
+            Artisan::call('cache:clear');
+            Artisan::call('route:clear');
+            echo "<pre style='color:#a78bfa;'>Config, Cache, and Routes cleared successfully!</pre>";
+
+            echo "<div class='success'>✅ BERHASIL! Migration & Database Seeder Selesai 100%.</div>";
+            echo "<p style='margin-top:20px;'><a href='/'>← Kembali ke Landing Page KADU</a> | <a href='/login'>Ke Halaman Login →</a></p>";
+
+        } catch (\Throwable $e) {
+            echo "<div class='error'>❌ Error Occurred: " . htmlspecialchars($e->getMessage()) . "</div>";
+            echo "<pre style='color:#fca5a5;'>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
         }
-    }
-
-    // 2. Check if ?fresh=1 parameter is explicitly passed
-    $isFresh = isset($_GET['fresh']) && $_GET['fresh'] === '1';
-
-    if ($isFresh) {
-        $kernel->call('migrate:fresh', [
-            '--seed' => true,
-            '--force' => true,
-        ]);
-        $action = "Migrate Fresh & Seed";
-    } else {
-        $kernel->call('migrate', [
-            '--force' => true,
-        ]);
-        $action = "Migrate (Update Only)";
-    }
-
-    // 3. Clear & rebuild application caches
-    @$kernel->call('config:clear');
-    @$kernel->call('route:clear');
-    @$kernel->call('view:clear');
-    
-    echo "<!DOCTYPE html><html><head><title>Migration & Composer Runner - XSELLER</title><style>body{font-family:sans-serif;padding:2rem;background:#f4f6f9;color:#333;}.card{background:#fff;padding:2rem;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);max-width:800px;margin:auto;}h1{margin-top:0;}pre{background:#1e293b;color:#38bdf8;padding:1rem;border-radius:8px;overflow-x:auto;}</style></head><body>";
-    echo "<div class='card'>";
-    echo "<h1 style='color:#10b981;'>✓ SUCCESS: {$action} Finished!</h1>";
-    echo "<pre>" . htmlspecialchars($composerLog . ($kernel->output() ?: "Migration completed successfully with no pending migrations.")) . "</pre>";
-    echo "<p style='margin-top:20px;'><a href='/admin/laporan' style='display:inline-block;padding:10px 18px;background:#10b981;color:#fff;text-decoration:none;border-radius:8px;font-weight:bold;'>Buka Halaman Laporan</a></p>";
-    echo "</div></body></html>";
-} catch (\Throwable $e) {
-    echo "<!DOCTYPE html><html><head><title>Migration Error - XSELLER</title><style>body{font-family:sans-serif;padding:2rem;background:#f4f6f9;}.card{background:#fff;padding:2rem;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);max-width:800px;margin:auto;}pre{background:#1e293b;color:#f87171;padding:1rem;border-radius:8px;overflow-x:auto;}</style></head><body>";
-    echo "<div class='card'>";
-    echo "<h1 style='color:#ef4444;'>✕ ERROR: Migration Failed</h1>";
-    echo "<pre>" . htmlspecialchars($e->getMessage()) . "\n\n" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
-    echo "</div></body></html>";
-}
+        ?>
+    </div>
+</body>
+</html>
