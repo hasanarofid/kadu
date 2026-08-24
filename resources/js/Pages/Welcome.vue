@@ -145,10 +145,10 @@ const faqs = [
             <Brain class="w-6 h-6 text-white" />
           </div>
           <div class="flex flex-col">
-            <span class="font-black text-xl tracking-tight text-white group-hover:text-indigo-300 transition-colors flex items-center gap-2">
-              KADU <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 font-bold border border-indigo-500/30">VOKASI</span>
+            <span class="font-black text-xl tracking-tight text-white group-hover:text-indigo-300 transition-colors">
+              KADU
             </span>
-            <span class="text-xxs text-slate-400 font-medium tracking-wide">Karsa Edukasi Vokasi SMK</span>
+            <span class="text-xxs text-slate-400 font-medium tracking-wide">Karsa Edukasi</span>
           </div>
         </Link>
 

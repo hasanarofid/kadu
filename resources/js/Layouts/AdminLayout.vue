@@ -71,7 +71,7 @@ const logout = () => {
             <div>
               <span class="font-black text-lg text-white tracking-tight">KADU</span>
               <span class="text-xxs px-2 py-0.5 ml-1.5 rounded-md bg-indigo-500/20 text-indigo-300 font-bold border border-indigo-500/30 uppercase">ADMIN</span>
-              <p class="text-xxs text-slate-400 font-semibold">Karsa Edukasi Vokasi</p>
+              <p class="text-xxs text-slate-400 font-semibold">Karsa Edukasi</p>
             </div>
           </Link>
 

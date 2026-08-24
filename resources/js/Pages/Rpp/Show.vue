@@ -41,10 +41,10 @@ const printRpp = () => {
             <Brain class="w-5 h-5" />
           </div>
           <div>
-            <span class="font-black text-lg text-white tracking-tight flex items-center gap-2">
-              KADU <span class="text-xxs px-2 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 font-bold border border-indigo-500/30">VOKASI</span>
+            <span class="font-black text-lg text-white tracking-tight">
+              KADU
             </span>
-            <p class="text-xxs text-indigo-200 font-medium">Karsa Edukasi Vokasi - RPP Deep Learning</p>
+            <p class="text-xxs text-indigo-200 font-medium">Karsa Edukasi - RPP Deep Learning</p>
           </div>
         </Link>
 

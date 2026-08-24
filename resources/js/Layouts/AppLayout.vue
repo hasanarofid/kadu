@@ -53,7 +53,7 @@ const logout = () => {
         <div class="p-2 bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-xl text-white shadow">
           <Brain class="w-5 h-5" />
         </div>
-        <span class="font-black text-base text-white tracking-tight">KADU VOKASI</span>
+        <span class="font-black text-base text-white tracking-tight">KADU</span>
       </Link>
       
       <div class="flex items-center gap-3">
@@ -86,10 +86,10 @@ const logout = () => {
               <Brain class="w-6 h-6" />
             </div>
             <div>
-              <span class="font-black text-lg text-white tracking-tight flex items-center gap-2">
-                KADU <span class="text-xxs px-2 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 font-bold border border-indigo-500/30">VOKASI</span>
+              <span class="font-black text-lg text-white tracking-tight">
+                KADU
               </span>
-              <p class="text-xxs text-slate-400 font-semibold">Karsa Edukasi Vokasi</p>
+              <p class="text-xxs text-slate-400 font-semibold">Karsa Edukasi</p>
             </div>
           </Link>
 
