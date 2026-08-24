@@ -12,7 +12,8 @@ import {
   AlertCircle,
   Shield,
   Coins,
-  Save
+  Save,
+  Upload
 } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -29,19 +30,32 @@ const isAdminRole = computed(() => currentUser.value?.roles?.some(r => r.name ==
 const flashSuccess = computed(() => page.props.flash?.success);
 const flashError = computed(() => page.props.flash?.error);
 
+const avatarPreview = ref(null);
+const avatarInput = ref(null);
+
 const form = useForm({
+  _method: 'PATCH',
   name: props.user_profile?.name || currentUser.value?.name || '',
   username: props.user_profile?.username || currentUser.value?.username || '',
   email: props.user_profile?.email || currentUser.value?.email || '',
+  avatar: null,
   password: '',
   password_confirmation: '',
 });
 
+const handleAvatarChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    form.avatar = file;
+    avatarPreview.value = URL.createObjectURL(file);
+  }
+};
+
 const submitProfile = () => {
-  form.patch(route('profile.update'), {
+  form.post(route('profile.update'), {
     preserveScroll: true,
     onSuccess: () => {
-      form.reset('password', 'password_confirmation');
+      form.reset('password', 'password_confirmation', 'avatar');
     },
   });
 };
@@ -71,11 +85,12 @@ const submitProfile = () => {
             Pengaturan Akun Pengguna
           </div>
           <h1 class="text-2xl font-black text-white">Profil & Keamanan Akun</h1>
-          <p class="text-xs text-slate-400">Kelola informasi nama, username, email, dan kata sandi login Anda.</p>
+          <p class="text-xs text-slate-400">Kelola informasi foto profil, nama, username, email, dan kata sandi login Anda.</p>
         </div>
 
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-black text-xl flex items-center justify-center shadow shrink-0">
-          {{ currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'U' }}
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-black text-xl flex items-center justify-center shadow shrink-0 overflow-hidden">
+          <img v-if="avatarPreview || props.user_profile?.avatar_url || currentUser?.avatar_url" :src="avatarPreview || props.user_profile?.avatar_url || currentUser?.avatar_url" alt="Avatar" class="w-full h-full object-cover" />
+          <span v-else>{{ currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'U' }}</span>
         </div>
       </div>
 
@@ -87,6 +102,38 @@ const submitProfile = () => {
               <User class="w-4 h-4 text-indigo-400" />
               Informasi Pengguna
             </h3>
+
+            <!-- Avatar Upload Row -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5 p-4 bg-slate-950/80 rounded-2xl border border-slate-800">
+              <div class="relative shrink-0">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-black text-2xl flex items-center justify-center shadow overflow-hidden">
+                  <img v-if="avatarPreview || props.user_profile?.avatar_url || currentUser?.avatar_url" :src="avatarPreview || props.user_profile?.avatar_url || currentUser?.avatar_url" alt="Avatar" class="w-full h-full object-cover" />
+                  <span v-else>{{ currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'U' }}</span>
+                </div>
+              </div>
+              <div class="space-y-1.5 flex-1 min-w-0">
+                <label class="block font-bold text-slate-200 text-xs">Foto Profil Saya</label>
+                <div class="flex flex-wrap items-center gap-3">
+                  <input 
+                    type="file" 
+                    ref="avatarInput" 
+                    @change="handleAvatarChange" 
+                    accept="image/*" 
+                    class="hidden" 
+                  />
+                  <button 
+                    type="button" 
+                    @click="avatarInput.click()" 
+                    class="px-3.5 py-2 bg-indigo-600/20 hover:bg-indigo-600/30 active:scale-[0.98] text-indigo-300 border border-indigo-500/30 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Upload class="w-3.5 h-3.5" />
+                    <span>Upload Foto Baru</span>
+                  </button>
+                  <span class="text-[11px] text-slate-400">Format: JPG, PNG, WEBP (Maksimal 3MB)</span>
+                </div>
+                <p v-if="form.errors.avatar" class="text-xs font-bold text-rose-400 mt-1">{{ form.errors.avatar }}</p>
+              </div>
+            </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
               <div>

@@ -35,6 +35,7 @@ class ProfileController extends Controller
                 'name'                => $user->name,
                 'username'            => $user->username ?? '',
                 'email'               => $user->email,
+                'avatar_url'          => $user->avatar_url,
                 'phone'               => $user->phone ?? '',
                 'bank_name'           => $user->bank_name ?? 'Bank Mandiri',
                 'bank_account_number' => $user->bank_account_number ?? '',
@@ -64,6 +65,7 @@ class ProfileController extends Controller
             'name'                => 'required|string|max:100',
             'username'            => 'required|string|max:50|unique:users,username,' . $user->id,
             'email'               => 'required|email|max:100|unique:users,email,' . $user->id,
+            'avatar'              => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:3072',
             'phone'               => 'nullable|string|max:20',
             'password'            => 'nullable|string|min:8|confirmed',
             'bank_name'           => 'nullable|string|max:100',
@@ -96,6 +98,14 @@ class ProfileController extends Controller
         $user->name = $validated['name'];
         $user->username = strtolower($validated['username']);
         $user->email = $validated['email'];
+
+        if ($request->hasFile('avatar')) {
+            if ($user->avatar && !str_starts_with($user->avatar, 'http')) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+            $user->avatar = $request->file('avatar')->store('avatars', 'public');
+        }
+
         if ($request->filled('phone')) {
             $user->phone = $validated['phone'];
         }

@@ -135,13 +135,14 @@ const logout = () => {
           <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800/80 space-y-3 shadow-inner">
             <div class="flex items-center gap-3">
               <div class="relative shrink-0">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-extrabold flex items-center justify-center text-base shadow">
-                  {{ currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'G' }}
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-extrabold flex items-center justify-center text-base shadow overflow-hidden">
+                  <img v-if="currentUser.avatar_url || currentUser.avatar" :src="currentUser.avatar_url || currentUser.avatar" alt="Profile Photo" class="w-full h-full object-cover" />
+                  <span v-else>{{ currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'G' }}</span>
                 </div>
                 <div 
                   :title="currentUser.email_verified_at ? 'Email Terverifikasi' : 'Email Belum Diverifikasi'"
                   :class="[
-                    'absolute -bottom-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[10px] text-white font-bold border-2 border-slate-950 shadow',
+                    'absolute -bottom-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[10px] text-white font-bold border-2 border-slate-950 shadow z-10',
                     currentUser.email_verified_at ? 'bg-emerald-500' : 'bg-amber-500'
                   ]"
                 >
