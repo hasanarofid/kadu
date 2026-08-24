@@ -164,7 +164,7 @@ const faqs = [
         <div class="flex items-center gap-3">
           <Link 
             v-if="user" 
-            :href="route('admin.dashboard')" 
+            :href="route('dashboard')" 
             class="inline-flex items-center justify-center px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-xs font-extrabold text-white rounded-xl shadow-lg shadow-indigo-600/30 hover:scale-[1.02] active:scale-[0.98] transition-all"
           >
             <Sparkles class="w-4 h-4 mr-1.5" />
