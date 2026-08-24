@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Administrator KADU',
                 'username' => 'admin',
                 'password' => bcrypt('password'),
+                'email_verified_at' => now(),
             ]
         );
         $admin->assignRole('admin');
@@ -37,6 +38,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Guru Vokasi (User)',
                 'username' => 'user',
                 'password' => bcrypt('password'),
+                'email_verified_at' => now(),
             ]
         );
         $user->assignRole('user');
@@ -47,6 +49,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Budi Santoso, S.Pd',
                 'username' => 'budi',
                 'password' => bcrypt('password'),
+                'email_verified_at' => now(),
             ]
         );
         $budi->assignRole('user');
@@ -55,6 +58,9 @@ class DatabaseSeeder extends Seeder
         User::doesntHave('roles')->get()->each(function ($u) {
             $u->assignRole('user');
         });
+
+        // Ensure all admin users have email_verified_at set
+        User::role('admin')->update(['email_verified_at' => now()]);
 
         // 4. Seed Initial Sample RPP Vokasi
         Rpp::updateOrCreate(

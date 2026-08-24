@@ -54,7 +54,7 @@ const logout = () => {
     <div class="fixed bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-violet-600/10 blur-[140px] pointer-events-none"></div>
 
     <!-- ⚠️ UNVERIFIED EMAIL NOTIFICATION BANNER (STICKY TOP) -->
-    <div v-if="currentUser && !currentUser.email_verified_at" class="bg-gradient-to-r from-amber-950/90 via-amber-900/90 to-amber-950/90 border-b border-amber-500/40 px-4 py-2.5 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-amber-200 z-50 shadow-lg backdrop-blur-md">
+    <div v-if="currentUser && !currentUser.email_verified_at && !currentUser.roles?.some(r => r.name === 'admin')" class="bg-gradient-to-r from-amber-950/90 via-amber-900/90 to-amber-950/90 border-b border-amber-500/40 px-4 py-2.5 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-amber-200 z-50 shadow-lg backdrop-blur-md">
       <div class="flex items-center gap-2.5 min-w-0">
         <span class="inline-flex p-1.5 bg-amber-500/20 rounded-lg text-amber-400 shrink-0">
           <AlertTriangle class="w-4 h-4" />
