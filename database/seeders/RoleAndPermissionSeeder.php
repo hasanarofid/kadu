@@ -23,19 +23,25 @@ class RoleAndPermissionSeeder extends Seeder
             'manage pages',
             'manage posts',
             'manage users',
+            'manage all rpps',
+            'create rpp',
+            'view rpp',
+            'delete rpp',
         ];
 
         foreach ($permissions as $permission) {
             Permission::findOrCreate($permission);
         }
 
-        // Create roles and assign existing permissions
+        // Create roles and assign permissions
         $adminRole = Role::findOrCreate('admin');
         $adminRole->givePermissionTo(Permission::all());
 
-        $editorRole = Role::findOrCreate('editor');
-        $editorRole->givePermissionTo(['manage pages', 'manage posts']);
+        $userRole = Role::findOrCreate('user');
+        $userRole->givePermissionTo(['create rpp', 'view rpp', 'delete rpp']);
 
+        // Alias client role for backward compatibility
         $clientRole = Role::findOrCreate('client');
+        $clientRole->givePermissionTo(['create rpp', 'view rpp', 'delete rpp']);
     }
 }

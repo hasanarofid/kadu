@@ -21,10 +21,14 @@ Route::post('/beli-voucher', [PaymentOrderController::class, 'store'])->name('pa
 Route::get('/beli-voucher/status/{uuid}', [PaymentOrderController::class, 'status'])->name('payment.status');
 
 Route::get('/dashboard', function () {
-    return redirect()->route('admin.dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    if (auth()->user()->hasRole('admin')) {
+        return redirect()->route('admin.dashboard');
+    }
+    return redirect()->route('rpps.index');
+})->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::resource('rpps', \App\Http\Controllers\RppController::class);
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/banks', [ProfileController::class, 'updateBanks'])->name('profile.update-banks');
