@@ -89,35 +89,25 @@ const submitForm = () => {
   <AppLayout>
     <Head :title="isEditing ? 'Edit RPP Vokasi - KADU' : 'Generator RPP Deep Learning - KADU'" />
 
-  <div class="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-indigo-500 selection:text-white relative pb-16">
-    <!-- Header Navigation Bar -->
-    <nav class="bg-indigo-900/80 backdrop-blur-xl border-b border-indigo-700/50 sticky top-0 z-50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        <Link href="/" class="flex items-center gap-3">
-          <div class="p-2 bg-white text-indigo-700 rounded-xl font-bold shadow">
-            <Brain class="w-5 h-5" />
+    <div class="space-y-8 text-left max-w-5xl mx-auto">
+      <!-- Header Banner Card -->
+      <div class="p-6 sm:p-8 rounded-3xl bg-slate-900/90 border border-slate-800 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/10 rounded-full text-indigo-300 text-xxs font-bold border border-indigo-500/20 uppercase">
+            <Sparkles class="w-3.5 h-3.5 text-indigo-400" />
+            {{ isEditing ? 'Edit RPP Vokasi' : 'Wizard AI Generator RPP' }}
           </div>
-          <div>
-            <span class="font-black text-lg text-white tracking-tight">
-              KADU
-            </span>
-            <p class="text-xxs text-indigo-200 font-medium">Karsa Edukasi - Generator RPP Deep Learning</p>
-          </div>
-        </Link>
-
-        <div class="flex items-center gap-3">
-          <span class="text-xs font-bold px-3 py-1 bg-indigo-800 text-indigo-200 rounded-full border border-indigo-600">
-            Normatif & Adaptif Edition
-          </span>
-          <Link :href="route('rpps.index')" class="p-2 bg-indigo-800 text-white rounded-xl hover:bg-indigo-700 text-xs font-bold">
-            <ArrowLeft class="w-4 h-4 inline mr-1" /> Dashboard RPP
-          </Link>
+          <h1 class="text-2xl font-black text-white">
+            {{ isEditing ? 'Edit Perangkat Ajar & RPP' : 'Buat RPP & Modul Ajar Baru' }}
+          </h1>
+          <p class="text-xs text-slate-400">Isi formulir 4-langkah di bawah untuk merancang RPP utuh berbasis Deep Learning, Literasi & Numerasi Terapan.</p>
         </div>
-      </div>
-    </nav>
 
-    <!-- Main Container -->
-    <main class="max-w-5xl mx-auto px-4 sm:px-6 pt-8 space-y-8 text-left">
+        <Link :href="route('rpps.index')" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-2xl border border-slate-700 flex items-center gap-1.5 shrink-0">
+          <ArrowLeft class="w-4 h-4" />
+          Kembali ke Dashboard
+        </Link>
+      </div>
       <!-- 4-Step Wizard Indicator Bar -->
       <div class="grid grid-cols-4 gap-2 sm:gap-4">
         <button 
@@ -354,7 +344,6 @@ const submitForm = () => {
           </button>
         </div>
       </div>
-    </main>
-  </div>
+    </div>
   </AppLayout>
 </template>
