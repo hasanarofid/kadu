@@ -18,11 +18,13 @@ Route::get('/run-migrate', function () {
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
 
-        // Pure PHP Symlink creation (bypass exec disabled on Hostinger)
-        $target = storage_path('app/public');
-        $shortcut = public_path('storage');
-        if (!file_exists($shortcut)) {
-            @symlink($target, $shortcut);
+        // Pure PHP Symlink creation if function is enabled by host
+        if (function_exists('symlink')) {
+            $target = storage_path('app/public');
+            $shortcut = public_path('storage');
+            if (!file_exists($shortcut)) {
+                @symlink($target, $shortcut);
+            }
         }
 
         \Illuminate\Support\Facades\Artisan::call('config:clear');
