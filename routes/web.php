@@ -17,15 +17,32 @@ Route::get('/run-migrate', function () {
     try {
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+
+        // Pure PHP Symlink creation (bypass exec disabled on Hostinger)
+        $target = storage_path('app/public');
+        $shortcut = public_path('storage');
+        if (!file_exists($shortcut)) {
+            @symlink($target, $shortcut);
+        }
+
         \Illuminate\Support\Facades\Artisan::call('config:clear');
         \Illuminate\Support\Facades\Artisan::call('cache:clear');
         \Illuminate\Support\Facades\Artisan::call('route:clear');
 
-        return "<h1>✅ BERHASIL! Database Migration & Seeder Selesai.</h1><pre>" . \Illuminate\Support\Facades\Artisan::output() . "</pre><br><a href='/'>Ke Landing Page KADU</a> | <a href='/login'>Ke Halaman Login</a>";
+        return "<h1>✅ BERHASIL! Database Migration & Storage Link Selesai.</h1><pre>" . \Illuminate\Support\Facades\Artisan::output() . "</pre><br><a href='/'>Ke Landing Page KADU</a> | <a href='/login'>Ke Halaman Login</a>";
     } catch (\Throwable $e) {
         return "<h1>❌ Error: " . htmlspecialchars($e->getMessage()) . "</h1><pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
     }
 });
+
+// Hostinger Storage Link Fallback (Serves public storage files if symlink is disabled by hosting)
+Route::get('/storage/{path}', function ($path) {
+    $filePath = storage_path('app/public/' . $path);
+    if (!file_exists($filePath)) {
+        abort(404);
+    }
+    return response()->file($filePath);
+})->where('path', '.*')->name('storage.fallback');
 
 // Midtrans Webhook Callback (Public POST route)
 Route::post('/api/midtrans/callback', [TokenPurchaseController::class, 'midtransCallback'])->name('midtrans.callback');
