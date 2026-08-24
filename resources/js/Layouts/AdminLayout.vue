@@ -12,19 +12,35 @@ import {
   X,
   ChevronRight,
   UserCheck,
-  ShieldAlert
+  ShieldAlert,
+  AlertTriangle,
+  Send,
+  CheckCircle2
 } from 'lucide-vue-next';
 
 const page = usePage();
 const currentUser = computed(() => page.props.auth?.user || { name: 'Administrator', email: 'admin@kadu.com' });
 
 const isMobileSidebarOpen = ref(false);
+const isResendingEmail = ref(false);
+const verificationMessage = ref('');
 
 const navigation = computed(() => [
   { name: 'Dashboard', href: route('admin.dashboard'), icon: LayoutDashboard, current: route().current('admin.dashboard') },
   { name: 'List User', href: route('admin.users.index'), icon: Users, current: route().current('admin.users.index') },
   { name: 'Paket Token', href: route('admin.packages.index'), icon: Coins, current: route().current('admin.packages.index') },
 ]);
+
+const resendVerificationEmail = () => {
+  isResendingEmail.value = true;
+  verificationMessage.value = '';
+  router.post(route('verification.send'), {}, {
+    onFinish: () => {
+      isResendingEmail.value = false;
+      verificationMessage.value = 'Link verifikasi baru telah dikirim ke email Anda!';
+    }
+  });
+};
 
 const logout = () => {
   router.post(route('logout'));
@@ -36,6 +52,28 @@ const logout = () => {
     <!-- Ambient Lighting -->
     <div class="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-600/10 blur-[140px] pointer-events-none"></div>
     <div class="fixed bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-violet-600/10 blur-[140px] pointer-events-none"></div>
+
+    <!-- ⚠️ UNVERIFIED EMAIL NOTIFICATION BANNER (STICKY TOP) -->
+    <div v-if="currentUser && !currentUser.email_verified_at" class="bg-gradient-to-r from-amber-950/90 via-amber-900/90 to-amber-950/90 border-b border-amber-500/40 px-4 py-2.5 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-amber-200 z-50 shadow-lg backdrop-blur-md">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <span class="inline-flex p-1.5 bg-amber-500/20 rounded-lg text-amber-400 shrink-0">
+          <AlertTriangle class="w-4 h-4" />
+        </span>
+        <div class="truncate">
+          <span class="font-extrabold text-amber-300">Akun Belum Diverifikasi:</span>
+          <span class="ml-1 text-amber-200/90">Email <code class="text-amber-100 bg-slate-950/80 px-1.5 py-0.5 rounded font-mono border border-amber-500/30">{{ currentUser.email }}</code> belum diaktivasi.</span>
+          <span v-if="verificationMessage" class="ml-2 text-emerald-300 font-bold block sm:inline">{{ verificationMessage }}</span>
+        </div>
+      </div>
+      <button 
+        @click="resendVerificationEmail" 
+        :disabled="isResendingEmail"
+        class="shrink-0 px-3.5 py-1.5 bg-amber-500 hover:bg-amber-400 active:scale-[0.98] text-slate-950 rounded-xl font-extrabold text-xs shadow-md shadow-amber-500/20 transition-all disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
+      >
+        <Send class="w-3.5 h-3.5" />
+        <span>{{ isResendingEmail ? 'Mengirim Email...' : 'Kirim Ulang Aktivasi' }}</span>
+      </button>
+    </div>
 
     <!-- Mobile Top Navigation Header -->
     <header class="lg:hidden bg-slate-900/90 backdrop-blur-xl border-b border-slate-800 h-16 px-4 flex items-center justify-between sticky top-0 z-40">
@@ -76,10 +114,22 @@ const logout = () => {
           </Link>
 
           <!-- Admin User Badge -->
-          <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+          <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-2 shadow-inner">
             <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-extrabold flex items-center justify-center text-sm shadow">
-                {{ currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'A' }}
+              <div class="relative shrink-0">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-extrabold flex items-center justify-center text-sm shadow">
+                  {{ currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'A' }}
+                </div>
+                <div 
+                  :title="currentUser.email_verified_at ? 'Email Terverifikasi' : 'Email Belum Diverifikasi'"
+                  :class="[
+                    'absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] text-white font-bold border-2 border-slate-950 shadow',
+                    currentUser.email_verified_at ? 'bg-emerald-500' : 'bg-amber-500'
+                  ]"
+                >
+                  <CheckCircle2 v-if="currentUser.email_verified_at" class="w-2.5 h-2.5" />
+                  <AlertTriangle v-else class="w-2.5 h-2.5" />
+                </div>
               </div>
               <div class="flex-1 min-w-0">
                 <p class="text-xs font-bold text-white truncate">{{ currentUser.name }}</p>
@@ -123,7 +173,7 @@ const logout = () => {
         <div class="p-6 border-t border-slate-800/80">
           <button 
             @click="logout" 
-            class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-rose-500/10 hover:bg-rose-600 text-rose-400 hover:text-white rounded-xl text-xs font-bold transition-all border border-rose-500/20"
+            class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-rose-500/10 hover:bg-rose-600 text-rose-400 hover:text-white rounded-xl text-xs font-bold transition-all border border-rose-500/20 cursor-pointer"
           >
             <LogOut class="w-4 h-4" />
             <span>Keluar Sistem</span>
