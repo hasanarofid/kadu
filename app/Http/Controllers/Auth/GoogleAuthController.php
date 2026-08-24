@@ -50,6 +50,10 @@ class GoogleAuthController extends Controller
                     'avatar' => $googleUser->avatar ?? $user->avatar,
                     'email_verified_at' => $user->email_verified_at ?? now(),
                 ]);
+
+                if ($user->roles->isEmpty()) {
+                    $user->assignRole('user');
+                }
             } else {
                 // Register new user via Google SSO
                 $username = Str::slug(explode('@', $googleUser->email)[0]) . rand(100, 999);
@@ -64,14 +68,7 @@ class GoogleAuthController extends Controller
                     'email_verified_at' => now(), // Auto-verified via Google OAuth
                 ]);
 
-                // Assign default user role
-                if (method_exists($user, 'assignRole')) {
-                    try {
-                        $user->assignRole('user');
-                    } catch (\Throwable $th) {
-                        // fallback
-                    }
-                }
+                $user->assignRole('user');
             }
 
             Auth::login($user, true);

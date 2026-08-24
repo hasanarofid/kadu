@@ -51,6 +51,11 @@ class DatabaseSeeder extends Seeder
         );
         $budi->assignRole('user');
 
+        // Assign 'user' role to any existing user in database without a role
+        User::doesntHave('roles')->get()->each(function ($u) {
+            $u->assignRole('user');
+        });
+
         // 4. Seed Initial Sample RPP Vokasi
         Rpp::updateOrCreate(
             ['title' => 'RPP Matematika Vokasi TKR - Persamaan Linier & Rasio Presisi Otomotif'],
