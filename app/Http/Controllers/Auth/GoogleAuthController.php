@@ -15,7 +15,14 @@ class GoogleAuthController extends Controller
      */
     public function redirectToGoogle()
     {
-        return Socialite::driver('google')->redirect();
+        $redirectUri = url('/auth/google/callback');
+        
+        // Ensure https scheme on production / live domain
+        if (request()->secure() || str_contains($redirectUri, 'kadu.andibakhtiar.com')) {
+            $redirectUri = str_replace('http://', 'https://', $redirectUri);
+        }
+
+        return Socialite::driver('google')->redirectUrl($redirectUri)->redirect();
     }
 
     /**
@@ -24,7 +31,12 @@ class GoogleAuthController extends Controller
     public function handleGoogleCallback()
     {
         try {
-            $googleUser = Socialite::driver('google')->user();
+            $redirectUri = url('/auth/google/callback');
+            if (request()->secure() || str_contains($redirectUri, 'kadu.andibakhtiar.com')) {
+                $redirectUri = str_replace('http://', 'https://', $redirectUri);
+            }
+
+            $googleUser = Socialite::driver('google')->redirectUrl($redirectUri)->user();
 
             // Find user by google_id or email
             $user = User::where('google_id', $googleUser->id)
@@ -50,19 +62,19 @@ class GoogleAuthController extends Controller
                     'password' => bcrypt(Str::random(16)),
                 ]);
 
-                // Assign default client role
+                // Assign default user role
                 if (method_exists($user, 'assignRole')) {
                     try {
-                        $user->assignRole('client');
+                        $user->assignRole('user');
                     } catch (\Throwable $th) {
-                        // ignore if role doesn't exist
+                        // fallback
                     }
                 }
             }
 
             Auth::login($user, true);
 
-            return redirect()->intended(route('admin.dashboard'));
+            return redirect()->route('dashboard');
         } catch (\Throwable $e) {
             return redirect()->route('login')->with('error', 'Gagal masuk menggunakan Google: ' . $e->getMessage());
         }
