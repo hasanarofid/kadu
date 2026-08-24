@@ -52,6 +52,11 @@ const submit = () => {
                 {{ status }}
             </div>
 
+            <!-- Flash Error Alert -->
+            <div v-if="$page.props.flash?.error" class="mb-4 p-3.5 rounded-xl bg-rose-500/20 border border-rose-500/40 text-xs font-bold text-rose-200 text-center shadow-lg">
+                ⚠️ {{ $page.props.flash.error }}
+            </div>
+
             <!-- 🎯 ONE-TAP GOOGLE LOGIN (UTAMA & TERCEPAT) -->
             <div class="space-y-3 mb-5 text-left">
                 <a
