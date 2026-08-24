@@ -30,7 +30,7 @@ const printRpp = () => {
 </script>
 
 <template>
-  <Head :title="rpp.title + ' - KADU (EduDeep SMK)'" />
+  <Head :title="rpp.title + ' - KADU (Karsa Edukasi Vokasi)'" />
 
   <div class="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-indigo-500 selection:text-white relative pb-16 print:bg-white print:text-black">
     <!-- Navbar (Hidden on Print) -->
@@ -42,9 +42,9 @@ const printRpp = () => {
           </div>
           <div>
             <span class="font-black text-lg text-white tracking-tight flex items-center gap-2">
-              EduDeep SMK
+              KADU <span class="text-xxs px-2 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 font-bold border border-indigo-500/30">VOKASI</span>
             </span>
-            <p class="text-xxs text-indigo-200 font-medium">Generator RPP Deep Learning, Literasi & Numerasi Vokasi</p>
+            <p class="text-xxs text-indigo-200 font-medium">Karsa Edukasi Vokasi - RPP Deep Learning</p>
           </div>
         </Link>
 

@@ -260,7 +260,7 @@ const faqs = [
                   <Brain class="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 class="text-xs font-bold text-white">EduDeep SMK - KADU</h4>
+                  <h4 class="text-xs font-bold text-white">KADU (Karsa Edukasi Vokasi)</h4>
                   <p class="text-xxs text-indigo-300">Normatif & Adaptif Edition</p>
                 </div>
               </div>
