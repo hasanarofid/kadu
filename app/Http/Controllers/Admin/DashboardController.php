@@ -4,154 +4,40 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Page;
-use App\Models\Post;
-use App\Models\Setting;
+use App\Models\Rpp;
+use App\Models\TokenPackage;
+use App\Models\TokenTransaction;
+use App\Models\TokenLog;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
     /**
-     * Display the admin binary MLM dashboard home based on XSELLER PRD 2026.
+     * Display the Admin Dashboard for KADU (Karsa Edukasi Vokasi).
      */
     public function index()
     {
-        $user = auth()->user();
+        $totalUsers = User::count();
+        $totalRpps = Rpp::count();
+        $totalPackages = TokenPackage::where('is_active', true)->count();
+        $totalRevenue = TokenTransaction::where('payment_status', 'paid')->sum('amount');
+        $totalTokensSold = TokenTransaction::where('payment_status', 'paid')->sum('tokens');
+
+        $recentUsers = User::latest()->take(5)->get();
+        $recentRpps = Rpp::with('user')->latest()->take(5)->get();
+        $recentTransactions = TokenTransaction::with('user', 'package')->latest()->take(5)->get();
 
         return Inertia::render('Admin/Dashboard', [
-            'referral_links' => [
-                'left' => url('/register?sponsor=' . ($user ? $user->id : 1) . '&position=left'),
-                'right' => url('/register?sponsor=' . ($user ? $user->id : 1) . '&position=right'),
+            'stats' => [
+                'total_users' => $totalUsers,
+                'total_rpps' => $totalRpps,
+                'total_packages' => $totalPackages,
+                'total_revenue' => $totalRevenue,
+                'total_tokens_sold' => $totalTokensSold,
             ],
-            'wallet' => [
-                'saldo' => 2500000,
-                'voucher_aktif' => 2, // Strict terminology: VOUCHER (no PIN)
-                'total_bonus_cair' => 400000,
-                'bonus_sponsor' => 300000,
-                'bonus_pasangan' => 100000,
-                'bonus_titik' => 0,
-                'bonus_reward' => 0,
-            ],
-            'binary_legs' => [
-                'left' => [
-                    'members' => 3,
-                    'pending_points' => 1,
-                ],
-                'right' => [
-                    'members' => 2,
-                    'pending_points' => 0,
-                ],
-            ],
-            'rewards' => [
-                [
-                    'key' => 'silver',
-                    'title' => 'SILVER REWARD',
-                    'prize' => 'HP Android / Rp 1 Juta',
-                    'target_left' => 10,
-                    'target_right' => 10,
-                    'current_left' => 3,
-                    'current_right' => 2,
-                    'status' => 'MENUNGGU',
-                    'icon' => 'Sparkles'
-                ],
-                [
-                    'key' => 'gold',
-                    'title' => 'GOLD REWARD',
-                    'prize' => 'Laptop / Rp 5 Juta',
-                    'target_left' => 50,
-                    'target_right' => 50,
-                    'current_left' => 3,
-                    'current_right' => 2,
-                    'status' => 'MENUNGGU',
-                    'icon' => 'Award'
-                ],
-                [
-                    'key' => 'platinum',
-                    'title' => 'PLATINUM REWARD',
-                    'prize' => 'Motor / Rp 25 Juta',
-                    'target_left' => 250,
-                    'target_right' => 250,
-                    'current_left' => 3,
-                    'current_right' => 2,
-                    'status' => 'MENUNGGU',
-                    'icon' => 'Shield'
-                ],
-                [
-                    'key' => 'diamond',
-                    'title' => 'DIAMOND REWARD',
-                    'prize' => 'Mobil / Rp 150 Juta',
-                    'target_left' => 1000,
-                    'target_right' => 1000,
-                    'current_left' => 3,
-                    'current_right' => 2,
-                    'status' => 'MENUNGGU',
-                    'icon' => 'Trophy'
-                ],
-                [
-                    'key' => 'crown',
-                    'title' => 'CROWN REWARD',
-                    'prize' => 'Rumah Mewah / Rp 750 Juta',
-                    'target_left' => 5000,
-                    'target_right' => 5000,
-                    'current_left' => 3,
-                    'current_right' => 2,
-                    'status' => 'MENUNGGU',
-                    'icon' => 'Gift'
-                ],
-            ],
-            'packages' => [
-                [
-                    'name' => 'Starter (Steping)',
-                    'price' => 125000,
-                    'sponsor_bonus' => 20000,
-                    'team_poin' => 0,
-                    'max_tier' => 'Tier 3 (Steping s/d Tier 15)',
-                    'tpr' => 'Non-TPR',
-                    'is_current' => false
-                ],
-                [
-                    'name' => 'Basic',
-                    'price' => 550000,
-                    'sponsor_bonus' => 100000,
-                    'team_poin' => 1,
-                    'max_tier' => 'Tier 5 Generasi',
-                    'tpr' => 'Non-TPR',
-                    'is_current' => false
-                ],
-                [
-                    'name' => 'Medium',
-                    'price' => 2100000,
-                    'sponsor_bonus' => 400000,
-                    'team_poin' => 4,
-                    'max_tier' => 'Tier 8 Generasi',
-                    'tpr' => 'Non-TPR',
-                    'is_current' => false
-                ],
-                [
-                    'name' => 'Pro',
-                    'price' => 4300000,
-                    'sponsor_bonus' => 800000,
-                    'team_poin' => 8,
-                    'max_tier' => 'Tier 12 Generasi',
-                    'tpr' => 'Profit Share 7% / bulan (3 bulan)',
-                    'is_current' => false
-                ],
-                [
-                    'name' => 'Ultimate',
-                    'price' => 10500000,
-                    'sponsor_bonus' => 2000000,
-                    'team_poin' => 12,
-                    'max_tier' => 'Tier 15 Generasi',
-                    'tpr' => 'Profit Share 9% / bulan (3 bulan)',
-                    'is_current' => true
-                ],
-            ],
-            'steping_status' => [
-                'current_tier' => 3,
-                'pro_referrals' => 0,
-                'next_tier' => 4,
-                'required_pro_referrals' => 2,
-            ]
+            'recent_users' => $recentUsers,
+            'recent_rpps' => $recentRpps,
+            'recent_transactions' => $recentTransactions,
         ]);
     }
 }

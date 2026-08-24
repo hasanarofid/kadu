@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'email', 'password', 'google_id', 'avatar', 'username', 'parent_id', 'position', 'left_count', 'right_count', 'left_points', 'right_points', 'package_name', 'saldo', 'saldo_umroh', 'total_bonus', 'security_pin', 'bonus_uncashed', 'bank_name', 'bank_account_number', 'bank_account_name'])]
+#[Fillable(['name', 'email', 'password', 'google_id', 'avatar', 'username', 'tokens', 'parent_id', 'position', 'left_count', 'right_count', 'left_points', 'right_points', 'package_name', 'saldo', 'saldo_umroh', 'total_bonus', 'security_pin', 'bonus_uncashed', 'bank_name', 'bank_account_number', 'bank_account_name'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -56,8 +56,18 @@ class User extends Authenticatable
         return $this->hasMany(Voucher::class, 'user_id');
     }
 
-    public function withdrawals()
+    public function rpps()
     {
-        return $this->hasMany(Withdrawal::class, 'user_id');
+        return $this->hasMany(Rpp::class);
+    }
+
+    public function tokenLogs()
+    {
+        return $this->hasMany(TokenLog::class);
+    }
+
+    public function tokenTransactions()
+    {
+        return $this->hasMany(TokenTransaction::class);
     }
 }

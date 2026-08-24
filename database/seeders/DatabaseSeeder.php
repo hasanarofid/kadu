@@ -78,10 +78,39 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // 5. Seed Settings
-        $this->call(SettingSeeder::class);
+        // 5. Seed Default Token Packages
+        \App\Models\TokenPackage::updateOrCreate(
+            ['name' => 'Paket Starter'],
+            [
+                'tokens' => 10,
+                'price' => 50000,
+                'description' => '10 Token RPP Deep Learning Vokasi. Cocok untuk uji coba pembuatan modul ajar guru SMK.',
+                'is_active' => true,
+            ]
+        );
 
-        // 6. Seed Pages & Sections
+        \App\Models\TokenPackage::updateOrCreate(
+            ['name' => 'Paket Professional'],
+            [
+                'tokens' => 50,
+                'price' => 200000,
+                'description' => '50 Token RPP. Hemat & Terfavorit untuk persiapan 1 semester penuh guru SMK.',
+                'is_active' => true,
+            ]
+        );
+
+        \App\Models\TokenPackage::updateOrCreate(
+            ['name' => 'Paket Ultimate Sekolah'],
+            [
+                'tokens' => 200,
+                'price' => 650000,
+                'description' => '200 Token RPP. Pilihan terbaik untuk MGMP, tim Kurikulum, atau kelompok guru SMK.',
+                'is_active' => true,
+            ]
+        );
+
+        // 6. Seed Settings & Pages
+        $this->call(SettingSeeder::class);
         $this->call(PageAndSectionSeeder::class);
     }
 }
