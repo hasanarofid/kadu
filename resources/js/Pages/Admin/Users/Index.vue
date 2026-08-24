@@ -134,8 +134,9 @@ const toggleRole = (user) => {
               >
                 <td class="py-4 px-4">
                   <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-extrabold flex items-center justify-center text-sm shadow shrink-0">
-                      {{ user.name ? user.name.charAt(0).toUpperCase() : 'U' }}
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-extrabold flex items-center justify-center text-sm shadow shrink-0 overflow-hidden">
+                      <img v-if="user.avatar_url || user.avatar" :src="user.avatar_url || user.avatar" alt="Avatar" class="w-full h-full object-cover" />
+                      <span v-else>{{ user.name ? user.name.charAt(0).toUpperCase() : 'U' }}</span>
                     </div>
                     <div>
                       <p class="font-bold text-white">{{ user.name }}</p>
@@ -189,13 +190,6 @@ const toggleRole = (user) => {
                       <Coins class="w-3.5 h-3.5 text-amber-400" />
                       Top-Up Token
                     </button>
-
-                    <button 
-                      @click="toggleRole(user)" 
-                      class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 text-xxs font-semibold rounded-xl border border-slate-700 cursor-pointer"
-                    >
-                      {{ user.roles?.some(r => r.name === 'admin') ? 'Jadi User' : 'Jadi Admin' }}
-                    </button>
                   </div>
                 </td>
               </tr>
@@ -218,8 +212,9 @@ const toggleRole = (user) => {
           </div>
 
           <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white font-bold flex items-center justify-center shrink-0">
-              {{ selectedUserForTopup.name ? selectedUserForTopup.name.charAt(0).toUpperCase() : 'U' }}
+            <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white font-bold flex items-center justify-center shrink-0 overflow-hidden">
+              <img v-if="selectedUserForTopup.avatar_url || selectedUserForTopup.avatar" :src="selectedUserForTopup.avatar_url || selectedUserForTopup.avatar" alt="Avatar" class="w-full h-full object-cover" />
+              <span v-else>{{ selectedUserForTopup.name ? selectedUserForTopup.name.charAt(0).toUpperCase() : 'U' }}</span>
             </div>
             <div>
               <p class="text-xs font-bold text-white">{{ selectedUserForTopup.name }}</p>
@@ -256,8 +251,9 @@ const toggleRole = (user) => {
           <!-- Modal Header -->
           <div class="flex items-center justify-between border-b border-slate-800 pb-4 shrink-0">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-extrabold flex items-center justify-center text-sm shadow">
-                {{ historyUser?.name ? historyUser.name.charAt(0).toUpperCase() : 'U' }}
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white font-extrabold flex items-center justify-center text-sm shadow shrink-0 overflow-hidden">
+                <img v-if="historyUser?.avatar_url || historyUser?.avatar" :src="historyUser?.avatar_url || historyUser?.avatar" alt="Avatar" class="w-full h-full object-cover" />
+                <span v-else>{{ historyUser?.name ? historyUser.name.charAt(0).toUpperCase() : 'U' }}</span>
               </div>
               <div>
                 <h3 class="text-base font-bold text-white">Histori Token & Data RPP: {{ historyUser?.name }}</h3>
