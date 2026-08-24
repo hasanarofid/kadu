@@ -11,12 +11,41 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'email', 'password', 'google_id', 'avatar', 'username', 'tokens', 'parent_id', 'position', 'left_count', 'right_count', 'left_points', 'right_points', 'package_name', 'saldo', 'saldo_umroh', 'total_bonus', 'security_pin', 'bonus_uncashed', 'bank_name', 'bank_account_number', 'bank_account_name'])]
-#[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, HasRoles;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'google_id',
+        'avatar',
+        'username',
+        'email_verified_at',
+        'tokens',
+        'parent_id',
+        'position',
+        'left_count',
+        'right_count',
+        'left_points',
+        'right_points',
+        'package_name',
+        'saldo',
+        'saldo_umroh',
+        'total_bonus',
+        'security_pin',
+        'bonus_uncashed',
+        'bank_name',
+        'bank_account_number',
+        'bank_account_name',
+    ];
 
     /**
      * Get the attributes that should be cast.
