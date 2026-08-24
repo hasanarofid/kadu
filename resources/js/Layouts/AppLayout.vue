@@ -71,7 +71,8 @@ const logout = () => {
         <div class="truncate">
           <span class="font-extrabold text-amber-300">Akun Belum Diverifikasi:</span>
           <span class="ml-1 text-amber-200/90">Email <code class="text-amber-100 bg-slate-950/80 px-1.5 py-0.5 rounded font-mono border border-amber-500/30">{{ currentUser.email }}</code> belum diaktivasi.</span>
-          <span v-if="verificationMessage" class="ml-2 text-emerald-300 font-bold block sm:inline">{{ verificationMessage }}</span>
+          <span v-if="$page.props.flash?.error" class="ml-2 text-rose-300 font-bold block sm:inline">⚠️ {{ $page.props.flash.error }}</span>
+          <span v-else-if="$page.props.flash?.success || $page.props.status === 'verification-link-sent'" class="ml-2 text-emerald-300 font-bold block sm:inline">✓ Link verifikasi telah dikirim ke email! Cek Inbox/Spam.</span>
         </div>
       </div>
       <button 
