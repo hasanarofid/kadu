@@ -1,10 +1,9 @@
 <script setup>
 import { ref } from 'vue';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
+import AppLayout from '@/Layouts/AppLayout.vue';
 import { 
-  Brain, 
   Plus, 
-  Search, 
   FileText, 
   Eye, 
   Edit3, 
@@ -12,25 +11,20 @@ import {
   Sparkles, 
   BookOpen, 
   GraduationCap, 
-  Wrench, 
-  Printer, 
-  LogOut,
-  User,
-  Shield,
-  LayoutDashboard
+  Wrench,
+  Coins
 } from 'lucide-vue-next';
 
 const props = defineProps({
   rpps: {
     type: Object,
     required: true
+  },
+  userTokens: {
+    type: Number,
+    default: 0
   }
 });
-
-const pageData = usePage();
-const currentUser = pageData.props.auth?.user;
-
-const searchQuery = ref('');
 
 const deleteRpp = (id) => {
   if (confirm('Apakah Anda yakin ingin menghapus RPP ini?')) {
@@ -40,57 +34,10 @@ const deleteRpp = (id) => {
 </script>
 
 <template>
-  <Head title="Dashboard RPP Saya - KADU (Karsa Edukasi Vokasi)" />
+  <AppLayout>
+    <Head title="Dashboard RPP Saya - KADU (Karsa Edukasi Vokasi)" />
 
-  <div class="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-indigo-500 selection:text-white relative">
-    <!-- Ambient Lights -->
-    <div class="fixed top-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-indigo-600/10 blur-[140px] pointer-events-none"></div>
-    <div class="fixed bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-violet-600/10 blur-[140px] pointer-events-none"></div>
-
-    <!-- Top Navigation Bar -->
-    <nav class="bg-slate-900/80 backdrop-blur-xl border-b border-slate-800 sticky top-0 z-50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        <Link href="/" class="flex items-center gap-3">
-          <div class="p-2 bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-xl text-white shadow-md">
-            <Brain class="w-5 h-5" />
-          </div>
-          <span class="font-black text-lg text-white tracking-tight flex items-center gap-2">
-            KADU <span class="text-xxs px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 font-bold border border-indigo-500/30">VOKASI</span>
-          </span>
-        </Link>
-
-        <div class="flex items-center gap-4">
-          <Link 
-            v-if="currentUser?.roles?.some(r => r.name === 'admin')"
-            :href="route('admin.dashboard')"
-            class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 rounded-xl border border-slate-700 transition-colors"
-          >
-            <Shield class="w-3.5 h-3.5 text-indigo-400" />
-            Panel Admin CMS
-          </Link>
-
-          <div class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs">
-            <div class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xxs">
-              {{ currentUser?.name?.charAt(0) || 'U' }}
-            </div>
-            <span class="font-bold text-white max-w-[120px] truncate">{{ currentUser?.name }}</span>
-          </div>
-
-          <Link 
-            :href="route('logout')" 
-            method="post" 
-            as="button" 
-            class="p-2 text-slate-400 hover:text-rose-400 transition-colors rounded-xl hover:bg-slate-900"
-            title="Keluar"
-          >
-            <LogOut class="w-4 h-4" />
-          </Link>
-        </div>
-      </div>
-    </nav>
-
-    <!-- Main Content Area -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+    <div class="space-y-8 text-left">
       <!-- Header Banner -->
       <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-indigo-950/80 via-slate-900 to-slate-950 border border-indigo-500/30 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
         <div class="space-y-2 z-10 text-left">
@@ -253,6 +200,6 @@ const deleteRpp = (id) => {
           </table>
         </div>
       </div>
-    </main>
-  </div>
+    </div>
+  </AppLayout>
 </template>

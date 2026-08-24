@@ -1,17 +1,15 @@
 <script setup>
 import { ref } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import AppLayout from '@/Layouts/AppLayout.vue';
 import { 
-  Brain, 
   Coins, 
   ShoppingBag, 
   History, 
-  ArrowLeft, 
   CheckCircle2, 
   Clock, 
   Sparkles, 
-  CreditCard,
-  LogOut
+  CreditCard
 } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -31,34 +29,10 @@ const buyPackage = (pkgId) => {
 </script>
 
 <template>
-  <Head title="Profil & Beli Token RPP - KADU" />
+  <AppLayout>
+    <Head title="Profil & Beli Token RPP - KADU" />
 
-  <div class="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-indigo-500 selection:text-white relative pb-16">
-    <!-- Navigation Bar -->
-    <nav class="bg-slate-900/90 backdrop-blur-xl border-b border-slate-800 sticky top-0 z-50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        <Link href="/" class="flex items-center gap-3">
-          <div class="p-2 bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-xl text-white shadow">
-            <Brain class="w-5 h-5" />
-          </div>
-          <span class="font-black text-lg text-white tracking-tight">KADU VOKASI</span>
-        </Link>
-
-        <div class="flex items-center gap-4">
-          <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold">
-            <Coins class="w-4 h-4 text-amber-400" />
-            <span>Sisa Kuota: {{ userTokens }} Token</span>
-          </div>
-
-          <Link :href="route('rpps.index')" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold shadow">
-            ← Dashboard RPP
-          </Link>
-        </div>
-      </div>
-    </nav>
-
-    <!-- Main Container -->
-    <main class="max-w-6xl mx-auto px-4 sm:px-6 pt-8 space-y-8 text-left">
+    <div class="space-y-8 text-left">
       <!-- User Token Summary Card -->
       <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-indigo-950 via-slate-900 to-slate-950 border border-indigo-500/30 shadow-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div class="space-y-2">
@@ -184,6 +158,6 @@ const buyPackage = (pkgId) => {
           </div>
         </div>
       </div>
-    </main>
-  </div>
+    </div>
+  </AppLayout>
 </template>

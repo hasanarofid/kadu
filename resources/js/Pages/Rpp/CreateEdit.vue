@@ -1,4 +1,5 @@
 <script setup>
+import AppLayout from '@/Layouts/AppLayout.vue';
 import { ref, computed } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { 
@@ -85,7 +86,8 @@ const submitForm = () => {
 </script>
 
 <template>
-  <Head :title="isEditing ? 'Edit RPP Vokasi - KADU' : 'Generator RPP Deep Learning - KADU'" />
+  <AppLayout>
+    <Head :title="isEditing ? 'Edit RPP Vokasi - KADU' : 'Generator RPP Deep Learning - KADU'" />
 
   <div class="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-indigo-500 selection:text-white relative pb-16">
     <!-- Header Navigation Bar -->
@@ -354,4 +356,5 @@ const submitForm = () => {
       </div>
     </main>
   </div>
+  </AppLayout>
 </template>
