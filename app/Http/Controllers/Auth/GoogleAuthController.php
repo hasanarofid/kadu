@@ -48,6 +48,7 @@ class GoogleAuthController extends Controller
                 $user->update([
                     'google_id' => $googleUser->id,
                     'avatar' => $googleUser->avatar ?? $user->avatar,
+                    'email_verified_at' => $user->email_verified_at ?? now(),
                 ]);
             } else {
                 // Register new user via Google SSO
@@ -60,6 +61,7 @@ class GoogleAuthController extends Controller
                     'avatar' => $googleUser->avatar,
                     'username' => $username,
                     'password' => bcrypt(Str::random(16)),
+                    'email_verified_at' => now(), // Auto-verified via Google OAuth
                 ]);
 
                 // Assign default user role
@@ -74,9 +76,9 @@ class GoogleAuthController extends Controller
 
             Auth::login($user, true);
 
-            return redirect()->route('dashboard');
+            return redirect()->intended(route('dashboard'))->with('success', 'Berhasil masuk dengan akun Google!');
         } catch (\Throwable $e) {
-            return redirect()->route('login')->with('error', 'Gagal masuk menggunakan Google: ' . $e->getMessage());
+            return redirect()->route('login')->with('error', 'Gagal masuk via Google. Pastikan Client ID & Secret di .env server sudah diisi. Detail: ' . $e->getMessage());
         }
     }
 }
