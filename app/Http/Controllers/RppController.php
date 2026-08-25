@@ -48,7 +48,7 @@ class RppController extends Controller
 
         // Pembuatan RPP wajib menggunakan Token (kecuali Admin)
         if (($user->tokens ?? 0) <= 0 && !$user->hasRole('admin')) {
-            return redirect()->route('token.purchase')->with('error', 'Token RPP Anda kosong (0 Token). Silakan beli Token RPP terlebih dahulu melalui Payment Gateway.');
+            return redirect()->route('tokens.index')->with('error', 'Token RPP Anda kosong (0 Token). Silakan beli Token RPP terlebih dahulu melalui Payment Gateway.');
         }
 
         return Inertia::render('Rpp/CreateEdit', [
@@ -65,7 +65,7 @@ class RppController extends Controller
 
         // Check if user has available tokens
         if (($user->tokens ?? 0) <= 0 && !$user->hasRole('admin')) {
-            return redirect()->route('token.purchase')->with('error', 'Token RPP Anda telah habis. Silakan isi saldo Token RPP terlebih dahulu.');
+            return redirect()->route('tokens.index')->with('error', 'Token RPP Anda telah habis (0 Token). Silakan beli paket token terlebih dahulu.');
         }
 
         $validated = $request->validate([

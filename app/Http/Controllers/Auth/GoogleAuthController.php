@@ -54,6 +54,14 @@ class GoogleAuthController extends Controller
                 if ($user->roles->isEmpty()) {
                     $user->assignRole('user');
                 }
+
+                Auth::login($user, true);
+
+                if (($user->tokens ?? 0) <= 0 && !$user->hasRole('admin')) {
+                    return redirect()->route('tokens.index')->with('success', 'Berhasil masuk via Google! Kuota token Anda 0, silakan beli paket token RPP.');
+                }
+
+                return redirect()->intended(route('dashboard'))->with('success', 'Berhasil masuk dengan akun Google!');
             } else {
                 // Register new user via Google SSO
                 $username = Str::slug(explode('@', $googleUser->email)[0]) . rand(100, 999);
@@ -65,15 +73,16 @@ class GoogleAuthController extends Controller
                     'avatar' => $googleUser->avatar,
                     'username' => $username,
                     'password' => bcrypt(Str::random(16)),
-                    'email_verified_at' => now(), // Auto-verified via Google OAuth
+                    'email_verified_at' => now(),
+                    'tokens' => 0,
                 ]);
 
                 $user->assignRole('user');
+
+                Auth::login($user, true);
+
+                return redirect()->route('tokens.index')->with('success', 'Selamat datang! Akun Google Anda berhasil terdaftar. Silakan pilih & beli paket token RPP terlebih dahulu.');
             }
-
-            Auth::login($user, true);
-
-            return redirect()->intended(route('dashboard'))->with('success', 'Berhasil masuk dengan akun Google!');
         } catch (\Throwable $e) {
             return redirect()->route('login')->with('error', 'Gagal masuk via Google. Pastikan Client ID & Secret di .env server sudah diisi. Detail: ' . $e->getMessage());
         }

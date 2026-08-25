@@ -43,6 +43,7 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'tokens' => 0,
         ]);
 
         $user->assignRole('user');
@@ -54,6 +55,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('tokens.index'))->with('success', 'Selamat datang! Akun Anda berhasil dibuat. Silakan beli paket token terlebih dahulu untuk mulai membuat RPP Vokasi.');
     }
 }

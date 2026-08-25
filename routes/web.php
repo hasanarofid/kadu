@@ -57,9 +57,15 @@ Route::post('/api/midtrans/callback', [TokenPurchaseController::class, 'midtrans
 
 // Authenticated User Dashboard Redirect
 Route::get('/dashboard', function () {
-    if (auth()->user()->hasRole('admin')) {
+    $user = auth()->user();
+    if ($user->hasRole('admin')) {
         return redirect()->route('admin.dashboard');
     }
+
+    if (($user->tokens ?? 0) <= 0) {
+        return redirect()->route('tokens.index')->with('success', 'Selamat datang! Kuota Token RPP Anda 0. Silakan beli paket token terlebih dahulu.');
+    }
+
     return redirect()->route('rpps.index');
 })->middleware(['auth'])->name('dashboard');
 
@@ -70,6 +76,7 @@ Route::middleware('auth')->group(function () {
 
     // Profil & Token Kuota User
     Route::get('/tokens', [TokenPurchaseController::class, 'index'])->name('tokens.index');
+    Route::get('/tokens/purchase', [TokenPurchaseController::class, 'index'])->name('tokens.purchase');
     Route::post('/tokens/checkout/{package}', [TokenPurchaseController::class, 'checkout'])->name('tokens.checkout');
 
     // Profile Settings

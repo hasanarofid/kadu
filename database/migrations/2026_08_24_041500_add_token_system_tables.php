@@ -14,7 +14,7 @@ return new class extends Migration
         // 1. Add tokens column to users table if not exists
         Schema::table('users', function (Blueprint $table) {
             if (!Schema::hasColumn('users', 'tokens')) {
-                $table->integer('tokens')->default(5)->after('email');
+                $table->integer('tokens')->default(0)->after('email');
             }
         });
 
