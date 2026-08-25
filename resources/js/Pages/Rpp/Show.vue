@@ -250,57 +250,80 @@ const printRpp = () => {
             </div>
           </div>
 
-          <!-- TAB 3: Video Script & AI Video Prompt -->
+          <!-- TAB 3: Video Pembelajaran (Naskah & Simulasi Player) -->
           <div v-if="activeTab === 'video'" class="space-y-6">
             <div class="flex items-center justify-between bg-violet-50 p-4 rounded-2xl border border-violet-100">
               <div>
                 <h3 class="font-black text-sm text-violet-950 flex items-center gap-2">
                   <Video class="w-5 h-5 text-violet-600" />
-                  NASKAH TUTORIAL VIDEO 3D & PROMPT AI GENERATOR
+                  NASKAH & STRUKTUR VIDEO PEMBELAJARAN VOKASI 3D
                 </h3>
-                <p class="text-xxs text-violet-700 font-medium">Skrip Alur Video Pembelajaran & Prompt AI Video 3D (Runway Gen-2 / Sora / Pika Labs)</p>
+                <p class="text-xxs text-violet-700 font-medium">Alur Visual & Narasi Suara Video Pembelajaran Siap Didemokan & Diproduksi</p>
               </div>
             </div>
 
-            <!-- Prompt AI Highlight Card -->
-            <div class="bg-slate-950 text-slate-100 p-5 rounded-2xl border border-indigo-500/40 space-y-3 shadow-xl">
-              <div class="flex items-center justify-between">
-                <span class="text-xxs font-extrabold uppercase text-amber-400 tracking-wider flex items-center gap-1.5">
-                  <Sparkles class="w-4 h-4 text-amber-400" /> Prompt AI Video Generator (Runway / Sora / Pika)
+            <!-- Simulated Interactive Video Player Preview -->
+            <div class="aspect-video bg-slate-950 rounded-3xl border border-violet-500/40 p-6 flex flex-col justify-between relative shadow-2xl overflow-hidden group">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent z-10"></div>
+              
+              <!-- Video Header -->
+              <div class="relative z-20 flex items-center justify-between text-xs text-white">
+                <span class="px-3 py-1 rounded-full bg-violet-600/80 backdrop-blur-md text-xxs font-bold uppercase tracking-wider">
+                  Video Tutorial Vokasi Deep Learning
                 </span>
-                <span class="text-xxs px-2 py-0.5 rounded bg-indigo-900 text-indigo-300 font-bold">Copy-Paste Ready</span>
+                <span class="text-xxs text-slate-300 font-semibold">Durasi Ideal: 03:00 Menit</span>
               </div>
-              <p class="text-xs font-mono bg-slate-900 p-3 rounded-xl border border-slate-800 text-emerald-300 leading-relaxed">
-                "Cinematic 3D animation, vocational high school students in modern {{ rpp.jurusan_smk }} workshop wearing safety gear practicing {{ rpp.mata_pelajaran }}, realistic lighting, 8k resolution, octane render"
-              </p>
+
+              <!-- Center Play Icon Placeholder -->
+              <div class="relative z-20 self-center flex flex-col items-center gap-2 my-auto text-center">
+                <div class="w-16 h-16 rounded-full bg-violet-600 text-white flex items-center justify-center shadow-2xl border-2 border-white/20 group-hover:scale-110 transition-all cursor-pointer">
+                  <Video class="w-8 h-8 ml-1" />
+                </div>
+                <h4 class="text-sm font-black text-white max-w-md">Video Pembelajaran Vokasi: {{ rpp.mata_pelajaran }}</h4>
+                <p class="text-xxs text-slate-300">Konsentrasi Keahlian: {{ rpp.jurusan_smk }}</p>
+              </div>
+
+              <!-- Video Footer Bar -->
+              <div class="relative z-20 flex items-center justify-between text-xxs text-slate-400 border-t border-white/10 pt-3">
+                <span>Mitra DU/DI: {{ rpp.kemitraan_dudi }}</span>
+                <span>Standar Kurikulum Merdeka</span>
+              </div>
             </div>
 
-            <!-- Video Timeline Cards -->
+            <!-- Video Timeline & Narasi Suara Cards -->
             <div class="space-y-3">
+              <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Rincian Narasi Suara & Alur Scene Video:</h4>
+
               <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 flex items-start gap-4">
-                <div class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xxs font-black">00:00 - 00:30</div>
+                <div class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xxs font-black shrink-0">SCENE 1 (00:00 - 00:30)</div>
                 <div class="space-y-1">
-                  <h5 class="text-xs font-bold text-slate-900">Scene 1: Intro & Briefing APD K3LH</h5>
-                  <p class="text-xxs text-slate-600">Visual: Animasi 3D siswa SMK memasuki bengkel {{ rpp.ruang_fisik }} dengan seragam keselamatan lengkap.</p>
-                  <p class="text-xxs text-indigo-700 font-semibold italic">Voiceover: "Selamat datang di modul praktik vokasi {{ rpp.mata_pelajaran }}. Selalu utamakan K3LH!"</p>
+                  <h5 class="text-xs font-bold text-slate-900">Pembukaan & Pengenalan K3LH</h5>
+                  <p class="text-xxs text-slate-600">Deskripsi Visual: Tampilan 3D suasana bengkel {{ rpp.ruang_fisik }} dengan siswa mengenakan APD lengkap.</p>
+                  <p class="text-xxs text-indigo-700 font-bold bg-indigo-50 p-2 rounded-lg border border-indigo-100 italic">
+                    Narasi Suara (Voiceover): "Selamat datang di modul praktik vokasi {{ rpp.mata_pelajaran }}. Sebelum memulai unjuk kerja, pastikan kelengkapan APD dan keselamatan kerja Anda."
+                  </p>
                 </div>
               </div>
 
               <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 flex items-start gap-4">
-                <div class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xxs font-black">00:30 - 01:45</div>
+                <div class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xxs font-black shrink-0">SCENE 2 (00:30 - 01:45)</div>
                 <div class="space-y-1">
-                  <h5 class="text-xs font-bold text-slate-900">Scene 2: Demonstrasi Pengukuran Presisi & SOP</h5>
-                  <p class="text-xxs text-slate-600">Visual: Zoom-in alat kerja presisi dan simulasi software {{ rpp.software_digital }}.</p>
-                  <p class="text-xxs text-indigo-700 font-semibold italic">Voiceover: "Perhatikan kalkulasi presisi berikut. Akurasi adalah standar utama di industri {{ rpp.kemitraan_dudi }}."</p>
+                  <h5 class="text-xs font-bold text-slate-900">Demonstrasi Pengukuran Presisi & SOP</h5>
+                  <p class="text-xxs text-slate-600">Deskripsi Visual: Demostrasi instrumen kerja presisi dan software {{ rpp.software_digital }}.</p>
+                  <p class="text-xxs text-indigo-700 font-bold bg-indigo-50 p-2 rounded-lg border border-indigo-100 italic">
+                    Narasi Suara (Voiceover): "Perhatikan alur pengukuran presisi berikut. Pengukuran akurat adalah jaminan kualitas standar industri {{ rpp.kemitraan_dudi }}."
+                  </p>
                 </div>
               </div>
 
               <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 flex items-start gap-4">
-                <div class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xxs font-black">01:45 - 03:00</div>
+                <div class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xxs font-black shrink-0">SCENE 3 (01:45 - 03:00)</div>
                 <div class="space-y-1">
-                  <h5 class="text-xs font-bold text-slate-900">Scene 3: Refleksi & Penutup</h5>
-                  <p class="text-xxs text-slate-600">Visual: Tampilan QR Code LKPD Digital & Logo KADU Vokasi.</p>
-                  <p class="text-xxs text-indigo-700 font-semibold italic">Voiceover: "Diskusikan hasil analisismu bersama tim kelompokmu!"</p>
+                  <h5 class="text-xs font-bold text-slate-900">Refleksi Mandiri & Penutup</h5>
+                  <p class="text-xxs text-slate-600">Deskripsi Visual: Ringkasan poin utama dan tampilan Kode QR LKPD Digital.</p>
+                  <p class="text-xxs text-indigo-700 font-bold bg-indigo-50 p-2 rounded-lg border border-indigo-100 italic">
+                    Narasi Suara (Voiceover): "Diskusikan hasil analisismu bersama tim kelompok. Sampai jumpa di modul vokasi berikutnya!"
+                  </p>
                 </div>
               </div>
             </div>

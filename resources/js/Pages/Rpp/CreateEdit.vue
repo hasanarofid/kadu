@@ -358,14 +358,19 @@ const submitForm = () => {
             </Link>
           </div>
 
-          <!-- Siap Menerapkan Banner -->
-          <div v-else class="p-5 rounded-2xl bg-gradient-to-r from-indigo-950 via-slate-900 to-violet-950 border border-indigo-500/40 space-y-2">
-            <div class="flex items-center gap-2 text-indigo-300 font-bold text-sm">
-              <Cpu class="w-5 h-5 text-indigo-400 animate-pulse" />
-              <span>Siap Menerapkan Deep Learning AI?</span>
+          <!-- Siap Menerapkan Banner & Breakdown Token AI -->
+          <div v-else class="p-5 rounded-2xl bg-gradient-to-r from-indigo-950 via-slate-900 to-violet-950 border border-indigo-500/40 space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2 text-indigo-300 font-bold text-sm">
+                <Cpu class="w-5 h-5 text-indigo-400 animate-pulse" />
+                <span>Siap Merancang RPP, PPT, & Video Pembelajaran?</span>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 font-extrabold text-xxs">
+                🪙 Biaya: 1 Token Paket
+              </span>
             </div>
             <p class="text-xs text-slate-300 leading-relaxed">
-              Sistem akan memproses seluruh inputan Anda untuk menghasilkan RPP Utuh, Draft Media Pembelajaran, Script Video Pembelajaran, dan Ringkasan Materi yang kaya Literasi & Numerasi Terapan SMK.
+              Dengan 1 Token Paket, Google Gemini AI akan merancang 4 perangkat ajar sekaligus: **RPP Deep Learning Utuh, Slide Deck PPT Interaktif, Naskah Video Pembelajaran Vokasi 3D, dan Ringkasan Materi Literasi & Numerasi SMK**.
             </p>
           </div>
         </div>
