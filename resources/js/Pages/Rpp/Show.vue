@@ -432,34 +432,69 @@ const printRpp = () => {
             </div>
 
             <!-- Simulated Interactive Video Player Preview -->
-            <div class="aspect-video bg-slate-950 rounded-3xl border border-violet-500/40 p-6 flex flex-col justify-between relative shadow-2xl overflow-hidden group">
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent z-10"></div>
+            <div class="aspect-video bg-gradient-to-br from-indigo-950 via-slate-900 to-violet-950 rounded-3xl border-2 border-violet-500/40 p-6 flex flex-col justify-between relative shadow-2xl overflow-hidden group">
+              <!-- Animated Background Gradient Mesh Glow -->
+              <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(124,58,237,0.25),transparent_70%)] pointer-events-none"></div>
               
               <!-- Video Header -->
               <div class="relative z-20 flex items-center justify-between text-xs text-white">
-                <span class="px-3 py-1 rounded-full bg-violet-600/80 backdrop-blur-md text-xxs font-bold uppercase tracking-wider flex items-center gap-2">
+                <span class="px-3 py-1 rounded-full bg-violet-600/80 backdrop-blur-md text-xxs font-bold uppercase tracking-wider flex items-center gap-2 shadow">
                   <span v-if="isPlayingVideo" class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                  Video Tutorial Vokasi Deep Learning
+                  <span>Video Tutorial Vokasi Deep Learning</span>
                 </span>
-                <span class="text-xxs text-slate-300 font-semibold">Durasi Ideal: 03:00 Menit</span>
+                
+                <div class="flex items-center gap-2">
+                  <span class="text-xxs px-2.5 py-1 rounded-full bg-slate-900/80 border border-slate-700 text-amber-300 font-extrabold uppercase tracking-wider">
+                    {{ videoProgress < 30 ? 'Scene 1 • APD K3LH' : (videoProgress < 70 ? 'Scene 2 • SOP Presisi' : 'Scene 3 • Refleksi') }}
+                  </span>
+                  <span class="text-xxs text-slate-300 font-semibold">Durasi: 03:00</span>
+                </div>
               </div>
 
-              <!-- Center Play/Pause Button Placeholder -->
-              <div class="relative z-20 self-center flex flex-col items-center gap-3 my-auto text-center">
-                <button 
-                  @click="togglePlayVideo"
-                  :class="['w-20 h-20 rounded-full flex items-center justify-center shadow-2xl border-4 border-white/30 transition-all cursor-pointer', isPlayingVideo ? 'bg-rose-600 text-white scale-110' : 'bg-violet-600 hover:scale-110 text-white']"
-                >
-                  <Pause v-if="isPlayingVideo" class="w-10 h-10" />
-                  <Play v-else class="w-10 h-10 ml-1" />
-                </button>
+              <!-- Center Interactive Visual Scene Canvas -->
+              <div class="relative z-20 self-center flex flex-col items-center gap-3 my-auto text-center w-full max-w-xl">
+                <!-- Scene Visual Graphics & Animation Container -->
+                <div class="p-5 rounded-2xl bg-slate-900/90 border border-indigo-500/30 backdrop-blur-xl shadow-2xl w-full flex flex-col items-center gap-3 transition-all duration-500">
+                  
+                  <!-- Equalizer Sound Wave Animation when Playing -->
+                  <div v-if="isPlayingVideo" class="flex items-center justify-center gap-1 h-6">
+                    <span class="w-1.5 bg-emerald-400 rounded-full animate-[bounce_1s_infinite_100ms] h-4"></span>
+                    <span class="w-1.5 bg-emerald-400 rounded-full animate-[bounce_1s_infinite_300ms] h-6"></span>
+                    <span class="w-1.5 bg-emerald-400 rounded-full animate-[bounce_1s_infinite_200ms] h-3"></span>
+                    <span class="w-1.5 bg-emerald-400 rounded-full animate-[bounce_1s_infinite_400ms] h-5"></span>
+                    <span class="w-1.5 bg-emerald-400 rounded-full animate-[bounce_1s_infinite_150ms] h-6"></span>
+                  </div>
 
-                <div class="space-y-1">
-                  <h4 class="text-base font-black text-white max-w-md">Video Pembelajaran Vokasi: {{ rpp.mata_pelajaran }}</h4>
-                  <p class="text-xs text-indigo-300 font-bold">Konsentrasi Keahlian: {{ rpp.jurusan_smk }}</p>
-                  <p v-if="isPlayingVideo" class="text-xxs text-emerald-400 font-bold animate-pulse">
-                    🔊 Sedang Menyuarakan Narasi Audio (Web Speech AI Output)...
-                  </p>
+                  <!-- Play/Pause Button Circle -->
+                  <button 
+                    @click="togglePlayVideo"
+                    :class="['w-16 h-16 rounded-full flex items-center justify-center shadow-2xl border-4 border-white/30 transition-all cursor-pointer', isPlayingVideo ? 'bg-rose-600 text-white scale-105' : 'bg-violet-600 hover:scale-110 text-white']"
+                  >
+                    <Pause v-if="isPlayingVideo" class="w-8 h-8" />
+                    <Play v-else class="w-8 h-8 ml-1" />
+                  </button>
+
+                  <div class="space-y-1">
+                    <h4 class="text-sm font-black text-white leading-snug">
+                      {{ videoProgress < 30 ? 'SCENE 1: APD & K3LH BENGKEL VOKASI' : (videoProgress < 70 ? 'SCENE 2: DEMONSTRASI KALKULASI SOP PRESISI' : 'SCENE 3: REFLEKSI MANDIRI & UNJUK KERJA') }}
+                    </h4>
+                    <p class="text-xxs text-indigo-300 font-bold">
+                      {{ rpp.mata_pelajaran }} • {{ rpp.jurusan_smk }}
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Real-time Subtitle CC Box Overlay -->
+                <div class="px-4 py-2 rounded-xl bg-slate-950/90 border border-slate-800 text-xxs font-semibold text-emerald-300 shadow-xl max-w-lg">
+                  <span class="text-slate-400 uppercase tracking-widest mr-1 font-bold">[CC SUBTITLE]:</span>
+                  <span>
+                    {{ videoProgress < 30 
+                      ? `"Selamat datang di modul praktik vokasi ${rpp.mata_pelajaran}. Pastikan kelengkapan APD dan keselamatan kerja K3LH Anda."` 
+                      : (videoProgress < 70 
+                        ? `"Perhatikan alur kalkulasi presisi berikut. Akurasi pengukuran adalah standar utama industri ${rpp.kemitraan_dudi}."` 
+                        : `"Diskusikan hasil analisismu bersama kelompok. Sampai jumpa di modul vokasi berikutnya!"`) 
+                    }}
+                  </span>
                 </div>
               </div>
 
@@ -471,7 +506,7 @@ const printRpp = () => {
 
                 <div class="flex items-center justify-between text-xxs text-slate-400 pt-1 border-t border-white/10">
                   <span>Mitra DU/DI: {{ rpp.kemitraan_dudi }}</span>
-                  <span>Standar Kurikulum Merdeka</span>
+                  <span>Digital Software: {{ rpp.software_digital }}</span>
                 </div>
               </div>
             </div>
