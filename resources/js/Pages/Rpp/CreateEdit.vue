@@ -12,13 +12,21 @@ import {
   Check, 
   CheckCircle,
   Cpu,
-  Printer
+  Printer,
+  Loader2,
+  Coins,
+  CreditCard,
+  AlertCircle
 } from 'lucide-vue-next';
 
 const props = defineProps({
   rpp: {
     type: Object,
     default: null
+  },
+  userTokens: {
+    type: Number,
+    default: 0
   }
 });
 
@@ -300,8 +308,23 @@ const submitForm = () => {
             </div>
           </div>
 
+          <!-- Warning Banner if User Tokens is 0 -->
+          <div v-if="userTokens <= 0 && !$page.props.auth.user?.roles?.some(r => r.name === 'admin')" class="p-5 rounded-2xl bg-amber-500/15 border border-amber-500/40 space-y-3">
+            <div class="flex items-center gap-2 text-amber-300 font-bold text-sm">
+              <Coins class="w-5 h-5 text-amber-400" />
+              <span>Kuota Token RPP Anda Kosong (0 Token)</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Anda membutuhkan minimal 1 Token RPP untuk meng-generate dokumen RPP AI Vokasi. Silakan isi paket token terlebih dahulu.
+            </p>
+            <Link :href="route('tokens.index')" class="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs rounded-xl shadow transition-all">
+              <CreditCard class="w-4 h-4" />
+              <span>Beli Paket Token Sekarang (Midtrans)</span>
+            </Link>
+          </div>
+
           <!-- Siap Menerapkan Banner -->
-          <div class="p-5 rounded-2xl bg-gradient-to-r from-indigo-950 via-slate-900 to-violet-950 border border-indigo-500/40 space-y-2">
+          <div v-else class="p-5 rounded-2xl bg-gradient-to-r from-indigo-950 via-slate-900 to-violet-950 border border-indigo-500/40 space-y-2">
             <div class="flex items-center gap-2 text-indigo-300 font-bold text-sm">
               <Cpu class="w-5 h-5 text-indigo-400 animate-pulse" />
               <span>Siap Menerapkan Deep Learning AI?</span>
@@ -317,7 +340,7 @@ const submitForm = () => {
           <button 
             type="button" 
             @click="prevStep" 
-            :disabled="currentStep === 1"
+            :disabled="currentStep === 1 || form.processing"
             class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-xs font-bold text-slate-200 rounded-xl transition-all"
           >
             ← Sebelumnya
@@ -336,14 +359,49 @@ const submitForm = () => {
             v-else
             type="button"
             @click="submitForm"
-            :disabled="form.processing"
-            class="px-7 py-3 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 hover:brightness-110 text-xs font-extrabold text-white rounded-xl shadow-lg shadow-indigo-600/30 active:scale-[0.98] transition-all cursor-pointer flex items-center gap-2"
+            :disabled="form.processing || (userTokens <= 0 && !$page.props.auth.user?.roles?.some(r => r.name === 'admin'))"
+            class="px-7 py-3 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 hover:brightness-110 disabled:opacity-50 text-xs font-extrabold text-white rounded-xl shadow-lg shadow-indigo-600/30 active:scale-[0.98] transition-all cursor-pointer flex items-center gap-2"
           >
-            <Sparkles class="w-4 h-4" />
-            <span>Generate Dokumen AI ✨</span>
+            <Loader2 v-if="form.processing" class="w-4 h-4 animate-spin text-white" />
+            <Sparkles v-else class="w-4 h-4 text-amber-300" />
+            <span>{{ form.processing ? 'Sedang Merancang RPP (AI)...' : 'Generate Dokumen AI ✨' }}</span>
           </button>
         </div>
       </div>
     </div>
+
+    <!-- Fullscreen AI Synthesis Loading Overlay Modal -->
+    <Teleport to="body">
+      <div 
+        v-if="form.processing" 
+        class="fixed inset-0 z-[100] bg-slate-950/90 backdrop-blur-2xl flex flex-col items-center justify-center p-6 text-center space-y-6 animate-fade-in"
+      >
+        <!-- Glowing Animated AI Aura -->
+        <div class="relative flex items-center justify-center">
+          <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-indigo-500 via-violet-500 to-purple-500 animate-spin blur-md opacity-60"></div>
+          <div class="absolute inset-2 bg-slate-950 rounded-full flex items-center justify-center border border-indigo-500/50 shadow-2xl">
+            <Brain class="w-10 h-10 text-indigo-400 animate-pulse" />
+          </div>
+        </div>
+
+        <div class="space-y-2 max-w-md">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-indigo-500/10 rounded-full text-indigo-300 text-xs font-bold border border-indigo-500/30 uppercase tracking-wider">
+            <Sparkles class="w-3.5 h-3.5 text-amber-400 animate-spin" />
+            Google Gemini AI Sintesis Deep Learning
+          </div>
+          <h3 class="text-2xl font-black text-white tracking-tight">Merancang Perangkat Ajar & RPP Vokasi...</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Mohon tunggu sebentar. AI sedang menyusun RPP Utuh, Draft Media Pembelajaran Visual, Script Video 3D, dan Ringkasan Materi Literasi & Numerasi Terapan SMK.
+          </p>
+        </div>
+
+        <!-- Animated Progress Pill -->
+        <div class="w-full max-w-xs bg-slate-900 border border-slate-800 rounded-full h-2 overflow-hidden relative">
+          <div class="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-400 rounded-full w-full animate-pulse"></div>
+        </div>
+
+        <span class="text-xxs text-slate-400 font-semibold tracking-wide uppercase">⚡ Memerlukan waktu ~5-10 detik • Mohon jangan menutup halaman</span>
+      </div>
+    </Teleport>
   </AppLayout>
 </template>
