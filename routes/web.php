@@ -9,8 +9,14 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\TokenPackageController;
 use Illuminate\Support\Facades\Route;
 
-// Landing Page
+// Landing Page & Public Legal Compliance Pages (Midtrans Verification)
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/terms', function () {
+    return Inertia::render('Terms');
+})->name('terms');
+Route::get('/privacy', function () {
+    return Inertia::render('Privacy');
+})->name('privacy');
 
 // Web Migration & Seeder Script Runner (Public Route for Hosting Deployment)
 Route::get('/run-migrate', function () {

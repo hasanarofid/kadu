@@ -639,11 +639,11 @@ const faqs = [
 
           <!-- Col 2 -->
           <div class="space-y-3">
-            <h5 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Tautan Cepat</h5>
+            <h5 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Tautan Legal & Akses</h5>
             <ul class="space-y-2 text-xs text-slate-400">
               <li><a href="#fitur" class="hover:text-white">Fitur Utama</a></li>
-              <li><a href="#wizard" class="hover:text-white">Wizard RPP AI</a></li>
-              <li><a href="#payment-gateway" class="hover:text-white">Payment Gateway</a></li>
+              <li><Link href="/terms" class="hover:text-indigo-300 font-semibold">Syarat & Ketentuan</Link></li>
+              <li><Link href="/privacy" class="hover:text-indigo-300 font-semibold">Kebijakan Privasi</Link></li>
               <li><Link :href="route('login')" class="hover:text-white">Login Dashboard</Link></li>
             </ul>
           </div>

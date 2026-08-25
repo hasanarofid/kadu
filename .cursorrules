@@ -173,3 +173,19 @@ Payment Gateway menghubungkan frontend, backend Laravel, dan jaringan bank / pen
 
 4. **Penanganan Limit Quota & Fallback Cerdas:**
    - Apabila API key kosong, kuota habis (HTTP 429), atau koneksi jaringan ke Gemini API gagal, `GeminiApiService` **WAJIB** mengeksekusi *Intelligent Synthesis Fallback* agar user tetap menerima dokumen RPP Vokasi utuh tanpa crash/error 500.
+
+---
+
+## 9. Rules Integrasi Midtrans Production & Merchant Compliance T&C
+
+1. **Konfigurasi Merchant Production:**
+   - Merchant ID: `G709634823`
+   - Client Key: Terkonfigurasi di `.env` (`MIDTRANS_CLIENT_KEY`)
+   - Server Key: Terkonfigurasi di `.env` (`MIDTRANS_SERVER_KEY`)
+   - Mode: `MIDTRANS_IS_PRODUCTION=true`
+
+2. **Compliance Legal Pages (Midtrans Verification Requirement):**
+   - Halaman Syarat & Ketentuan Layanan: `/terms` (`resources/js/Pages/Terms.vue`).
+   - Halaman Kebijakan Privasi: `/privacy` (`resources/js/Pages/Privacy.vue`).
+   - Beracuan pada template resmi Midtrans T&C (Template #3 Digital Goods & Services).
+   - Seluruh halaman legal wajib terhubung dan dapat diakses langsung dari Footer landing page (`/`).
