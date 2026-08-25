@@ -135,3 +135,41 @@ Payment Gateway menghubungkan frontend, backend Laravel, dan jaringan bank / pen
 - Jawab secara singkat, padat, dan langsung ke poin solusi teknis.
 - Tampilkan hanya snippet / diff kode yang berubah.
 - Gunakan Bahasa Indonesia yang profesional dan santai.
+
+---
+
+## 8. Rules Integrasi Google Gemini AI API (Generator RPP Vokasi)
+
+1. **Konfigurasi Environment & Model:**
+   - Provider: **Google Generative AI (Gemini)** REST API `v1beta`.
+   - Key Environment: `GEMINI_API_KEY` di `.env`.
+   - Default Model: `GEMINI_MODEL="gemini-flash-latest"` (atau `gemini-1.5-flash`).
+   - Endpoint Target: `https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent`
+
+2. **Standar Otentikasi Request API:**
+   - Gunakan HTTP Header `X-goog-api-key: {GEMINI_API_KEY}` dan `Content-Type: application/json`.
+   - Struktur JSON Request:
+     ```json
+     {
+       "contents": [
+         {
+           "parts": [
+             {
+               "text": "<PROMPT_RPP_DEEP_LEARNING_VOKASI>"
+             }
+           ]
+         }
+       ]
+     }
+     ```
+
+3. **Integritas Prompting & Output 4 Bagian (Deep Learning Vokasi):**
+   - Prompt dikirim via `App\Services\GeminiApiService`.
+   - Output hasil AI disintesis secara cerdas menjadi 4 tab konten:
+     - `content_rpp`: RPP Utuh & Modul Ajar (Kerangka Pembelajaran, Tujuan Meaningful, Stimulus Literasi & Numerasi Terapan Vokasi, Langkah Mindful-Meaningful-Joyful, Asesmen Formatif/Sumatif).
+     - `content_media`: Draft Media Pembelajaran (Slide presentasi visual interactive, Infografis alur bengkel, LKPD simulator).
+     - `content_video_script`: Video Script & Prompt Generator AI (Skrip tutorial 3D & prompt generator AI).
+     - `content_materi`: Ringkasan Materi Literasi & Numerasi Terapan SMK (Standard Operasional Prosedur DU/DI).
+
+4. **Penanganan Limit Quota & Fallback Cerdas:**
+   - Apabila API key kosong, kuota habis (HTTP 429), atau koneksi jaringan ke Gemini API gagal, `GeminiApiService` **WAJIB** mengeksekusi *Intelligent Synthesis Fallback* agar user tetap menerima dokumen RPP Vokasi utuh tanpa crash/error 500.

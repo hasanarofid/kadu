@@ -13,7 +13,7 @@ class GeminiApiService
     public function __construct()
     {
         $this->apiKey = env('GEMINI_API_KEY', '');
-        $this->model = env('GEMINI_MODEL', 'gemini-1.5-flash');
+        $this->model = env('GEMINI_MODEL', 'gemini-flash-latest');
     }
 
     /**
@@ -21,25 +21,37 @@ class GeminiApiService
      */
     public function generateRppContent(array $inputData): array
     {
-        $mapel = $inputData['mata_pelajaran'] ?? 'Matematika Vokasi';
-        $jurusan = $inputData['jurusan_smk'] ?? 'Teknik Kendaraan Ringan (TKR)';
-        $cp = $inputData['capaian_pembelajaran'] ?? '';
-        $model = $inputData['model_pembelajaran'] ?? 'Project-Based Learning (PBL)';
-        $dudi = $inputData['kemitraan_dudi'] ?? 'Industri Pasangan DU/DI';
+        $mapel    = $inputData['mata_pelajaran'] ?? 'Matematika Vokasi';
+        $jurusan  = $inputData['jurusan_smk'] ?? 'Teknik Kendaraan Ringan (TKR)';
+        $cp       = $inputData['capaian_pembelajaran'] ?? '';
+        $model    = $inputData['model_pembelajaran'] ?? 'Project-Based Learning (PBL)';
+        $dudi     = $inputData['kemitraan_dudi'] ?? 'Industri Pasangan DU/DI';
+        $gaya     = is_array($inputData['gaya_belajar'] ?? null) ? implode(', ', $inputData['gaya_belajar']) : ($inputData['gaya_belajar'] ?? 'Visual, Kinestetik');
+        $profil   = is_array($inputData['dimensi_profil'] ?? null) ? implode(', ', $inputData['dimensi_profil']) : ($inputData['dimensi_profil'] ?? 'Bernalar Kritis, Kreatif, Vokasi');
 
         if (!empty($this->apiKey)) {
             try {
-                $prompt = "Anda adalah pakar Kurikulum Merdeka Vokasi SMK. Buatkan Rencana Program Pembelajaran (RPP) / Modul Ajar Deep Learning dengan konteks:\n" .
+                $prompt = "Anda adalah pakar Kurikulum Merdeka Vokasi SMK & Deep Learning Engine. Buatkan Rencana Program Pembelajaran (RPP) / Modul Ajar Deep Learning Vokasi utuh dengan spesifikasi:\n" .
                           "- Mata Pelajaran: {$mapel}\n" .
-                          "- Jurusan SMK: {$jurusan}\n" .
-                          "- Capaian Pembelajaran: {$cp}\n" .
+                          "- Konsentrasi Keahlian / Jurusan SMK: {$jurusan}\n" .
+                          "- Capaian Pembelajaran (CP): {$cp}\n" .
                           "- Model Pembelajaran: {$model}\n" .
-                          "- Mitra Industri: {$dudi}\n\n" .
-                          "Berikan output terstruktur yang mencakup: I. Kerangka & Ekosistem, II. Tujuan Pembelajaran (Meaningful), III. Stimulus Literasi & Numerasi Terapan, IV. Langkah Pembelajaran (Mindful, Meaningful, Joyful), V. Asesmen Formatif & Sumatif.";
+                          "- Kemitraan DU/DI: {$dudi}\n" .
+                          "- Gaya Belajar Siswa: {$gaya}\n" .
+                          "- Target Dimensi Profil: {$profil}\n\n" .
+                          "Output HARUS terbagi menjadi 4 bagian berikut:\n" .
+                          "1. RPP / Modul Ajar (Kerangka Pembelajaran, Tujuan Meaningful, Stimulus Literasi & Numerasi Terapan Vokasi, Langkah Pembelajaran Mindful-Meaningful-Joyful, Asesmen Formatif & Sumatif)\n" .
+                          "2. Media Pembelajaran (Slide presentasi visual interactive, Infografis alur bengkel, LKPD simulator)\n" .
+                          "3. Video Script & Prompt AI (Skrip tutorial video 3D dan prompt generator video AI)\n" .
+                          "4. Materi Pembelajaran (Ringkasan materi literasi & numerasi terapan vokasi standar industri)\n\n" .
+                          "Berikan respon terstruktur dengan penanda judul jelas untuk keempat bagian di atas.";
 
-                $url = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:generateContent?key={$this->apiKey}";
+                $url = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:generateContent";
 
-                $response = Http::post($url, [
+                $response = Http::withHeaders([
+                    'Content-Type'   => 'application/json',
+                    'X-goog-api-key' => $this->apiKey,
+                ])->timeout(30)->post($url, [
                     'contents' => [
                         [
                             'parts' => [
@@ -53,15 +65,17 @@ class GeminiApiService
                     $resultText = $response->json('candidates.0.content.parts.0.text');
                     if ($resultText) {
                         return [
-                            'content_rpp' => $resultText,
-                            'content_media' => "1. Slide Presentasi Visual Interactive: SOP & Prosedur Teknik {$jurusan}\n2. Infografis Alur Kerja Praktik Bengkel SMK\n3. LKPD berbasis Simulator Software Digital.",
+                            'content_rpp'          => $resultText,
+                            'content_media'        => "1. Slide Presentasi Visual Interactive: SOP & Prosedur Teknik {$jurusan}\n2. Infografis Alur Kerja Praktik Bengkel SMK\n3. LKPD berbasis Simulator Software Digital.",
                             'content_video_script' => "PROMPT AI VIDEO: 'High quality 3D tutorial video of vocational students practicing {$mapel} in modern {$jurusan} workshop'.",
-                            'content_materi' => "RINGKASAN MATERI LITERASI & NUMERASI TERAPAN SMK: Penerapan formula dan standar operasional prosedur industri {$dudi}.",
+                            'content_materi'       => "RINGKASAN MATERI LITERASI & NUMERASI TERAPAN SMK: Penerapan formula dan standar operasional prosedur industri {$dudi}.",
                         ];
                     }
+                } else {
+                    Log::warning('Gemini API Non-Success Response: Status ' . $response->status() . ' - Body: ' . $response->body());
                 }
             } catch (\Throwable $e) {
-                Log::error('Gemini API Error: ' . $e->getMessage());
+                Log::error('Gemini API Exception: ' . $e->getMessage());
             }
         }
 
