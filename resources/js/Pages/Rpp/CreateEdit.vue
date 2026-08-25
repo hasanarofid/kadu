@@ -54,6 +54,15 @@ const form = useForm({
   ],
 });
 
+const loadingMessages = [
+  '🧠 Menghubungkan ke Google Gemini AI (Deep Learning Vokasi)...',
+  '📝 Menyusun RPP Utuh, Tujuan Pembelajaran & Asesmen Vokasi...',
+  '🎨 Merancang Draft Media Pembelajaran & Prompt Video Script 3D...',
+  '📚 Mengkalkulasi Ringkasan Materi Literasi & Numerasi Terapan SMK...'
+];
+const currentLoadingMsg = ref(loadingMessages[0]);
+let msgInterval = null;
+
 const toggleGayaBelajar = (val) => {
   const idx = form.gaya_belajar.indexOf(val);
   if (idx > -1) {
@@ -85,10 +94,23 @@ const prevStep = () => {
 };
 
 const submitForm = () => {
+  let idx = 0;
+  currentLoadingMsg.value = loadingMessages[0];
+  if (msgInterval) clearInterval(msgInterval);
+  
+  msgInterval = setInterval(() => {
+    idx = (idx + 1) % loadingMessages.length;
+    currentLoadingMsg.value = loadingMessages[idx];
+  }, 2000);
+
   if (isEditing.value) {
-    form.put(route('rpps.update', props.rpp.id));
+    form.put(route('rpps.update', props.rpp.id), {
+      onFinish: () => clearInterval(msgInterval)
+    });
   } else {
-    form.post(route('rpps.store'));
+    form.post(route('rpps.store'), {
+      onFinish: () => clearInterval(msgInterval)
+    });
   }
 };
 </script>
@@ -390,8 +412,8 @@ const submitForm = () => {
             Google Gemini AI Sintesis Deep Learning
           </div>
           <h3 class="text-2xl font-black text-white tracking-tight">Merancang Perangkat Ajar & RPP Vokasi...</h3>
-          <p class="text-xs text-slate-300 leading-relaxed">
-            Mohon tunggu sebentar. AI sedang menyusun RPP Utuh, Draft Media Pembelajaran Visual, Script Video 3D, dan Ringkasan Materi Literasi & Numerasi Terapan SMK.
+          <p class="text-xs text-indigo-200 font-bold leading-relaxed min-h-[40px] flex items-center justify-center transition-all">
+            {{ currentLoadingMsg }}
           </p>
         </div>
 
