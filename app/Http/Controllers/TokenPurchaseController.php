@@ -6,6 +6,8 @@ use App\Models\TokenPackage;
 use App\Models\TokenTransaction;
 use App\Models\TokenLog;
 use App\Mail\BonusMlmMail;
+use Midtrans\Config as MidtransConfig;
+use Midtrans\Snap as MidtransSnap;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -56,10 +58,10 @@ class TokenPurchaseController extends Controller
 
         if (!empty($serverKey)) {
             try {
-                \Midtrans\Config::$serverKey = $serverKey;
-                \Midtrans\Config::$isProduction = $isProduction;
-                \Midtrans\Config::$isSanitized = true;
-                \Midtrans\Config::$is3ds = true;
+                MidtransConfig::$serverKey = $serverKey;
+                MidtransConfig::$isProduction = $isProduction;
+                MidtransConfig::$isSanitized = true;
+                MidtransConfig::$is3ds = true;
 
                 $params = [
                     'transaction_details' => [
@@ -80,7 +82,7 @@ class TokenPurchaseController extends Controller
                     ],
                 ];
 
-                $snapToken = \Midtrans\Snap::getSnapToken($params);
+                $snapToken = MidtransSnap::getSnapToken($params);
                 $transaction->update(['snap_token' => $snapToken]);
 
                 return redirect()->back()->with('snap_token', $snapToken)->with('success', 'Order Token berhasil dibuat! Silakan tuntaskan pembayaran.');
