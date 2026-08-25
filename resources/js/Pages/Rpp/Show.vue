@@ -12,7 +12,8 @@ import {
   Plus, 
   Sparkles, 
   CheckCircle,
-  Download
+  Download,
+  Presentation
 } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -166,17 +167,145 @@ const printRpp = () => {
             </div>
           </div>
 
-          <!-- TAB 2: Media Pembelajaran -->
-          <div v-if="activeTab === 'media'" class="space-y-4">
-            <h3 class="font-bold text-sm text-slate-900">🖼️ DRAFT MEDIA PEMBELAJARAN VOKASI</h3>
+          <!-- TAB 2: Media Pembelajaran (PPT Slide Deck Viewer) -->
+          <div v-if="activeTab === 'media'" class="space-y-6">
+            <div class="flex items-center justify-between bg-indigo-50 p-4 rounded-2xl border border-indigo-100">
+              <div>
+                <h3 class="font-black text-sm text-indigo-950 flex items-center gap-2">
+                  <Presentation class="w-5 h-5 text-indigo-600" />
+                  SLIDE PRESENTASI (PPT) & MEDIA INTERAKTIF VOKASI
+                </h3>
+                <p class="text-xxs text-indigo-700 font-medium">Struktur Slide Deck 16:9 Siap Diimpor ke Canva, PowerPoint, atau Gamma AI</p>
+              </div>
+            </div>
+
+            <!-- Visual 16:9 Aspect Ratio Slide Deck Carousel / Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Slide 1 -->
+              <div class="aspect-video bg-gradient-to-br from-indigo-900 via-slate-900 to-indigo-950 text-white p-6 rounded-2xl shadow-lg border border-indigo-500/30 flex flex-col justify-between relative overflow-hidden">
+                <div class="flex items-center justify-between text-xxs font-bold text-indigo-300">
+                  <span>SLIDE 1 • COVER PRESENTASI</span>
+                  <span class="px-2 py-0.5 rounded bg-indigo-500/20 border border-indigo-400/30">16:9</span>
+                </div>
+                <div class="space-y-1">
+                  <h4 class="text-sm font-black text-white leading-tight uppercase">Penerapan Deep Learning {{ rpp.mata_pelajaran }}</h4>
+                  <p class="text-xxs text-indigo-200">Konsentrasi Keahlian: {{ rpp.jurusan_smk }}</p>
+                  <p class="text-xxs text-slate-300">Kemitraan DU/DI: {{ rpp.kemitraan_dudi }}</p>
+                </div>
+                <div class="text-xxs text-slate-400 border-t border-indigo-500/20 pt-2 flex items-center justify-between">
+                  <span>Modul Vokasi Merdeka</span>
+                  <span>KADU AI Engine</span>
+                </div>
+              </div>
+
+              <!-- Slide 2 -->
+              <div class="aspect-video bg-slate-900 text-white p-6 rounded-2xl shadow-lg border border-slate-800 flex flex-col justify-between">
+                <div class="flex items-center justify-between text-xxs font-bold text-amber-400">
+                  <span>SLIDE 2 • MINDFUL & APERSEPSI</span>
+                  <span class="px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30">Langkah 1</span>
+                </div>
+                <div class="space-y-2">
+                  <h5 class="text-xs font-bold text-white">Pertanyaan Pemantik Vokasi:</h5>
+                  <p class="text-xxs text-slate-300 italic leading-relaxed">"Bagaimana kalkulasi presisi pada {{ rpp.mata_pelajaran }} mencegah kegagalan teknis di industri pasangan?"</p>
+                  <div class="p-2 rounded-lg bg-slate-950 border border-slate-800 text-xxs text-amber-300 font-semibold">
+                    ⚡ Hening 1 Menit & Safety Briefing APD K3LH
+                  </div>
+                </div>
+                <div class="text-xxs text-slate-400 pt-2 border-t border-slate-800">Kegiatan Awal Pembelajaran</div>
+              </div>
+
+              <!-- Slide 3 -->
+              <div class="aspect-video bg-slate-900 text-white p-6 rounded-2xl shadow-lg border border-slate-800 flex flex-col justify-between">
+                <div class="flex items-center justify-between text-xxs font-bold text-emerald-400">
+                  <span>SLIDE 3 • NUMERASI & KONSEP BENGKEL</span>
+                  <span class="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30">Langkah 2</span>
+                </div>
+                <div class="space-y-1.5">
+                  <h5 class="text-xs font-bold text-white">Formula Presisi & SOP Industri:</h5>
+                  <p class="text-xxs text-slate-300 leading-relaxed">{{ rpp.capaian_pembelajaran }}</p>
+                </div>
+                <div class="text-xxs text-emerald-300 font-bold border-t border-slate-800 pt-2">
+                  Stimulus Literasi & Numerasi Terapan SMK
+                </div>
+              </div>
+
+              <!-- Slide 4 -->
+              <div class="aspect-video bg-slate-900 text-white p-6 rounded-2xl shadow-lg border border-slate-800 flex flex-col justify-between">
+                <div class="flex items-center justify-between text-xxs font-bold text-violet-400">
+                  <span>SLIDE 4 • SIMULASI DIGITAL & LKPD</span>
+                  <span class="px-2 py-0.5 rounded bg-violet-500/10 border border-violet-500/30">Langkah 3</span>
+                </div>
+                <div class="space-y-2">
+                  <h5 class="text-xs font-bold text-white">Software & Tools Digital:</h5>
+                  <p class="text-xxs text-violet-300 font-semibold">{{ rpp.software_digital }}</p>
+                  <p class="text-xxs text-slate-400">Ruang Virtual: {{ rpp.ruang_virtual }}</p>
+                </div>
+                <div class="text-xxs text-slate-400 border-t border-slate-800 pt-2">Unjuk Kerja Praktik Siswa</div>
+              </div>
+            </div>
+
+            <!-- Full Raw Slide Text -->
             <div class="whitespace-pre-wrap font-mono text-xs bg-slate-50 p-5 rounded-xl border border-slate-200">
               {{ rpp.content_media }}
             </div>
           </div>
 
-          <!-- TAB 3: Video Script & Prompt -->
-          <div v-if="activeTab === 'video'" class="space-y-4">
-            <h3 class="font-bold text-sm text-slate-900">🎬 PROMPT & SCRIPT VIDEO AI</h3>
+          <!-- TAB 3: Video Script & AI Video Prompt -->
+          <div v-if="activeTab === 'video'" class="space-y-6">
+            <div class="flex items-center justify-between bg-violet-50 p-4 rounded-2xl border border-violet-100">
+              <div>
+                <h3 class="font-black text-sm text-violet-950 flex items-center gap-2">
+                  <Video class="w-5 h-5 text-violet-600" />
+                  NASKAH TUTORIAL VIDEO 3D & PROMPT AI GENERATOR
+                </h3>
+                <p class="text-xxs text-violet-700 font-medium">Skrip Alur Video Pembelajaran & Prompt AI Video 3D (Runway Gen-2 / Sora / Pika Labs)</p>
+              </div>
+            </div>
+
+            <!-- Prompt AI Highlight Card -->
+            <div class="bg-slate-950 text-slate-100 p-5 rounded-2xl border border-indigo-500/40 space-y-3 shadow-xl">
+              <div class="flex items-center justify-between">
+                <span class="text-xxs font-extrabold uppercase text-amber-400 tracking-wider flex items-center gap-1.5">
+                  <Sparkles class="w-4 h-4 text-amber-400" /> Prompt AI Video Generator (Runway / Sora / Pika)
+                </span>
+                <span class="text-xxs px-2 py-0.5 rounded bg-indigo-900 text-indigo-300 font-bold">Copy-Paste Ready</span>
+              </div>
+              <p class="text-xs font-mono bg-slate-900 p-3 rounded-xl border border-slate-800 text-emerald-300 leading-relaxed">
+                "Cinematic 3D animation, vocational high school students in modern {{ rpp.jurusan_smk }} workshop wearing safety gear practicing {{ rpp.mata_pelajaran }}, realistic lighting, 8k resolution, octane render"
+              </p>
+            </div>
+
+            <!-- Video Timeline Cards -->
+            <div class="space-y-3">
+              <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 flex items-start gap-4">
+                <div class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xxs font-black">00:00 - 00:30</div>
+                <div class="space-y-1">
+                  <h5 class="text-xs font-bold text-slate-900">Scene 1: Intro & Briefing APD K3LH</h5>
+                  <p class="text-xxs text-slate-600">Visual: Animasi 3D siswa SMK memasuki bengkel {{ rpp.ruang_fisik }} dengan seragam keselamatan lengkap.</p>
+                  <p class="text-xxs text-indigo-700 font-semibold italic">Voiceover: "Selamat datang di modul praktik vokasi {{ rpp.mata_pelajaran }}. Selalu utamakan K3LH!"</p>
+                </div>
+              </div>
+
+              <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 flex items-start gap-4">
+                <div class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xxs font-black">00:30 - 01:45</div>
+                <div class="space-y-1">
+                  <h5 class="text-xs font-bold text-slate-900">Scene 2: Demonstrasi Pengukuran Presisi & SOP</h5>
+                  <p class="text-xxs text-slate-600">Visual: Zoom-in alat kerja presisi dan simulasi software {{ rpp.software_digital }}.</p>
+                  <p class="text-xxs text-indigo-700 font-semibold italic">Voiceover: "Perhatikan kalkulasi presisi berikut. Akurasi adalah standar utama di industri {{ rpp.kemitraan_dudi }}."</p>
+                </div>
+              </div>
+
+              <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 flex items-start gap-4">
+                <div class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xxs font-black">01:45 - 03:00</div>
+                <div class="space-y-1">
+                  <h5 class="text-xs font-bold text-slate-900">Scene 3: Refleksi & Penutup</h5>
+                  <p class="text-xxs text-slate-600">Visual: Tampilan QR Code LKPD Digital & Logo KADU Vokasi.</p>
+                  <p class="text-xxs text-indigo-700 font-semibold italic">Voiceover: "Diskusikan hasil analisismu bersama tim kelompokmu!"</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Full Raw Video Script Text -->
             <div class="whitespace-pre-wrap font-mono text-xs bg-slate-50 p-5 rounded-xl border border-slate-200">
               {{ rpp.content_video_script }}
             </div>
