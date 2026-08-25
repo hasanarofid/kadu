@@ -13,7 +13,13 @@ import {
   Sparkles, 
   CheckCircle,
   Download,
-  Presentation
+  Presentation,
+  Play,
+  Pause,
+  Maximize2,
+  X,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -24,6 +30,146 @@ const props = defineProps({
 });
 
 const activeTab = ref('rpp'); // 'rpp', 'media', 'video', 'materi'
+
+// Video Audio-Visual Interactive Simulation Player State
+const isPlayingVideo = ref(false);
+const videoProgress = ref(0);
+let progressTimer = null;
+
+const togglePlayVideo = () => {
+  if (isPlayingVideo.value) {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    clearInterval(progressTimer);
+    isPlayingVideo.value = false;
+    videoProgress.value = 0;
+  } else {
+    isPlayingVideo.value = true;
+    videoProgress.value = 0;
+    
+    // Simulate Video Timeline Progress
+    progressTimer = setInterval(() => {
+      if (videoProgress.value < 100) {
+        videoProgress.value += 2;
+      } else {
+        clearInterval(progressTimer);
+        isPlayingVideo.value = false;
+        videoProgress.value = 0;
+      }
+    }, 150);
+
+    // Native Web Speech Synthesis Audio Narration for Teacher Demo
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const text = `Selamat datang di modul praktik vokasi ${props.rpp.mata_pelajaran}. Konsentrasi keahlian ${props.rpp.jurusan_smk}. Selalu utamakan keselamatan kerja K3LH dan pengamatan presisi standar industri ${props.rpp.kemitraan_dudi}.`;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'id-ID';
+      utterance.rate = 0.95;
+      utterance.onend = () => {
+        isPlayingVideo.value = false;
+        clearInterval(progressTimer);
+        videoProgress.value = 0;
+      };
+      window.speechSynthesis.speak(utterance);
+    }
+  }
+};
+
+// Fullscreen PPT Slide Presenter State
+const isPresentationMode = ref(false);
+const currentSlide = ref(0);
+
+const slides = [
+  {
+    title: `Penerapan Deep Learning ${props.rpp.mata_pelajaran}`,
+    subtitle: `Konsentrasi Keahlian: ${props.rpp.jurusan_smk}`,
+    meta: `Kemitraan DU/DI: ${props.rpp.kemitraan_dudi}`,
+    badge: "SLIDE 1 • COVER PRESENTASI",
+    type: "cover"
+  },
+  {
+    title: "Pertanyaan Pemantik & Langkah Berkesadaran (Mindful)",
+    subtitle: `"Bagaimana kalkulasi presisi pada ${props.rpp.mata_pelajaran} mencegah kegagalan teknis di industri pasangan?"`,
+    meta: "⚡ Hening 1 Menit & Safety Briefing APD K3LH",
+    badge: "SLIDE 2 • MINDFUL & APERSEPSI",
+    type: "mindful"
+  },
+  {
+    title: "Konsep Utama & Stimulus Numerasi Terapan",
+    subtitle: props.rpp.capaian_pembelajaran,
+    meta: "Standar Operasional Prosedur (SOP) Industri Pasangan",
+    badge: "SLIDE 3 • NUMERASI & BENGKEL",
+    type: "numerasi"
+  },
+  {
+    title: "Simulasi Digital & Unjuk Kerja Siswa",
+    subtitle: `Software & Tools: ${props.rpp.software_digital}`,
+    meta: `Ruang Virtual: ${props.rpp.ruang_virtual}`,
+    badge: "SLIDE 4 • SIMULASI DIGITAL & LKPD",
+    type: "simulasi"
+  },
+  {
+    title: "Refleksi Metakognisi & Evaluasi Mandiri",
+    subtitle: "Diskusi Kelompok Vokasi & Penilaian Rubrik Unjuk Kerja Praktik",
+    meta: "Standar Kurikulum Merdeka Vokasi",
+    badge: "SLIDE 5 • REFLEKSI & PENUTUP",
+    type: "refleksi"
+  }
+];
+
+const startPresentation = (idx = 0) => {
+  currentSlide.value = idx;
+  isPresentationMode.value = true;
+};
+
+const prevSlide = () => {
+  if (currentSlide.value > 0) currentSlide.value--;
+};
+
+const nextSlide = () => {
+  if (currentSlide.value < slides.length - 1) currentSlide.value++;
+};
+
+// Download HTML PPT Slide Deck File
+const downloadPpt = () => {
+  const pptHtml = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Slide PPT - ${props.rpp.mata_pelajaran}</title>
+  <style>
+    body { font-family: sans-serif; background: #0f172a; color: white; margin: 0; padding: 40px; display: flex; flex-direction: column; gap: 40px; align-items: center; }
+    .slide { width: 900px; height: 500px; background: #1e293b; border-radius: 24px; padding: 40px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; border: 2px solid #3b82f6; }
+    h1 { color: #60a5fa; margin: 0; font-size: 28px; }
+    p { font-size: 18px; line-height: 1.6; color: #cbd5e1; }
+    .badge { font-weight: bold; font-size: 12px; color: #f59e0b; letter-spacing: 1px; }
+  </style>
+</head>
+<body>
+  ${slides.map((s, i) => `
+    <div class="slide">
+      <div class="badge">${s.badge}</div>
+      <div>
+        <h1>${s.title}</h1>
+        <p>${s.subtitle}</p>
+      </div>
+      <div style="font-size: 14px; color: #94a3b8;">${s.meta}</div>
+    </div>
+  `).join('')}
+</body>
+</html>`;
+
+  const blob = new Blob([pptHtml], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `PPT_Slide_${props.rpp.mata_pelajaran.replace(/[^a-zA-Z0-9]/g, '_')}.html`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
 
 const printRpp = () => {
   window.print();
@@ -167,9 +313,9 @@ const printRpp = () => {
             </div>
           </div>
 
-          <!-- TAB 2: Media Pembelajaran (PPT Slide Deck Viewer) -->
+          <!-- TAB 2: Media Pembelajaran (PPT Slide Deck Viewer & Presenter) -->
           <div v-if="activeTab === 'media'" class="space-y-6">
-            <div class="flex items-center justify-between bg-indigo-50 p-4 rounded-2xl border border-indigo-100">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-indigo-50 p-4 rounded-2xl border border-indigo-100">
               <div>
                 <h3 class="font-black text-sm text-indigo-950 flex items-center gap-2">
                   <Presentation class="w-5 h-5 text-indigo-600" />
@@ -177,15 +323,34 @@ const printRpp = () => {
                 </h3>
                 <p class="text-xxs text-indigo-700 font-medium">Struktur Slide Deck 16:9 Siap Diimpor ke Canva, PowerPoint, atau Gamma AI</p>
               </div>
+
+              <div class="flex items-center gap-2">
+                <button 
+                  @click="startPresentation(0)" 
+                  class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-extrabold flex items-center gap-1.5 shadow transition-all"
+                >
+                  <Maximize2 class="w-3.5 h-3.5" />
+                  <span>Mulai Presentasi (Fullscreen)</span>
+                </button>
+                <button 
+                  @click="downloadPpt" 
+                  class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all"
+                >
+                  <Download class="w-3.5 h-3.5 text-amber-400" />
+                  <span>Unduh File PPT</span>
+                </button>
+              </div>
             </div>
 
-            <!-- Visual 16:9 Aspect Ratio Slide Deck Carousel / Cards -->
+            <!-- Visual 16:9 Aspect Ratio Slide Deck Cards (Click to Present) -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <!-- Slide 1 -->
-              <div class="aspect-video bg-gradient-to-br from-indigo-900 via-slate-900 to-indigo-950 text-white p-6 rounded-2xl shadow-lg border border-indigo-500/30 flex flex-col justify-between relative overflow-hidden">
+              <div @click="startPresentation(0)" class="aspect-video bg-gradient-to-br from-indigo-900 via-slate-900 to-indigo-950 text-white p-6 rounded-2xl shadow-lg border border-indigo-500/30 flex flex-col justify-between relative overflow-hidden cursor-pointer hover:border-indigo-400 group transition-all">
                 <div class="flex items-center justify-between text-xxs font-bold text-indigo-300">
                   <span>SLIDE 1 • COVER PRESENTASI</span>
-                  <span class="px-2 py-0.5 rounded bg-indigo-500/20 border border-indigo-400/30">16:9</span>
+                  <span class="px-2 py-0.5 rounded bg-indigo-500/20 border border-indigo-400/30 flex items-center gap-1">
+                    <Maximize2 class="w-3 h-3 group-hover:scale-110" /> Klik Presentasi
+                  </span>
                 </div>
                 <div class="space-y-1">
                   <h4 class="text-sm font-black text-white leading-tight uppercase">Penerapan Deep Learning {{ rpp.mata_pelajaran }}</h4>
@@ -199,7 +364,7 @@ const printRpp = () => {
               </div>
 
               <!-- Slide 2 -->
-              <div class="aspect-video bg-slate-900 text-white p-6 rounded-2xl shadow-lg border border-slate-800 flex flex-col justify-between">
+              <div @click="startPresentation(1)" class="aspect-video bg-slate-900 text-white p-6 rounded-2xl shadow-lg border border-slate-800 flex flex-col justify-between cursor-pointer hover:border-amber-400 group transition-all">
                 <div class="flex items-center justify-between text-xxs font-bold text-amber-400">
                   <span>SLIDE 2 • MINDFUL & APERSEPSI</span>
                   <span class="px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30">Langkah 1</span>
@@ -215,7 +380,7 @@ const printRpp = () => {
               </div>
 
               <!-- Slide 3 -->
-              <div class="aspect-video bg-slate-900 text-white p-6 rounded-2xl shadow-lg border border-slate-800 flex flex-col justify-between">
+              <div @click="startPresentation(2)" class="aspect-video bg-slate-900 text-white p-6 rounded-2xl shadow-lg border border-slate-800 flex flex-col justify-between cursor-pointer hover:border-emerald-400 group transition-all">
                 <div class="flex items-center justify-between text-xxs font-bold text-emerald-400">
                   <span>SLIDE 3 • NUMERASI & KONSEP BENGKEL</span>
                   <span class="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30">Langkah 2</span>
@@ -230,7 +395,7 @@ const printRpp = () => {
               </div>
 
               <!-- Slide 4 -->
-              <div class="aspect-video bg-slate-900 text-white p-6 rounded-2xl shadow-lg border border-slate-800 flex flex-col justify-between">
+              <div @click="startPresentation(3)" class="aspect-video bg-slate-900 text-white p-6 rounded-2xl shadow-lg border border-slate-800 flex flex-col justify-between cursor-pointer hover:border-violet-400 group transition-all">
                 <div class="flex items-center justify-between text-xxs font-bold text-violet-400">
                   <span>SLIDE 4 • SIMULASI DIGITAL & LKPD</span>
                   <span class="px-2 py-0.5 rounded bg-violet-500/10 border border-violet-500/30">Langkah 3</span>
@@ -243,23 +408,27 @@ const printRpp = () => {
                 <div class="text-xxs text-slate-400 border-t border-slate-800 pt-2">Unjuk Kerja Praktik Siswa</div>
               </div>
             </div>
-
-            <!-- Full Raw Slide Text -->
-            <div class="whitespace-pre-wrap font-mono text-xs bg-slate-50 p-5 rounded-xl border border-slate-200">
-              {{ rpp.content_media }}
-            </div>
           </div>
 
-          <!-- TAB 3: Video Pembelajaran (Naskah & Simulasi Player) -->
+          <!-- TAB 3: Video Pembelajaran (Interactive Audio-Visual Player Simulation) -->
           <div v-if="activeTab === 'video'" class="space-y-6">
-            <div class="flex items-center justify-between bg-violet-50 p-4 rounded-2xl border border-violet-100">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-violet-50 p-4 rounded-2xl border border-violet-100">
               <div>
                 <h3 class="font-black text-sm text-violet-950 flex items-center gap-2">
                   <Video class="w-5 h-5 text-violet-600" />
-                  NASKAH & STRUKTUR VIDEO PEMBELAJARAN VOKASI 3D
+                  PLAYER DEMO & NASKAH VIDEO PEMBELAJARAN VOKASI 3D
                 </h3>
-                <p class="text-xxs text-violet-700 font-medium">Alur Visual & Narasi Suara Video Pembelajaran Siap Didemokan & Diproduksi</p>
+                <p class="text-xxs text-violet-700 font-medium">Klik tombol Play di bawah untuk mendengarkan Narasi Suara AI & Alur Demokrasi Video</p>
               </div>
+
+              <button 
+                @click="togglePlayVideo" 
+                :class="['px-4 py-2 rounded-xl text-xs font-extrabold flex items-center gap-2 shadow transition-all cursor-pointer', isPlayingVideo ? 'bg-rose-600 text-white' : 'bg-violet-600 hover:bg-violet-500 text-white']"
+              >
+                <Pause v-if="isPlayingVideo" class="w-4 h-4" />
+                <Play v-else class="w-4 h-4" />
+                <span>{{ isPlayingVideo ? 'Hentikan Narasi (Stop)' : 'Putar Video & Audio Narasi (Play)' }}</span>
+              </button>
             </div>
 
             <!-- Simulated Interactive Video Player Preview -->
@@ -268,25 +437,42 @@ const printRpp = () => {
               
               <!-- Video Header -->
               <div class="relative z-20 flex items-center justify-between text-xs text-white">
-                <span class="px-3 py-1 rounded-full bg-violet-600/80 backdrop-blur-md text-xxs font-bold uppercase tracking-wider">
+                <span class="px-3 py-1 rounded-full bg-violet-600/80 backdrop-blur-md text-xxs font-bold uppercase tracking-wider flex items-center gap-2">
+                  <span v-if="isPlayingVideo" class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
                   Video Tutorial Vokasi Deep Learning
                 </span>
                 <span class="text-xxs text-slate-300 font-semibold">Durasi Ideal: 03:00 Menit</span>
               </div>
 
-              <!-- Center Play Icon Placeholder -->
-              <div class="relative z-20 self-center flex flex-col items-center gap-2 my-auto text-center">
-                <div class="w-16 h-16 rounded-full bg-violet-600 text-white flex items-center justify-center shadow-2xl border-2 border-white/20 group-hover:scale-110 transition-all cursor-pointer">
-                  <Video class="w-8 h-8 ml-1" />
+              <!-- Center Play/Pause Button Placeholder -->
+              <div class="relative z-20 self-center flex flex-col items-center gap-3 my-auto text-center">
+                <button 
+                  @click="togglePlayVideo"
+                  :class="['w-20 h-20 rounded-full flex items-center justify-center shadow-2xl border-4 border-white/30 transition-all cursor-pointer', isPlayingVideo ? 'bg-rose-600 text-white scale-110' : 'bg-violet-600 hover:scale-110 text-white']"
+                >
+                  <Pause v-if="isPlayingVideo" class="w-10 h-10" />
+                  <Play v-else class="w-10 h-10 ml-1" />
+                </button>
+
+                <div class="space-y-1">
+                  <h4 class="text-base font-black text-white max-w-md">Video Pembelajaran Vokasi: {{ rpp.mata_pelajaran }}</h4>
+                  <p class="text-xs text-indigo-300 font-bold">Konsentrasi Keahlian: {{ rpp.jurusan_smk }}</p>
+                  <p v-if="isPlayingVideo" class="text-xxs text-emerald-400 font-bold animate-pulse">
+                    🔊 Sedang Menyuarakan Narasi Audio (Web Speech AI Output)...
+                  </p>
                 </div>
-                <h4 class="text-sm font-black text-white max-w-md">Video Pembelajaran Vokasi: {{ rpp.mata_pelajaran }}</h4>
-                <p class="text-xxs text-slate-300">Konsentrasi Keahlian: {{ rpp.jurusan_smk }}</p>
               </div>
 
-              <!-- Video Footer Bar -->
-              <div class="relative z-20 flex items-center justify-between text-xxs text-slate-400 border-t border-white/10 pt-3">
-                <span>Mitra DU/DI: {{ rpp.kemitraan_dudi }}</span>
-                <span>Standar Kurikulum Merdeka</span>
+              <!-- Simulated Video Timeline Bar -->
+              <div class="relative z-20 space-y-2">
+                <div class="w-full bg-slate-900 border border-slate-800 rounded-full h-2 overflow-hidden">
+                  <div class="h-full bg-gradient-to-r from-violet-500 via-indigo-500 to-emerald-400 rounded-full transition-all duration-300" :style="{ width: videoProgress + '%' }"></div>
+                </div>
+
+                <div class="flex items-center justify-between text-xxs text-slate-400 pt-1 border-t border-white/10">
+                  <span>Mitra DU/DI: {{ rpp.kemitraan_dudi }}</span>
+                  <span>Standar Kurikulum Merdeka</span>
+                </div>
               </div>
             </div>
 
@@ -364,5 +550,88 @@ const printRpp = () => {
         </Link>
       </div>
     </main>
+
+    <!-- Fullscreen Interactive PPT Presentation Modal -->
+    <Teleport to="body">
+      <div 
+        v-if="isPresentationMode" 
+        class="fixed inset-0 z-[100] bg-slate-950/95 backdrop-blur-2xl flex flex-col items-center justify-between p-6 sm:p-10 animate-fade-in text-white"
+      >
+        <!-- Modal Navbar Header -->
+        <div class="w-full max-w-6xl flex items-center justify-between border-b border-slate-800 pb-4">
+          <div class="flex items-center gap-3">
+            <Presentation class="w-6 h-6 text-indigo-400" />
+            <div>
+              <h3 class="font-extrabold text-sm text-white">Mode Presentasi Slide PPT Vokasi</h3>
+              <p class="text-xxs text-slate-400">{{ rpp.mata_pelajaran }} • {{ rpp.jurusan_smk }}</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <span class="px-3 py-1 bg-indigo-500/20 rounded-full text-indigo-300 text-xs font-bold border border-indigo-500/30">
+              Slide {{ currentSlide + 1 }} dari {{ slides.length }}
+            </span>
+            <button @click="isPresentationMode = false" class="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white transition-all cursor-pointer">
+              <X class="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        <!-- Center Slide View Container -->
+        <div class="w-full max-w-5xl aspect-video bg-slate-900 border-2 border-indigo-500/40 rounded-3xl p-8 sm:p-12 shadow-2xl flex flex-col justify-between my-auto relative overflow-hidden">
+          <div class="flex items-center justify-between text-xs font-bold text-amber-400">
+            <span>{{ slides[currentSlide].badge }}</span>
+            <span class="px-2.5 py-1 rounded bg-slate-950 border border-slate-800 text-slate-300 text-xxs font-mono">
+              16:9 HD Presenter Mode
+            </span>
+          </div>
+
+          <div class="space-y-4 my-auto">
+            <h2 class="text-2xl sm:text-3xl font-black text-white leading-tight tracking-tight uppercase">
+              {{ slides[currentSlide].title }}
+            </h2>
+            <p class="text-sm sm:text-base text-indigo-200 font-medium leading-relaxed max-w-3xl">
+              {{ slides[currentSlide].subtitle }}
+            </p>
+            <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-emerald-300 font-bold max-w-xl">
+              📌 {{ slides[currentSlide].meta }}
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between text-xxs text-slate-400 border-t border-slate-800 pt-3">
+            <span>Industri Pasangan: {{ rpp.kemitraan_dudi }}</span>
+            <span>KADU Deep Learning Engine</span>
+          </div>
+        </div>
+
+        <!-- Modal Controls Navigation Bar -->
+        <div class="w-full max-w-6xl flex items-center justify-between pt-4 border-t border-slate-800">
+          <button 
+            @click="prevSlide" 
+            :disabled="currentSlide === 0"
+            :class="['px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition-all', currentSlide === 0 ? 'bg-slate-900 text-slate-600 cursor-not-allowed' : 'bg-slate-800 hover:bg-slate-700 text-white cursor-pointer']"
+          >
+            <ChevronLeft class="w-4 h-4" /> Slide Sebelumnya
+          </button>
+
+          <div class="flex items-center gap-2">
+            <button 
+              v-for="(s, idx) in slides" 
+              :key="idx" 
+              @click="currentSlide = idx"
+              :class="['w-3 h-3 rounded-full transition-all cursor-pointer', currentSlide === idx ? 'bg-indigo-500 w-8' : 'bg-slate-800 hover:bg-slate-700']"
+            ></button>
+          </div>
+
+          <button 
+            @click="nextSlide" 
+            :disabled="currentSlide === slides.length - 1"
+            :class="['px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition-all', currentSlide === slides.length - 1 ? 'bg-slate-900 text-slate-600 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-500 text-white cursor-pointer']"
+          >
+            Slide Selanjutnya <ChevronRight class="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
