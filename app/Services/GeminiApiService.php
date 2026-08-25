@@ -96,9 +96,27 @@ class GeminiApiService
                     if ($resultText) {
                         return [
                             'content_rpp'          => $resultText,
-                            'content_media'        => "DRAFT MEDIA PEMBELAJARAN VOKASI\n1. Slide Presentasi Visual Interactive: SOP & Prosedur Teknik {$mapel}\n2. Infografis Alur Kerja Praktik Bengkel/Lab SMK\n3. LKPD berbasis Simulator & Pemanfaatan Digital ({$softwareDigital}).",
-                            'content_video_script' => "PROMPT & SCRIPT VIDEO PEMBELAJARAN AI 3D\nTitle: Tutorial Deep Learning Vokasi - {$mapel}\nPrompt AI: 'High quality 3D animated tutorial video showing vocational students practicing {$mapel} in a modern workshop with {$dudi}'.",
-                            'content_materi'       => "RINGKASAN MATERI LITERASI & NUMERASI TERAPAN SMK\n- Konsep Utama: Pembelajaran Kontekstual {$mapel} di Industri {$jurusan}.\n- Formula & Kalkulasi Presisi: Penerapan rumus dan pengikuran presisi.\n- Referensi SOP: Standar Operasional Prosedur Duduk Industri ({$dudi}).",
+                            'content_media'        => "DRAFT SLIDE PRESENTASI (PPT) & MEDIA INTERAKTIF VOKASI\n" .
+                                                      "Mata Pelajaran: {$mapel} | Jurusan: {$jurusan}\n\n" .
+                                                      "SLIDE 1: JUDUL & APD K3LH\n- Judul: Penerapan Deep Learning {$mapel} Standar Vokasi\n- Sub-Judul: Pembelajaran Berbasis Industri Pasangan ({$dudi})\n- Visual: Maskot Vokasi & Peralatan Bengkel/Lab Presisi.\n\n" .
+                                                      "SLIDE 2: MINDFUL & APERSEPSI\n- Pertanyaan Pemantik: Bagaimana konsep ini memecahkan masalah nyata di bengkel industri?\n- Langkah Berkesadaran: Keheningan 1 menit & pengenalan keselamatan kerja.\n\n" .
+                                                      "SLIDE 3: KONSEP UTAMA & NUMERASI TERAPAN\n- Formula & Rumus Kalkulasi Presisi {$mapel}.\n- Infografis Alur Pengukuran & Pengujian Standar Industri.\n\n" .
+                                                      "SLIDE 4: PROSEDUR OPERASIONAL BENGKEL (SOP DU/DI)\n- Tahapan Kerja Rinci Berdasarkan Kasus Riil Mitra ({$dudi}).\n\n" .
+                                                      "SLIDE 5: SIMULASI DIGITAL & LKPD INTERAKTIF\n- Panduan Praktik Menggunakan Software/Simulator: {$softwareDigital}.\n- Kode QR / Tautan LKPD Digital Siswa.",
+                            'content_video_script' => "SKRIP TUTORIAL VIDEO PEMBELAJARAN 3D & PROMPT GENERATOR AI\n" .
+                                                      "Judul Video: Panduan Praktik Deep Learning Vokasi - {$mapel}\n" .
+                                                      "Target Platform: YouTube Education / LMS Virtual ({$ruangVirtual})\n\n" .
+                                                      "--- PROMPT GENERATOR VIDEO AI (RUNWAY GEN-2 / SORA / PIKA) ---\n" .
+                                                      "Prompt 1 (Scene 1): 'Cinematic 3D animation, vocational high school students in modern workshop wearing safety gear practicing {$mapel}, realistic lighting, 8k resolution'\n" .
+                                                      "Prompt 2 (Scene 2): 'Close-up shot of precise industrial tool measurement, digital readout displaying accurate calculations, high detailed, octane render'\n\n" .
+                                                      "--- TIMELINE & NASKAH VOICEOVER (00:00 - 03:00) ---\n" .
+                                                      "[00:00 - 00:30] INTRO & SAFETY BRIEFING\n- Voiceover: 'Halo Rekan Vokasi! Selamat datang di modul pembelajaran {$mapel}. Hari ini kita akan mempelajari penerapan langsung di industri.'\n- Visual: Animasi 3D bengkel modern vokasi.\n\n" .
+                                                      "[00:30 - 01:45] INTI PEMBELAJARAN & APLEKASI NUMERASI\n- Voiceover: 'Perhatikan kalkulasi presisi berikut ini. Setiap hitungan berpengaruh langsung pada kualitas standar industri {$dudi}.'\n- Visual: Grafik 3D bergerak & simulasi {$softwareDigital}.\n\n" .
+                                                      "[01:45 - 03:00] REFLEKSI & PENUTUP\n- Voiceover: 'Bagaimana hasil analisismu? Diskusikan bersama kelompok praktikmu!'\n- Visual: Logo KADU & Tautan LKPD Digital.",
+                            'content_materi'       => "RINGKASAN MATERI LITERASI & NUMERASI TERAPAN SMK\n" .
+                                                      "- Konsep Utama: Pembelajaran Kontekstual {$mapel} di Industri {$jurusan}.\n" .
+                                                      "- Formula & Kalkulasi Presisi: Penerapan rumus dan pengukuran presisi.\n" .
+                                                      "- Referensi SOP: Standar Operasional Prosedur Industri Pasangan ({$dudi}).",
                         ];
                     }
                 } else {
@@ -143,11 +161,11 @@ class GeminiApiService
                    "V. ASESMEN PEMBELAJARAN TERINTEGRASI LITERASI & NUMERASI\n" .
                    "- Asesmen Formatif: Observasi Rubrik Unjuk Kerja & Lembar Kerja (LKPD).\n" .
                    "- Asesmen Sumatif: Uji Kompetensi Proyek & Kalkulasi Kebutuhan Presisi.",
-            'content_media' => "DRAFT MEDIA PEMBELAJARAN VOKASI\n" .
+            'content_media' => "DRAFT SLIDE PRESENTASI (PPT) & MEDIA INTERAKTIF VOKASI\n" .
                    "1. Slide Presentasi Visual Interactive: SOP & Prosedur Teknik {$mapel}\n" .
                    "2. Infografis Alur Kerja Praktik Bengkel/Lab SMK\n" .
                    "3. Lembar Kerja Praktik Peserta Didik (LKPD) berbasis Simulator Software Digital ({$softwareDigital}).",
-            'content_video_script' => "PROMPT & SCRIPT VIDEO PEMBELAJARAN AI 3D\n" .
+            'content_video_script' => "SKRIP TUTORIAL VIDEO PEMBELAJARAN 3D & PROMPT GENERATOR AI\n" .
                    "[Video Title]: Tutorial Deep Learning Vokasi - {$mapel}\n" .
                    "[Prompt AI Video Generator]: 'High quality 3D animated tutorial video showing vocational students practicing {$mapel} in modern workshop with {$dudi}'.\n" .
                    "[Scene 1]: Pengenalan Alat & APD K3LH.\n" .
