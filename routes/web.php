@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\TokenPackageController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 // Landing Page & Public Legal Compliance Pages (Midtrans Verification)
 Route::get('/', [HomeController::class, 'index'])->name('home');
