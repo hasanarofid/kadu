@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from 'vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { ref, watch, computed } from 'vue';
+import { Head, Link, useForm, usePage, router } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { 
   Coins, 
@@ -9,7 +9,8 @@ import {
   CheckCircle2, 
   Clock, 
   Sparkles, 
-  CreditCard
+  CreditCard,
+  AlertCircle
 } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -19,12 +20,45 @@ const props = defineProps({
   logs: Array,
 });
 
+const page = usePage();
 const activeTab = ref('packages'); // 'packages', 'history'
-
 const form = useForm({});
 
+const flashSuccess = computed(() => page.props.flash?.success);
+const flashError = computed(() => page.props.flash?.error);
+
+const payWithSnap = (snapToken) => {
+  if (window.snap) {
+    window.snap.pay(snapToken, {
+      onSuccess: function(result) {
+        router.reload({ preserveScroll: true });
+      },
+      onPending: function(result) {
+        router.reload({ preserveScroll: true });
+      },
+      onError: function(result) {
+        alert('Pembayaran gagal atau dibatalkan.');
+        router.reload({ preserveScroll: true });
+      },
+      onClose: function() {
+        router.reload({ preserveScroll: true });
+      }
+    });
+  } else {
+    alert('SDK Midtrans Snap sedang dimuat. Silakan klik ulang tombol pembayaran.');
+  }
+};
+
+watch(() => page.props.flash?.snap_token, (snapToken) => {
+  if (snapToken) {
+    payWithSnap(snapToken);
+  }
+}, { immediate: true });
+
 const buyPackage = (pkgId) => {
-  form.post(route('tokens.checkout', pkgId));
+  form.post(route('tokens.checkout', pkgId), {
+    preserveScroll: true,
+  });
 };
 </script>
 
@@ -33,6 +67,17 @@ const buyPackage = (pkgId) => {
     <Head title="Profil & Beli Token RPP - KADU" />
 
     <div class="space-y-8 text-left">
+      <!-- Flash Alert Notifications -->
+      <div v-if="flashSuccess" class="p-4 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 rounded-2xl text-xs font-semibold flex items-center gap-2 shadow animate-fade-in">
+        <CheckCircle2 class="w-4 h-4 text-emerald-400 shrink-0" />
+        <span>{{ flashSuccess }}</span>
+      </div>
+
+      <div v-if="flashError" class="p-4 bg-rose-500/10 border border-rose-500/30 text-rose-300 rounded-2xl text-xs font-semibold flex items-center gap-2 shadow animate-fade-in">
+        <AlertCircle class="w-4 h-4 text-rose-400 shrink-0" />
+        <span>{{ flashError }}</span>
+      </div>
+
       <!-- User Token Summary Card -->
       <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-indigo-950 via-slate-900 to-slate-950 border border-indigo-500/30 shadow-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div class="space-y-2">
@@ -101,7 +146,7 @@ const buyPackage = (pkgId) => {
           <button 
             @click="buyPackage(pkg.id)" 
             :disabled="form.processing"
-            class="w-full py-3.5 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 hover:brightness-110 text-white text-xs font-extrabold rounded-2xl shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 cursor-pointer"
+            class="w-full py-3.5 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 hover:brightness-110 text-white text-xs font-extrabold rounded-2xl shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition-all"
           >
             <CreditCard class="w-4 h-4" />
             <span>Beli Sekarang (Midtrans)</span>
@@ -150,9 +195,18 @@ const buyPackage = (pkgId) => {
                 <p class="font-bold text-white">{{ trx.package?.name || 'Paket Token' }} ({{ trx.tokens }} Token)</p>
                 <p class="text-xxs text-slate-400">Order ID: {{ trx.order_id }}</p>
               </div>
-              <div class="text-right">
-                <span class="font-bold text-emerald-400">Rp {{ Number(trx.amount).toLocaleString('id-ID') }}</span>
-                <span class="block text-xxs font-extrabold uppercase text-amber-400">{{ trx.payment_status }}</span>
+              <div class="text-right flex items-center gap-3">
+                <div>
+                  <span class="font-bold text-emerald-400">Rp {{ Number(trx.amount).toLocaleString('id-ID') }}</span>
+                  <span :class="['block text-xxs font-extrabold uppercase', trx.payment_status === 'paid' ? 'text-emerald-400' : 'text-amber-400']">{{ trx.payment_status }}</span>
+                </div>
+                <button 
+                  v-if="trx.payment_status === 'pending' && trx.snap_token"
+                  @click="payWithSnap(trx.snap_token)"
+                  class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl shadow cursor-pointer transition-all shrink-0"
+                >
+                  Bayar
+                </button>
               </div>
             </div>
           </div>

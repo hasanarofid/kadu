@@ -52,7 +52,7 @@ class TokenPurchaseController extends Controller
 
         // Midtrans Snap integration configuration
         $serverKey = env('MIDTRANS_SERVER_KEY', '');
-        $isProduction = env('MIDTRANS_IS_PRODUCTION', false);
+        $isProduction = filter_var(env('MIDTRANS_IS_PRODUCTION', true), FILTER_VALIDATE_BOOLEAN);
 
         if (!empty($serverKey)) {
             try {
@@ -68,10 +68,10 @@ class TokenPurchaseController extends Controller
                     ],
                     'item_details' => [
                         [
-                            'id' => $package->id,
+                            'id' => (string) $package->id,
                             'price' => (int) $package->price,
                             'quantity' => 1,
-                            'name' => $package->name . ' (' . $package->tokens . ' Token RPP)',
+                            'name' => substr($package->name . ' (' . $package->tokens . ' Token RPP)', 0, 50),
                         ]
                     ],
                     'customer_details' => [
@@ -82,12 +82,15 @@ class TokenPurchaseController extends Controller
 
                 $snapToken = \Midtrans\Snap::getSnapToken($params);
                 $transaction->update(['snap_token' => $snapToken]);
+
+                return redirect()->back()->with('snap_token', $snapToken)->with('success', 'Order Token berhasil dibuat! Silakan tuntaskan pembayaran.');
             } catch (\Throwable $e) {
-                // Fallback simulation
+                \Illuminate\Support\Facades\Log::error('Midtrans Snap Checkout Error: ' . $e->getMessage());
+                return redirect()->back()->with('error', 'Gagal membuat tagihan Midtrans: ' . $e->getMessage());
             }
         }
 
-        return redirect()->back()->with('success', 'Order Token berhasil dibuat! Silakan lanjutkan ke pembayaran.');
+        return redirect()->back()->with('success', 'Order Token berhasil dibuat! Silakan hubungi Admin untuk verifikasi.');
     }
 
     /**
