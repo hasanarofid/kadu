@@ -21,37 +21,67 @@ class GeminiApiService
      */
     public function generateRppContent(array $inputData): array
     {
-        $mapel    = $inputData['mata_pelajaran'] ?? 'Matematika Vokasi';
-        $jurusan  = $inputData['jurusan_smk'] ?? 'Teknik Kendaraan Ringan (TKR)';
-        $cp       = $inputData['capaian_pembelajaran'] ?? '';
-        $model    = $inputData['model_pembelajaran'] ?? 'Project-Based Learning (PBL)';
-        $dudi     = $inputData['kemitraan_dudi'] ?? 'Industri Pasangan DU/DI';
-        $gaya     = is_array($inputData['gaya_belajar'] ?? null) ? implode(', ', $inputData['gaya_belajar']) : ($inputData['gaya_belajar'] ?? 'Visual, Kinestetik');
-        $profil   = is_array($inputData['dimensi_profil'] ?? null) ? implode(', ', $inputData['dimensi_profil']) : ($inputData['dimensi_profil'] ?? 'Bernalar Kritis, Kreatif, Vokasi');
+        $mapel            = $inputData['mata_pelajaran'] ?? 'Matematika Vokasi';
+        $jurusan          = $inputData['jurusan_smk'] ?? 'Teknik Kendaraan Ringan (TKR)';
+        $alokasiWaktu     = $inputData['alokasi_waktu'] ?? '3 JP (3 x 45 Menit)';
+        $cp               = $inputData['capaian_pembelajaran'] ?? '';
+        $gaya             = is_array($inputData['gaya_belajar'] ?? null) ? implode(', ', $inputData['gaya_belajar']) : ($inputData['gaya_belajar'] ?? 'Visual, Kinestetik, Auditori');
+        $karakteristikFisik = $inputData['karakteristik_fisik'] ?? 'Non-Inklusi (Reguler)';
+        $model            = $inputData['model_pembelajaran'] ?? 'Project-Based Learning (PBL)';
+        $metode           = $inputData['metode_pembelajaran'] ?? 'Diskusi Kelompok, Simulasi, dan Praktik Bengkel';
+        $strategi         = $inputData['strategi_pembelajaran'] ?? 'Pembelajaran Berdiferensiasi & Collaborative Learning';
+        $media            = $inputData['media_pembelajaran'] ?? 'Slide Interactive, Infografis Bengkel, LKPD Digital';
+        $materi           = $inputData['materi_pembelajaran'] ?? 'Literasi & Numerasi Terapan SMK';
+        $dudi             = $inputData['kemitraan_dudi'] ?? 'Industri Pasangan DU/DI & Guru Tamu Praktisi';
+        $ruangFisik       = $inputData['ruang_fisik'] ?? 'Bengkel Otomotif / Ruang Teori SMK';
+        $ruangVirtual     = $inputData['ruang_virtual'] ?? 'LMS Google Classroom & WhatsApp Group';
+        $softwareDigital  = $inputData['software_digital'] ?? 'Platform Merdeka Mengajar (PMM), Simulator Engine Scan, Canva';
+        $profil           = is_array($inputData['dimensi_profil'] ?? null) ? implode(', ', $inputData['dimensi_profil']) : ($inputData['dimensi_profil'] ?? 'Bernalar Kritis, Kreatif, Gotong Royong, Vokasi');
 
         if (!empty($this->apiKey)) {
             try {
-                $prompt = "Anda adalah pakar Kurikulum Merdeka Vokasi SMK & Deep Learning Engine. Buatkan Rencana Program Pembelajaran (RPP) / Modul Ajar Deep Learning Vokasi utuh dengan spesifikasi:\n" .
-                          "- Mata Pelajaran: {$mapel}\n" .
-                          "- Konsentrasi Keahlian / Jurusan SMK: {$jurusan}\n" .
-                          "- Capaian Pembelajaran (CP): {$cp}\n" .
-                          "- Model Pembelajaran: {$model}\n" .
-                          "- Kemitraan DU/DI: {$dudi}\n" .
-                          "- Gaya Belajar Siswa: {$gaya}\n" .
-                          "- Target Dimensi Profil: {$profil}\n\n" .
+                $prompt = "Anda adalah pakar Kurikulum Merdeka Vokasi SMK & Pembelajaran Mendalam (Deep Learning Engine). Buatkan Rencana Program Pembelajaran (RPP) / Modul Ajar Deep Learning Vokasi utuh dan presisi dengan spesifikasi lengkap:\n\n" .
+                          "1. Mata Pelajaran: {$mapel}\n" .
+                          "2. Alokasi Waktu: {$alokasiWaktu}\n" .
+                          "3. Capaian Pembelajaran (CP): {$cp}\n" .
+                          "4. Target Dimensi Profil Lulusan: {$profil}\n" .
+                          "5. Karakteristik Peserta Didik (Gaya Belajar): {$gaya}\n" .
+                          "6. Karakteristik Fisik: {$karakteristikFisik}\n" .
+                          "7. Kerangka Pembelajaran (Bagian 1):\n" .
+                          "   - Praktik Pedagogik / Model Pembelajaran: {$model}\n" .
+                          "   - Metode Pembelajaran: {$metode}\n" .
+                          "   - Strategi Pembelajaran: {$strategi}\n" .
+                          "   - Media Pembelajaran: {$media}\n" .
+                          "   - Materi Pembelajaran: {$materi}\n" .
+                          "8. Kemitraan Pembelajaran (DU/DI & Mitra): {$dudi}\n" .
+                          "9. Lingkungan Pembelajaran: Ruang Fisik ({$ruangFisik}), Ruang Virtual ({$ruangVirtual})\n" .
+                          "10. Pemanfaatan Digital: {$softwareDigital}\n" .
+                          "11. Langkah-Langkah Pembelajaran (Prinsip Pembelajaran Mendalam / Deep Learning):\n" .
+                          "    a. Kegiatan Awal:\n" .
+                          "       - Langkah Berkesadaran (Mindful)\n" .
+                          "       - Langkah Kebermaknaan (Meaningful)\n" .
+                          "       - Langkah Menggembirakan (Joyful)\n" .
+                          "    b. Kegiatan Inti:\n" .
+                          "       - Langkah Pemahaman (Understanding)\n" .
+                          "       - Langkah Aplikasi (Application Praktik Vokasi)\n" .
+                          "       - Refleksi Pembelajaran (Metakognisi)\n" .
+                          "    c. Kegiatan Penutup\n" .
+                          "12. Asesmen Pembelajaran Terintegrasi:\n" .
+                          "    - Asesmen Formatif (Terintegrasi Literasi & Numerasi)\n" .
+                          "    - Asesmen Sumatif (Terintegrasi Literasi & Numerasi)\n\n" .
                           "Output HARUS terbagi menjadi 4 bagian berikut:\n" .
-                          "1. RPP / Modul Ajar (Kerangka Pembelajaran, Tujuan Meaningful, Stimulus Literasi & Numerasi Terapan Vokasi, Langkah Pembelajaran Mindful-Meaningful-Joyful, Asesmen Formatif & Sumatif)\n" .
-                          "2. Media Pembelajaran (Slide presentasi visual interactive, Infografis alur bengkel, LKPD simulator)\n" .
+                          "1. RPP / Modul Ajar (Berisi seluruh 12 poin struktur di atas utuh & detail)\n" .
+                          "2. Media Pembelajaran (Draft Slide presentasi visual interactive, Infografis alur kerja, LKPD simulator digital)\n" .
                           "3. Video Script & Prompt AI (Skrip tutorial video 3D dan prompt generator video AI)\n" .
                           "4. Materi Pembelajaran (Ringkasan materi literasi & numerasi terapan vokasi standar industri)\n\n" .
-                          "Berikan respon terstruktur dengan penanda judul jelas untuk keempat bagian di atas.";
+                          "Berikan respon terstruktur dengan penanda judul yang sangat jelas untuk keempat bagian di atas.";
 
                 $url = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:generateContent";
 
                 $response = Http::withHeaders([
                     'Content-Type'   => 'application/json',
                     'X-goog-api-key' => $this->apiKey,
-                ])->timeout(30)->post($url, [
+                ])->timeout(35)->post($url, [
                     'contents' => [
                         [
                             'parts' => [
@@ -66,9 +96,9 @@ class GeminiApiService
                     if ($resultText) {
                         return [
                             'content_rpp'          => $resultText,
-                            'content_media'        => "1. Slide Presentasi Visual Interactive: SOP & Prosedur Teknik {$jurusan}\n2. Infografis Alur Kerja Praktik Bengkel SMK\n3. LKPD berbasis Simulator Software Digital.",
-                            'content_video_script' => "PROMPT AI VIDEO: 'High quality 3D tutorial video of vocational students practicing {$mapel} in modern {$jurusan} workshop'.",
-                            'content_materi'       => "RINGKASAN MATERI LITERASI & NUMERASI TERAPAN SMK: Penerapan formula dan standar operasional prosedur industri {$dudi}.",
+                            'content_media'        => "DRAFT MEDIA PEMBELAJARAN VOKASI\n1. Slide Presentasi Visual Interactive: SOP & Prosedur Teknik {$mapel}\n2. Infografis Alur Kerja Praktik Bengkel/Lab SMK\n3. LKPD berbasis Simulator & Pemanfaatan Digital ({$softwareDigital}).",
+                            'content_video_script' => "PROMPT & SCRIPT VIDEO PEMBELAJARAN AI 3D\nTitle: Tutorial Deep Learning Vokasi - {$mapel}\nPrompt AI: 'High quality 3D animated tutorial video showing vocational students practicing {$mapel} in a modern workshop with {$dudi}'.",
+                            'content_materi'       => "RINGKASAN MATERI LITERASI & NUMERASI TERAPAN SMK\n- Konsep Utama: Pembelajaran Kontekstual {$mapel} di Industri {$jurusan}.\n- Formula & Kalkulasi Presisi: Penerapan rumus dan pengikuran presisi.\n- Referensi SOP: Standar Operasional Prosedur Duduk Industri ({$dudi}).",
                         ];
                     }
                 } else {
@@ -81,46 +111,51 @@ class GeminiApiService
 
         // Standard Intelligent Fallback Synthesis
         return [
-            'content_rpp' => "RENCANA PROGRAM PEMBELAJARAN (RPP) / MODUL AJAR VOKASI\n" .
-                   "Pendekatan Pembelajaran Mendalam (Deep Learning) - SMK Vokasi\n\n" .
-                   "Mata Pelajaran: {$mapel}\n" .
-                   "Konsentrasi Keahlian: {$jurusan}\n" .
-                   "Capaian Pembelajaran: {$cp}\n\n" .
-                   "I. KERANGKA PEMBELAJARAN & EKOSISTEM\n" .
-                   "- Praktik Pedagogik: {$model}\n" .
-                   "- Kemitraan DU/DI: {$dudi}\n" .
-                   "- Ruang Fisik & Virtual: Bengkel Vokasi & LMS Classroom\n\n" .
-                   "II. TUJUAN PEMBELAJARAN (MEANINGFUL LEARNING)\n" .
-                   "- Peserta didik mampu menganalisis dan menerapkan konsep {$mapel} pada standar spesifikasi kerja di bidang {$jurusan}.\n\n" .
-                   "III. STIMULUS LITERASI & NUMERASI TERAPAN\n" .
-                   "- Stimulus Literasi Vokasi: Modul panduan kerja standar (SOP) dan manual teknik {$jurusan}.\n" .
-                   "- Stimulus Numerasi Vokasi: Pengukuran presisi, kalkulasi toleransi, dan estimasi biaya operasional.\n\n" .
+            'content_rpp' => "RENCANA PROGRAM PEMBELAJARAN (RPP) / MODUL AJAR VOKASI DEEP LEARNING\n\n" .
+                   "I. IDENTITAS & KONTEKS PEMBELAJARAN\n" .
+                   "- Mata Pelajaran: {$mapel}\n" .
+                   "- Konsentrasi Keahlian / Jurusan: {$jurusan}\n" .
+                   "- Alokasi Waktu: {$alokasiWaktu}\n" .
+                   "- Capaian Pembelajaran (CP): {$cp}\n\n" .
+                   "II. DIMENSI PROFIL LULUSAN & KARAKTERISTIK PESERTA DIDIK\n" .
+                   "- Target Dimensi Profil: {$profil}\n" .
+                   "- Gaya Belajar Siswa: {$gaya}\n" .
+                   "- Karakteristik Fisik: {$karakteristikFisik}\n\n" .
+                   "III. KERANGKA PEMBELAJARAN & LINGKUNGAN\n" .
+                   "- Praktik Pedagogik (Model): {$model}\n" .
+                   "- Metode Pembelajaran: {$metode}\n" .
+                   "- Strategi Pembelajaran: {$strategi}\n" .
+                   "- Media Pembelajaran: {$media}\n" .
+                   "- Materi Pembelajaran: {$materi}\n" .
+                   "- Kemitraan Pembelajaran: {$dudi}\n" .
+                   "- Lingkungan Pembelajaran: Ruang Fisik ({$ruangFisik}), Ruang Virtual ({$ruangVirtual})\n" .
+                   "- Pemanfaatan Digital: {$softwareDigital}\n\n" .
                    "IV. LANGKAH-LANGKAH PEMBELAJARAN (DEEP LEARNING)\n" .
-                   "A. Kegiatan Awal:\n" .
-                   "   1. Mindful (Kesadaran): Apersepsi dan pengenalan keselamatan kerja (K3LH).\n" .
-                   "   2. Meaningful (Kebermaknaan): Diskusi studi kasus riil dari industri pasangan DU/DI.\n" .
-                   "   3. Joyful (Menggembirakan): Ice breaking simulasi cepat alat kerja.\n" .
-                   "B. Kegiatan Inti:\n" .
-                   "   1. Pemahaman Konsep & Stimulus Literasi-Numerasi.\n" .
-                   "   2. Aplikasi Praktik Vokasi di Bengkel/Laboratorium.\n" .
-                   "   3. Refleksi Pembelajaran (Metakognisi).\n" .
-                   "C. Kegiatan Penutup: Evaluasi hasil karya dan doa bersama.\n\n" .
-                   "V. ASESMEN PEMBELAJARAN TERINTEGRASI\n" .
-                   "- Asesmen Formatif: Observasi unjuk kerja praktik bengkel.\n" .
-                   "- Asesmen Sumatif: Uji kompetensi hasil proyek.",
+                   "A. KEGIATAN AWAL:\n" .
+                   "   1. Langkah Berkesadaran (Mindful): Apersepsi, keheningan fokus, K3LH.\n" .
+                   "   2. Langkah Kebermaknaan (Meaningful): Orientasi kasus riil industri DU/DI.\n" .
+                   "   3. Langkah Menggembirakan (Joyful): Ice breaking interaktif alat kerja.\n" .
+                   "B. KEGIATAN INTI:\n" .
+                   "   1. Langkah Pemahaman (Understanding): Bedah materi & stimulus literasi-numerasi.\n" .
+                   "   2. Langkah Aplikasi (Application): Unjuk kerja praktik lapangan/bengkel.\n" .
+                   "   3. Refleksi Pembelajaran (Metakognisi): Evaluasi mandiri & umpan balik.\n" .
+                   "C. KEGIATAN PENUTUP: Menyimpulkan hasil proyek & berdoa bersama.\n\n" .
+                   "V. ASESMEN PEMBELAJARAN TERINTEGRASI LITERASI & NUMERASI\n" .
+                   "- Asesmen Formatif: Observasi Rubrik Unjuk Kerja & Lembar Kerja (LKPD).\n" .
+                   "- Asesmen Sumatif: Uji Kompetensi Proyek & Kalkulasi Kebutuhan Presisi.",
             'content_media' => "DRAFT MEDIA PEMBELAJARAN VOKASI\n" .
-                   "1. Slide Presentasi Visual Interactive: SOP & Prosedur Teknik {$jurusan}\n" .
-                   "2. Infografis Alur Kerja Praktik Bengkel SMK\n" .
-                   "3. Lembar Kerja Praktik Peserta Didik (LKPD) berbasis Simulator Software Digital.",
-            'content_video_script' => "PROMPT & SCRIPT VIDEO PEMBELAJARAN AI\n" .
-                   "[Video Title]: Tutorial Praktik Vokasi Presisi - {$mapel}\n" .
-                   "[Prompt AI Video Generator]: 'Create a high quality 3D animated tutorial video showing vocational students working safely in a modern workshop for {$jurusan}'.\n" .
+                   "1. Slide Presentasi Visual Interactive: SOP & Prosedur Teknik {$mapel}\n" .
+                   "2. Infografis Alur Kerja Praktik Bengkel/Lab SMK\n" .
+                   "3. Lembar Kerja Praktik Peserta Didik (LKPD) berbasis Simulator Software Digital ({$softwareDigital}).",
+            'content_video_script' => "PROMPT & SCRIPT VIDEO PEMBELAJARAN AI 3D\n" .
+                   "[Video Title]: Tutorial Deep Learning Vokasi - {$mapel}\n" .
+                   "[Prompt AI Video Generator]: 'High quality 3D animated tutorial video showing vocational students practicing {$mapel} in modern workshop with {$dudi}'.\n" .
                    "[Scene 1]: Pengenalan Alat & APD K3LH.\n" .
                    "[Scene 2]: Demonstrasi Pengukuran Presisi & Troubleshooting.",
             'content_materi' => "RINGKASAN MATERI LITERASI & NUMERASI TERAPAN SMK\n" .
                    "- Konsep Utama: Pembelajaran Kontekstual {$mapel} di Industri {$jurusan}.\n" .
-                   "- Formula & Kalkulasi Presisi: Penerapan rumus matematika/teknis pada alat bengkel.\n" .
-                   "- Referensi SOP: Standar Operasional Prosedur Duduk Industri.",
+                   "- Formula & Kalkulasi Presisi: Penerapan rumus matematika/teknis pada alat kerja.\n" .
+                   "- Referensi SOP: Standar Operasional Prosedur Industri Pasangan ({$dudi}).",
         ];
     }
 }

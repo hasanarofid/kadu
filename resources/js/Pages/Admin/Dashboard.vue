@@ -95,26 +95,33 @@ const props = defineProps({
 
       <!-- Recent Tables Row -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Recent Users Table Card -->
+        <!-- Low Token Users Alert Card -->
         <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
           <div class="flex items-center justify-between">
-            <h3 class="text-base font-bold text-white flex items-center gap-2">
-              <Users class="w-4 h-4 text-indigo-400" />
-              Pengguna Terbaru
+            <h3 class="text-base font-bold text-amber-300 flex items-center gap-2">
+              <ShieldAlert class="w-4 h-4 text-amber-400" />
+              Monitoring Token Rendah (Perlu Top-up/Beli)
             </h3>
-            <Link :href="route('admin.users.index')" class="text-xs font-bold text-indigo-400 hover:underline">Lihat Semua →</Link>
+            <Link :href="route('admin.users.index')" class="text-xs font-bold text-amber-400 hover:underline">Kelola Token →</Link>
           </div>
 
-          <div class="divide-y divide-slate-800 text-xs">
-            <div v-for="u in recent_users" :key="u.id" class="py-3 flex items-center justify-between">
+          <div v-if="!low_token_users || low_token_users.length === 0" class="py-6 text-center text-xs text-slate-500">
+            Seluruh pengguna memiliki kuota token mencukupi.
+          </div>
+
+          <div v-else class="divide-y divide-slate-800 text-xs">
+            <div v-for="u in low_token_users" :key="u.id" class="py-3 flex items-center justify-between">
               <div>
                 <p class="font-bold text-white">{{ u.name }}</p>
                 <p class="text-xxs text-slate-400">{{ u.email }}</p>
               </div>
-              <div class="text-right">
-                <span class="px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-300 font-bold border border-indigo-500/20 text-xxs">
+              <div class="flex items-center gap-3">
+                <span :class="['px-2.5 py-1 rounded-full font-extrabold text-xxs border', (u.tokens ?? 0) === 0 ? 'bg-rose-500/10 text-rose-300 border-rose-500/30' : 'bg-amber-500/10 text-amber-300 border-amber-500/30']">
                   {{ u.tokens ?? 0 }} Token
                 </span>
+                <Link :href="route('admin.users.index')" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xxs rounded-lg shadow">
+                  + Isi Token
+                </Link>
               </div>
             </div>
           </div>
@@ -140,6 +147,52 @@ const props = defineProps({
               </Link>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- AI Token Mutation Log Table Card -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <Coins class="w-4 h-4 text-indigo-400" />
+            Histori Mutasi & Pemakaian AI Token System
+          </h3>
+          <span class="text-xxs font-bold text-slate-400">Real-Time Audit Log</span>
+        </div>
+
+        <div v-if="!recent_logs || recent_logs.length === 0" class="py-8 text-center text-xs text-slate-500">
+          Belum ada riwayat mutasi token AI.
+        </div>
+
+        <div v-else class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-950 text-slate-400 font-bold uppercase text-xxs border-b border-slate-800">
+              <tr>
+                <th class="p-3">Pengguna</th>
+                <th class="p-3">Aktivitas / Deskripsi</th>
+                <th class="p-3 text-center">Tipe</th>
+                <th class="p-3 text-right">Mutasi Token</th>
+                <th class="p-3 text-right">Saldo Setelahnya</th>
+                <th class="p-3 text-right">Waktu</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 text-slate-300">
+              <tr v-for="log in recent_logs" :key="log.id" class="hover:bg-slate-850/50">
+                <td class="p-3 font-bold text-white">{{ log.user?.name || 'User' }}</td>
+                <td class="p-3 font-medium text-slate-300">{{ log.description }}</td>
+                <td class="p-3 text-center">
+                  <span :class="['px-2 py-0.5 rounded-full font-bold text-xxs uppercase border', log.type === 'purchase' || log.type === 'topup' ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30' : 'bg-rose-500/10 text-rose-300 border-rose-500/30']">
+                    {{ log.type }}
+                  </span>
+                </td>
+                <td :class="['p-3 text-right font-black', log.type === 'purchase' || log.type === 'topup' ? 'text-emerald-400' : 'text-rose-400']">
+                  {{ log.type === 'purchase' || log.type === 'topup' ? '+' : '-' }}{{ log.tokens }} Token
+                </td>
+                <td class="p-3 text-right font-bold text-indigo-300">{{ log.balance_after }} Token</td>
+                <td class="p-3 text-right text-xxs text-slate-400">{{ new Date(log.created_at).toLocaleString('id-ID') }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

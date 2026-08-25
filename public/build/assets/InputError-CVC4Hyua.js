@@ -1,0 +1,1 @@
+import{B as e,I as t,_ as n,b as r,d as i,k as a}from"./app-IVlX-XRB.js";var o={class:`text-sm text-red-600 dark:text-red-400`},s={__name:`InputError`,props:{message:{type:String}},setup(s){return(c,l)=>t((a(),r(`div`,null,[n(`p`,o,e(s.message),1)],512)),[[i,s.message]])}};export{s as t};

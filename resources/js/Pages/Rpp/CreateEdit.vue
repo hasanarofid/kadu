@@ -186,13 +186,24 @@ const submitForm = () => {
             <div>
               <label class="block text-xs font-bold text-slate-300 mb-1.5">Mata Pelajaran</label>
               <select v-model="form.mata_pelajaran" class="w-full h-11 bg-slate-950 border border-slate-800 rounded-xl px-3 text-xs font-semibold text-white">
-                <option value="Matematika">Matematika Vokasi</option>
-                <option value="Bahasa Indonesia">Bahasa Indonesia Vokasi</option>
-                <option value="Bahasa Inggris">Bahasa Inggris Teknik</option>
-                <option value="Fisika Terapan">Fisika Terapan Vokasi</option>
-                <option value="Kimia Industri">Kimia Industri</option>
-                <option value="Pemeliharaan Mesin">Pemeliharaan Mesin Otomotif</option>
-                <option value="Pemrograman Web">Pemrograman Web & Perangkat Bergerak</option>
+                <optgroup label="Mata Pelajaran Kelompok Normatif">
+                  <option value="Pendidikan Agama">Pendidikan Agama</option>
+                  <option value="Pendidikan Kewarganegaraan">Pendidikan Kewarganegaraan (PPKn)</option>
+                  <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                  <option value="Penjas, Olahraga dan Kesehatan">Penjas, Olahraga dan Kesehatan (PJOK)</option>
+                  <option value="Seni Budaya">Seni Budaya</option>
+                </optgroup>
+                <optgroup label="Mata Pelajaran Kelompok Adaptif">
+                  <option value="Bahasa Inggris">Bahasa Inggris</option>
+                  <option value="Matematika">Matematika</option>
+                  <option value="IPAS">IPAS (Ilmu Pengetahuan Alam & Sosial)</option>
+                  <option value="Kewirausahaan">Kewirausahaan (PKK)</option>
+                </optgroup>
+                <optgroup label="Mata Pelajaran Kelompok Kejuruan (Produktif)">
+                  <option value="Pemeliharaan Mesin Otomotif">Pemeliharaan Mesin Otomotif (TKR)</option>
+                  <option value="Pemrograman Web">Pemrograman Web & Perangkat Bergerak (RPL)</option>
+                  <option value="Teknik Jaringan Komputer">Teknik Jaringan Komputer (TKJ)</option>
+                </optgroup>
               </select>
             </div>
 
@@ -204,10 +215,12 @@ const submitForm = () => {
             <div>
               <label class="block text-xs font-bold text-slate-300 mb-1.5">Alokasi Waktu (JP)</label>
               <select v-model="form.alokasi_waktu" class="w-full h-11 bg-slate-950 border border-slate-800 rounded-xl px-3 text-xs font-semibold text-white">
+                <option value="1 JP (1 x 45 Menit)">1 JP (1 x 45 Menit)</option>
                 <option value="2 JP (2 x 45 Menit)">2 JP (2 x 45 Menit)</option>
                 <option value="3 JP (3 x 45 Menit)">3 JP (3 x 45 Menit)</option>
                 <option value="4 JP (4 x 45 Menit)">4 JP (4 x 45 Menit)</option>
-                <option value="6 JP Blok Praktik">6 JP Blok Praktik Bengkel</option>
+                <option value="5 JP (5 x 45 Menit)">5 JP (5 x 45 Menit)</option>
+                <option value="6 JP (Blok Praktik)">6 JP (Blok Praktik Bengkel)</option>
               </select>
             </div>
           </div>
