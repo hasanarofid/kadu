@@ -68,11 +68,6 @@ class TokenPurchaseController extends Controller
                         'order_id' => $orderId,
                         'gross_amount' => (int) $package->price,
                     ],
-                    'enabled_payments' => [
-                        'credit_card', 'gopay', 'shopeepay', 'qris',
-                        'bca_va', 'bni_va', 'bri_va', 'mandiri_va', 'permata_va', 'other_va',
-                        'indomaret', 'alfamart'
-                    ],
                     'item_details' => [
                         [
                             'id' => (string) $package->id,
