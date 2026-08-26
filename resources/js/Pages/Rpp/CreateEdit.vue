@@ -200,9 +200,7 @@ const submitForm = () => {
                   <option value="Kewirausahaan">Kewirausahaan (PKK)</option>
                 </optgroup>
                 <optgroup label="Mata Pelajaran Kelompok Kejuruan (Produktif)">
-                  <option value="Pemeliharaan Mesin Otomotif">Pemeliharaan Mesin Otomotif (TKR)</option>
-                  <option value="Pemrograman Web">Pemrograman Web & Perangkat Bergerak (RPL)</option>
-                  <option value="Teknik Jaringan Komputer">Teknik Jaringan Komputer (TKJ)</option>
+                  <option value="Mata Pelajaran Kelompok Kejuruan (Produktif)">Mata Pelajaran Kelompok Kejuruan (Produktif)</option>
                 </optgroup>
               </select>
             </div>
