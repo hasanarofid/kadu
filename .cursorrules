@@ -100,8 +100,9 @@ Payment Gateway menghubungkan frontend, backend Laravel, dan jaringan bank / pen
 
 ## 4. Aturan Bisnis & Pembatasan Generator RPP AI
 
-1. **Persyaratan Token RPP:**
-   - Pembuatan / generation RPP AI **TIDAK BISA** dilakukan sebelum pengguna memiliki saldo Token RPP (Token > 0).
+1. **Persyaratan Token RPP & Bonus Pendaftaran:**
+   - **Bonus Registrasi Baru:** Setiap pengguna baru yang mendaftar akun (baik via Form Register standar maupun Google SSO) secara otomatis mendapatkan **Bonus 10 Token Gratis** yang langsung dicatat di `TokenLog` (`type: bonus`).
+   - Pembuatan / generation RPP AI **TIDAK BISA** dilakukan jika saldo Token RPP pengguna habis (Token <= 0).
    - Pengguna dengan saldo 0 Token yang mencoba mengakses form pembuatan RPP akan di-redirect ke halaman pembelian Token RPP via Midtrans Payment Gateway.
    - Setiap pembuatan 1 RPP AI akan memotong 1 Token RPP dan mencatat `TokenLog` mutasi.
 

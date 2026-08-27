@@ -43,10 +43,20 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'tokens' => 0,
+            'tokens' => 10,
         ]);
 
         $user->assignRole('user');
+
+        // Catat Log Bonus Token Pendaftaran Baru
+        \App\Models\TokenLog::create([
+            'user_id' => $user->id,
+            'rpp_id' => null,
+            'type' => 'bonus',
+            'tokens' => 10,
+            'balance_after' => 10,
+            'description' => 'Bonus 10 Token Gratis Pendaftaran Baru',
+        ]);
 
         event(new Registered($user));
 
@@ -55,6 +65,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('tokens.index'))->with('success', 'Selamat datang! Akun Anda berhasil dibuat. Silakan beli paket token terlebih dahulu untuk mulai membuat RPP Vokasi.');
+        return redirect(route('dashboard'))->with('success', 'Selamat datang! Akun Anda berhasil dibuat dan Anda mendapatkan bonus 10 Token gratis untuk mulai membuat RPP Vokasi.');
     }
 }

@@ -74,14 +74,24 @@ class GoogleAuthController extends Controller
                     'username' => $username,
                     'password' => bcrypt(Str::random(16)),
                     'email_verified_at' => now(),
-                    'tokens' => 0,
+                    'tokens' => 10,
                 ]);
 
                 $user->assignRole('user');
 
+                // Catat Log Bonus Token Pendaftaran Baru Google SSO
+                \App\Models\TokenLog::create([
+                    'user_id' => $user->id,
+                    'rpp_id' => null,
+                    'type' => 'bonus',
+                    'tokens' => 10,
+                    'balance_after' => 10,
+                    'description' => 'Bonus 10 Token Gratis Pendaftaran Baru via Google SSO',
+                ]);
+
                 Auth::login($user, true);
 
-                return redirect()->route('tokens.index')->with('success', 'Selamat datang! Akun Google Anda berhasil terdaftar. Silakan pilih & beli paket token RPP terlebih dahulu.');
+                return redirect()->route('dashboard')->with('success', 'Selamat datang! Akun Google Anda berhasil terdaftar dan Anda mendapatkan bonus 10 Token gratis untuk mulai membuat RPP Vokasi.');
             }
         } catch (\Throwable $e) {
             return redirect()->route('login')->with('error', 'Gagal masuk via Google. Pastikan Client ID & Secret di .env server sudah diisi. Detail: ' . $e->getMessage());
