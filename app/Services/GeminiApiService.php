@@ -74,7 +74,7 @@ class GeminiApiService
                 $response = Http::withHeaders([
                     'Content-Type'   => 'application/json',
                     'X-goog-api-key' => $this->apiKey,
-                ])->timeout(60)->post($url, [
+                ])->timeout(20)->post($url, [
                     'contents' => [
                         [
                             'parts' => [
@@ -85,6 +85,7 @@ class GeminiApiService
                     'generationConfig' => [
                         'responseMimeType' => 'application/json',
                         'temperature'      => 0.7,
+                        'maxOutputTokens'  => 2500,
                     ],
                 ]);
 
